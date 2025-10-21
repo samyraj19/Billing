@@ -1,0 +1,19 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="KBilling.App"
+			 xmlns:conv="using:KBilling.Converters"
+			 xmlns:models="using:KBilling.Model"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Styles>
+        <FluentTheme />
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+		<StyleInclude Source="avares://KBilling/Styles/CustomeControl.axaml"/>
+    </Application.Styles>
+	<Application.Resources>
+		<!-- Admin-only visibility -->
+		<conv:RoleToVisibilityConverter x:Key="AdminOnly" RequiredRole="{x:Static models:EUserRoles.Admin}"/>
+
+	</Application.Resources>
+</Application>
