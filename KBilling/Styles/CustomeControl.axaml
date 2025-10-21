@@ -1,1 +1,23 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:local="using:KBilling.Controls"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Add Styles Here -->
+	<Style Selector="local|IconButton.IconButtonStyle">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="Part_Border_CusBtn"
+						Background="{TemplateBinding Background}"
+						CornerRadius="5"
+						Padding="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"/>
+						<ContentPresenter/>
+					</StackPanel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+</Styles>
 
