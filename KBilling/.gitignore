@@ -1,20 +1,3 @@
-# Ignore build and output folders
-/bin/
-/obj/
-/dist/
-/out/
-/.vs//
-
-# Ignore IDE files
-*.suo
-*.user
-*.log
-.vscode/
-.idea/
-
-# Ignore OS files
-.DS_Store
-Thumbs.db
-
-# Ignore specific files
-secret.txt
+/KBilling/.vs
+/KBilling/output
+/KBilling/**/obj
