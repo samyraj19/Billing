@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace KBilling.Model {
-    public partial class Products : ObservableObject{
+   public partial class Product : ObservableObject {
       [ObservableProperty] private int? no;
       [ObservableProperty] private string? productName;
       [ObservableProperty] private int? productNumber;
@@ -19,5 +19,9 @@ namespace KBilling.Model {
          SellingRate = null;
          Quantity = null;
       }
+   }
+
+   public static class ProductExtensions {
+      public static bool IsProductClass (this object obj) => obj is Product;
    }
 }

@@ -26,62 +26,70 @@ public partial class AddProducts : UserControl {
       txtSellRate.AddHandler (InputElement.TextInputEvent, TextInputForDecimal, RoutingStrategies.Tunnel);
    }
 
-   void SearchTextChanging (object? sender, TextChangingEventArgs e) => VM?.UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
+   void SearchTextChanging (object? sender, TextChangingEventArgs e)
+      => VM?.UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
 
-   void OnLoaded (object? sender, Avalonia.Interactivity.RoutedEventArgs e) => BtnSubmit.Click += OnBtnSubmit;
+   void OnLoaded (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+      BtnSubmit.Click += (s, ev) => Submit();
+      BtnCancel.Click += (s, ev) => VM?.Clear ();
+   }
 
-   private void OnKeyDown (object? sender, KeyEventArgs e) {
+   void OnKeyDown (object? sender, KeyEventArgs e) {
       if (e.Key == Key.Enter) {
          Submit ();
          e.Handled = true;
       }
    }
 
-   void OnBtnSubmit (object? sender, RoutedEventArgs e) => Submit ();
-
    void OnUnLoaded (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
       throw new System.NotImplementedException ();
    }
 
-   void TextInputForInteger (object? sender, TextInputEventArgs e) => e.Handled = !int.TryParse (e.Text, out _);
+   void TextInputForInteger (object? sender, TextInputEventArgs e)
+      => e.Handled = !int.TryParse (e.Text, out _);
 
    void TextInputForDecimal (object? sender, TextInputEventArgs e) {  // Only digits or dot
       if (!string.IsNullOrEmpty (e.Text) && !e.Text.All (c => char.IsDigit (c) || c == '.')) e.Handled = true;
       // Prevent more than one dot
-      if ((!string.IsNullOrEmpty (txtPurRate.Text) && !string.IsNullOrEmpty (e.Text)) && e.Text.Contains ('.') && txtPurRate.Text.Contains ('.')) e.Handled = true;
-      if ((!string.IsNullOrEmpty (txtSellRate.Text) && !string.IsNullOrEmpty (e.Text)) && e.Text.Contains ('.') && txtSellRate.Text.Contains ('.')) e.Handled = true;
+      if (sender is TextBox tb && e.Text.Contains ('.') && tb.Text.Contains ('.')) e.Handled = true;
    }
 
    async void IconButton_Click (object? sender, RoutedEventArgs e) {
-      var action = (sender as Button)?.Tag?.ToString ();
-      var item = DataGridProduct.SelectedItem as Products;
-      if (item == null) return;
-      if (action.IsDelete ()) {
-         var box = MessageBoxManager.GetMessageBoxStandard ("Delete Item", "Are you sure you want to delete this item?.", ButtonEnum.YesNo, Icon.Success);
-         var result = await box.ShowAsync ();
-         if (result == ButtonResult.Yes) {
-
-         }
+      if ((sender as Button)?.Tag?.ToString () is string action) {
+         mAction = action.GetEAction ();
+         if (action.IsDelete ()) DeleteAsync ();
+         else if (action.IsEdit () && mSelectedItem.IsProductClass()) VM?.Edit (mSelectedItem);
       }
    }
+
+   void DataGrid_SelectionChanged (object? sender, SelectionChangedEventArgs e)
+      => mSelectedItem = DataGridProduct.SelectedItem as Product;
 
    #region Methods
    void Submit () {
       if (VM.CanSubmit ()) {
-         MessageBoxManager.GetMessageBoxStandard ("Add product", "Product added successfully.", ButtonEnum.Ok, Icon.Success)
-                          .ShowAsync ();
-         VM.AddProductToList ();
+         VM.AddOrUpdateProductInList (VM, mAction);
          VM?.Clear ();
+         mAction = EAction.None;
       }
+   }
+
+   async void DeleteAsync () {
+
+      if (!mSelectedItem.IsProductClass()) {
+         await MessageBoxManager.GetMessageBoxStandard ("Select Item", "Please select an item.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
+         return;
+      }
+      var box = MessageBoxManager.GetMessageBoxStandard ("Delete Item", "Are you sure you want to delete this item?", ButtonEnum.YesNo, Icon.Success);
+      var result = await box.ShowAsync ();
+      if (result == ButtonResult.Yes) VM?.DeleteItem (mSelectedItem!);
    }
 
    #endregion
 
    #region Fields
    ProductVM? VM => DataContext as ProductVM;
-
-   private void DataGrid_SelectionChanged (object? sender, Avalonia.Controls.SelectionChangedEventArgs e) {
-      var item = DataGridProduct.SelectedItem as Products;
-   }
+   Product? mSelectedItem = null;
+   EAction mAction = EAction.None;
    #endregion
 }

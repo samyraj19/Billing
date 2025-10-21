@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 Background="#f6f8f9"
              x:Class="KBilling.Dashboard">
 	<UserControl.Styles>
 		<Style Selector="Button">
@@ -14,34 +15,72 @@
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
+		<Style Selector="Label.h1" >
+			<Setter Property="FontSize" Value="18"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="Border">
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Margin" Value="10"/>
+			<Setter Property="CornerRadius" Value="10"/>
+			<Setter Property="Padding" Value="5"/>
+		</Style>
 	</UserControl.Styles>
-	<Grid x:Name="MainPanel" ColumnDefinitions="8* 98*">
-		<Border Grid.Row="0" BorderThickness="0,0,2,0" BorderBrush="LightGray">
-			<Grid RowDefinitions="5* 95*" Background="White">
-				<Grid Grid.Row="0" Background="Transparent">
-					<Label Content="Fancy Store"/>
-				</Grid>
-				<StackPanel Grid.Row="1"
-						Orientation="Vertical"
-							HorizontalAlignment="Center">
-					<Button x:Name="BtnProduct" Content="Products"/>
-					<Button x:Name="BtnPricing" Content="Pricing"/>
-					<Button x:Name="BtnStock" Content="Stocks"/>
-				</StackPanel>
-			</Grid>
-		</Border>
-		
-
-		<Grid Grid.Column="1" RowDefinitions="5* 95*">
-			<Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Background="#FFFFFF">
-				<Grid Grid.Row="0">
-					<Label Content="DashBoard" Margin="5,0,0,0"
-						   VerticalContentAlignment="Center"   
-						   FontSize="16" FontWeight="Regular"/>
-				</Grid>
-			</Border>
-			
-			<ContentControl Grid.Row="1" x:Name="ContentPanel" Background="#f9f9f9"/>
+	<Grid x:Name="MainPanel" RowDefinitions="10* 20* 70*">
+		<Grid ColumnDefinitions="25* 75*" Grid.Row="0">
+			<Label Grid.Column="0" Content="Dashboard Overview" Classes="h1"/>
 		</Grid>
+
+		<Grid Grid.Row="1" ColumnDefinitions="* * *">
+			<Border Grid.Column="0">
+				<StackPanel>
+					<Label Content="Total Items"/>
+					<Label Content="150" FontSize="24" FontWeight="Bold"/>
+				</StackPanel>
+			</Border>
+			<Border Grid.Column="1">
+				<StackPanel>
+					<Label Content="Total Sales"/>
+					<Label Content="Rs.25,000" FontSize="24" FontWeight="Bold"/>
+				</StackPanel>
+			</Border>
+			<Border Grid.Column="2">
+				<StackPanel>
+					<Label Content="Total Profits"/>
+					<Label Content="Rs.2,000" FontSize="24" FontWeight="Bold"/>
+				</StackPanel>
+			</Border>
+		</Grid>
+
+		<DataGrid Grid.Row="2" AutoGenerateColumns="False" x:Name="DataGridProduct"
+					  BorderThickness="1" BorderBrush="Gray"
+					  GridLinesVisibility="All"
+					  ColumnWidth="*">
+			<DataGrid.Columns>
+				<DataGridTextColumn IsReadOnly="True" Header="#"
+									Width="75"/>
+				<DataGridTextColumn Header="Name" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Number" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Purchase Rate" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Selling Rate" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Status" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Stock" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Added By" IsReadOnly="True"
+									/>
+				<DataGridTextColumn Header="Added Date" IsReadOnly="True"
+									/>
+
+			</DataGrid.Columns>
+		</DataGrid>
 	</Grid>
 </UserControl>

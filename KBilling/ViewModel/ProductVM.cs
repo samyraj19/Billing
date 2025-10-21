@@ -8,15 +8,16 @@ using System.Collections.Specialized;
 using KBilling.Services;
 using System.Linq;
 using System;
+using static System.Collections.Specialized.BitVector32;
 
 namespace KBilling.ViewModel {
-   public class ProductVM : Products {
+   public class ProductVM : Product {
 
       public ProductVM () {
          AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
-         AllProducts = new ObservableCollection<Products> ();
-         AllProducts.CollectionChanged += ProductsCollectionChanged;
-         FilterProducts = new ObservableCollection<Products> ();
+         AllProducts = new ObservableCollection<Product> ();
+         FilterProducts = new ObservableCollection<Product> ();
+         FilterProducts.CollectionChanged += ProductsCollectionChanged;
       }
 
       #region Methods
@@ -43,20 +44,53 @@ namespace KBilling.ViewModel {
          if (SellingRate < minsellrate) return false;
          return true;
       }
+      public void Edit (Product product) {
+         ProductName = product.ProductName;
+         ProductNumber = product.ProductNumber;
+         PurchaseRate = product.PurchaseRate;
+         SellingRate = product.SellingRate;
+         Quantity = product.Quantity;
+      }
 
-      public void AddProductToList () {
-         AllProducts?.Add (new Products () {
-            ProductName = this.ProductName,
-            ProductNumber = this.ProductNumber,
-            PurchaseRate = this.PurchaseRate,
-            SellingRate = this.SellingRate,
-            Quantity = this.Quantity
+      public void AddOrUpdateProductInList (Product product,EAction action) {
+         var existingProduct = AllProducts.FirstOrDefault (p => p.ProductNumber == product.ProductNumber);
+         if (existingProduct is not null && action.IsEdit()) UpdateItem (product, existingProduct);
+         else AddItem (product);
+         UpdateFilter (string.Empty);
+      }
+
+      void AddItem (Product product) {
+         if (AllProducts.Any (p => p.ProductNumber == product.ProductNumber)) {
+            MessageBoxManager.GetMessageBoxStandard ("Add product Error", "Product number already there. Please choose a different number", ButtonEnum.Ok, Icon.Error)
+                             .ShowAsync ();
+            return;
+         }
+         AllProducts?.Add (new () {
+            ProductName = product.ProductName,
+            ProductNumber = product.ProductNumber,
+            PurchaseRate = product.PurchaseRate,
+            SellingRate = product.SellingRate,
+            Quantity = product.Quantity
          });
+         MessageBoxManager.GetMessageBoxStandard ("Add product", "Product added successfully.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
+      }
+
+      void UpdateItem (Product current, Product existing) {
+         existing.ProductName = current.ProductName;
+         existing.ProductNumber = current.ProductNumber;
+         existing.PurchaseRate = current.PurchaseRate;
+         existing.SellingRate = current.SellingRate;
+         existing.Quantity = current.Quantity;
+         MessageBoxManager.GetMessageBoxStandard ("Add product", "Product updated successfully.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
+      }
+
+      public void DeleteItem (Product item) {
+         AllProducts?.Remove (item);
          UpdateFilter (string.Empty);
       }
 
       public void UpdateFilter (string text) {
-         IEnumerable<Products> filtered;
+         IEnumerable<Product> filtered;
          if (string.IsNullOrEmpty (text)) filtered = AllProducts;
          else filtered = AllProducts.Where (p => p.ProductName.Contains (text, StringComparison.OrdinalIgnoreCase));
 
@@ -67,14 +101,14 @@ namespace KBilling.ViewModel {
       void ProductsCollectionChanged (object? sender, NotifyCollectionChangedEventArgs e) {
          if (e.NewItems != null && AllProducts is not null) {
             int no = 1;
-            foreach (Products item in AllProducts) item.No = no++;
+            foreach (Product item in AllProducts) item.No = no++;
          }
       }
       #endregion
 
       #region Fields
-      readonly ObservableCollection<Products>? AllProducts;
-      public ObservableCollection<Products>? FilterProducts { get; set; }
+      readonly ObservableCollection<Product>? AllProducts;
+      public ObservableCollection<Product>? FilterProducts { get; set; }
       public EUserRoles? Role => AppSession.Role;
       #endregion
    }

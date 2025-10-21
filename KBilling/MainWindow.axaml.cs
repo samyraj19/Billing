@@ -8,7 +8,7 @@ namespace KBilling {
 
          // Default view
          var view = new ViewManager (ContentPanel);
-         view.ShowView ("Dashboard");
+         view.ShowView ("MainView");
       }
    }
 }
