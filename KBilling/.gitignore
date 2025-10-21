@@ -1,3 +1,6 @@
-/KBilling/.vs
-/KBilling/output
-/KBilling/**/obj
+# Ignore Visual Studio folder
+.vs/
+
+# Ignore build/output folders
+bin/
+obj/
