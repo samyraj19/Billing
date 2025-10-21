@@ -9,6 +9,7 @@ using KBilling.Helper;
 using KBilling.ViewModel;
 using MsBox.Avalonia.Enums;
 using MsBox.Avalonia;
+using KBilling.Model;
 
 namespace KBilling;
 public partial class AddProducts : UserControl {
@@ -51,6 +52,19 @@ public partial class AddProducts : UserControl {
       if ((!string.IsNullOrEmpty (txtSellRate.Text) && !string.IsNullOrEmpty (e.Text)) && e.Text.Contains ('.') && txtSellRate.Text.Contains ('.')) e.Handled = true;
    }
 
+   async void IconButton_Click (object? sender, RoutedEventArgs e) {
+      var action = (sender as Button)?.Tag?.ToString ();
+      var item = DataGridProduct.SelectedItem as Products;
+      if (item == null) return;
+      if (action.IsDelete ()) {
+         var box = MessageBoxManager.GetMessageBoxStandard ("Delete Item", "Are you sure you want to delete this item?.", ButtonEnum.YesNo, Icon.Success);
+         var result = await box.ShowAsync ();
+         if (result == ButtonResult.Yes) {
+
+         }
+      }
+   }
+
    #region Methods
    void Submit () {
       if (VM.CanSubmit ()) {
@@ -65,5 +79,9 @@ public partial class AddProducts : UserControl {
 
    #region Fields
    ProductVM? VM => DataContext as ProductVM;
+
+   private void DataGrid_SelectionChanged (object? sender, Avalonia.Controls.SelectionChangedEventArgs e) {
+      var item = DataGridProduct.SelectedItem as Products;
+   }
    #endregion
 }
