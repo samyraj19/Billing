@@ -1,0 +1,106 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 Background="#f6f8f9"
+			 xmlns:vm="using:KBilling.ViewModel"
+			 x:DataType="vm:ProductVM"
+			 xmlns:CustomContrl="using:KBilling.Controls"
+             x:Class="KBilling.AddProducts">
+	<UserControl.DataContext>
+		<vm:ProductVM/>
+	</UserControl.DataContext>
+	<UserControl.Styles>
+		<Style Selector="TextBox">
+			<Setter Property="Width" Value="200"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="Focusable" Value="True"/>
+		</Style>
+		<Style Selector="Label">
+			<Setter Property="Margin" Value="0,4"/>
+		</Style>
+	</UserControl.Styles>
+	<Grid RowDefinitions="Auto Auto">
+		<Border Background="White" Grid.Row="0"
+				Padding="5"
+				CornerRadius="5" Margin="15">
+			<Grid x:Name="MainPanel" RowDefinitions="* * * * *" ColumnDefinitions="20* 20* 20* 40*">
+				<Label Grid.Row="0" Grid.Column="0" Content="Name *"/>
+				<Label Grid.Row="0" Grid.Column="1" Content="Numer *"/>
+				<Label Grid.Row="0" Grid.Column="2" Content="Purchase Rate *"/>
+				<TextBox Grid.Row="1" Grid.Column="0"
+						 Text="{Binding ProductName,Mode=TwoWay}"/>
+				<TextBox Grid.Row="1" Grid.Column="1"
+						 x:Name="ProductNumberTextbox"
+						 Text="{Binding ProductNumber,Mode=TwoWay}"/>
+				<TextBox x:Name="txtPurRate"
+						 Grid.Row="1" Grid.Column="2"
+						 IsEnabled="{Binding Role, Converter={StaticResource AdminOnly}}"
+						 Text="{Binding PurchaseRate,Mode=TwoWay}"/>
+
+				<Label Grid.Row="2" Grid.Column="0" Content="Selling Rate *"/>
+				<Label Grid.Row="2" Grid.Column="1" Content="Quantity *"/>
+				<TextBox x:Name="txtSellRate"
+						 Grid.Row="3" Grid.Column="0"
+						 IsEnabled="{Binding Role, Converter={StaticResource AdminOnly}}"
+						 Text="{Binding SellingRate,Mode=TwoWay}"/>
+				<TextBox x:Name="txtQty"
+						 Grid.Row="3" Grid.Column="1"
+						 Text="{Binding Quantity,Mode=TwoWay}"/>
+
+				<Button Grid.Row="4" x:Name="BtnSubmit"
+						Grid.ColumnSpan="3" Content="Submit"
+						Margin="5,20,5,5"
+						Width="200" Height="40"
+						VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+						HorizontalAlignment="Center"/>
+
+			</Grid>
+		</Border>
+
+		<Grid Grid.Row="1" RowDefinitions="10* 90*" Margin="10">
+			<StackPanel Orientation="Horizontal" Margin="0,5">
+				<TextBox x:Name="SearchTxt" Watermark="Search Item name/number"/>
+				<!--<CustomContrl:IconButton Width="30" Height="30" 
+										 Icon="avares://KBilling/Assets/search.png" Margin="5,0"/>-->
+			</StackPanel>
+			<DataGrid Grid.Row="1" AutoGenerateColumns="False"
+				  BorderThickness="1" BorderBrush="Gray"
+				  GridLinesVisibility="All"
+				  ColumnWidth="*"
+				  ItemsSource="{Binding FilterProducts}">
+				<DataGrid.Columns>
+					<DataGridTextColumn IsReadOnly="True" Header="#"
+										Width="75"
+										Binding="{Binding No}"/>
+					<DataGridTextColumn Header="Item Name" IsReadOnly="True"
+										Binding="{Binding ProductName}"/>
+					<DataGridTextColumn Header="Item Number" IsReadOnly="True"
+										Binding="{Binding ProductNumber}"/>
+					<DataGridTextColumn Header="Quantity" IsReadOnly="True"
+										Binding="{Binding Quantity}"/>
+					<DataGridTextColumn Header="Status" IsReadOnly="True"
+										Binding="{Binding Status}"/>
+					<DataGridTextColumn Header="Added By" IsReadOnly="True"
+										Binding="{Binding Createdby}"/>
+					<DataGridTextColumn Header="Added Date" IsReadOnly="True"
+										Binding="{Binding Date}"/>
+					<DataGridTemplateColumn Header="Action" Width="100">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+									<CustomContrl:IconButton Width="25" Height="25" Icon="avares://KBilling/Assets/delete.png"/>
+									<CustomContrl:IconButton Width="25" Height="25" Icon="avares://KBilling/Assets/edit.png"/>
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+
+	</Grid>
+
+</UserControl>
