@@ -3,6 +3,7 @@
 /obj/
 /dist/
 /out/
+/.vs//
 
 # Ignore IDE files
 *.suo
