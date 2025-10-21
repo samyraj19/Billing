@@ -1,0 +1,19 @@
+# Ignore build and output folders
+/bin/
+/obj/
+/dist/
+/out/
+
+# Ignore IDE files
+*.suo
+*.user
+*.log
+.vscode/
+.idea/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore specific files
+secret.txt
