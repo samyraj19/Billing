@@ -10,7 +10,11 @@ namespace KBilling.Model {
       [ObservableProperty] private decimal? quantity;
       [ObservableProperty] private string? status;
       [ObservableProperty] private string? createdby;
-      [ObservableProperty] private string? date;
+      [ObservableProperty] private string? createddate;
+      [ObservableProperty] private string? modifiedby;
+      [ObservableProperty] private string? modifieddate;
+
+      Product? mOriginal;
 
       public void Clear () {
          ProductName = null;
@@ -19,6 +23,10 @@ namespace KBilling.Model {
          SellingRate = null;
          Quantity = null;
       }
+
+      public void SnapShot () => mOriginal = (Product)this.MemberwiseClone ();
+
+      public bool IsModified () => mOriginal != null && (PurchaseRate != mOriginal.PurchaseRate || SellingRate != mOriginal.SellingRate);
    }
 
    public static class ProductExtensions {

@@ -42,7 +42,10 @@ public partial class AddProducts : UserControl {
    }
 
    void OnUnLoaded (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-      throw new System.NotImplementedException ();
+      KeyDown -= OnKeyDown;
+      BtnCancel.Click -= (s, ev) => VM?.Clear ();
+      BtnCancel.Click -= (s, ev) => VM?.Clear ();
+      BtnSubmit.Click -= (s, ev) => Submit ();
    }
 
    void TextInputForInteger (object? sender, TextInputEventArgs e)

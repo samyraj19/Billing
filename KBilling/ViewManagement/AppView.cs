@@ -5,6 +5,10 @@ namespace KBilling.ViewManagement {
          reg.Register ("MainView", new MainView ());
          reg.Register ("DashBoard", new Dashboard ());
          reg.Register ("AddProduct", new AddProducts ());
+         reg.Register ("PriceUpdateView", new PriceUpdateView ());
+         reg.Register ("StocksView", new StocksView ());
+
+         reg.Register ("BillingView", new BillingView ());
 
          var windowRegistry = WindowRegistry.Instance;
          windowRegistry.Register ("MainWindow", new MainWindow ());

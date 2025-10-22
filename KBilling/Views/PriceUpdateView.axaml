@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 Background="#f6f8f9"
+			 xmlns:vm="using:KBilling.ViewModel"
+			 x:DataType="vm:UpdatePricingVM"
+             x:Class="KBilling.PriceUpdateView">
+	<UserControl.DataContext>
+		<vm:UpdatePricingVM/>
+	</UserControl.DataContext>
+	<Grid RowDefinitions="90* 10*">
+		<DataGrid   x:Name="DataGridProduct" Grid.Row="0"
+					Margin="5" ColumnWidth="*"
+					ItemsSource="{Binding FilterProducts}">
+			<DataGrid.Columns>
+				<DataGridTextColumn IsReadOnly="True" Header="#"
+									Width="60"
+									Binding="{Binding No}"/>
+				<DataGridTextColumn Header="Name" IsReadOnly="True"
+									Binding="{Binding ProductName}"/>
+				<DataGridTextColumn Header="Number" IsReadOnly="True"
+									Binding="{Binding ProductNumber}"/>
+
+				<DataGridTemplateColumn Header="Purchase Rate">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBox Text="{Binding PurchaseRate}"/>
+						</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+				<DataGridTemplateColumn Header="Selling Rate">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBox Text="{Binding SellingRate}"/>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				
+				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
+									Binding="{Binding Quantity}"/>
+				<DataGridTextColumn Header="Created By" IsReadOnly="True"
+									Binding="{Binding Createdby}"/>
+				<DataGridTextColumn Header="Created Date" IsReadOnly="True"
+									Binding="{Binding Createddate}"/>
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<StackPanel Grid.Row="1">
+			<Button x:Name="BtnUpdatePrices"
+					Content="Update"
+					Width="200"
+					Height="45"
+					HorizontalAlignment="Right"
+					Margin="5"
+					VerticalContentAlignment="Center"
+					HorizontalContentAlignment="Center"/>
+		</StackPanel>
+	</Grid>
+	
+</UserControl>

@@ -35,7 +35,6 @@ namespace KBilling.ViewModel {
                              .ShowAsync ();
             return false;
          }
-
          return true;
       }
 
@@ -44,6 +43,7 @@ namespace KBilling.ViewModel {
          if (SellingRate < minsellrate) return false;
          return true;
       }
+
       public void Edit (Product product) {
          ProductName = product.ProductName;
          ProductNumber = product.ProductNumber;

@@ -32,4 +32,8 @@
     <AvaloniaResource Include="Assets\delete.png" />
     <AvaloniaResource Include="Assets\edit.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
 </Project>

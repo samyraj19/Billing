@@ -73,28 +73,25 @@
 				<!--<CustomContrl:IconButton Width="30" Height="30" 
 										 Icon="avares://KBilling/Assets/search.png" Margin="5,0"/>-->
 			</StackPanel>
-			<DataGrid Grid.Row="1" AutoGenerateColumns="False" x:Name="DataGridProduct"
-				  BorderThickness="1" BorderBrush="Gray"
-				  GridLinesVisibility="All"
-				  ColumnWidth="*"
-					  SelectionChanged="DataGrid_SelectionChanged"
+			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
+				  SelectionChanged="DataGrid_SelectionChanged"
 				  ItemsSource="{Binding FilterProducts}">
 				<DataGrid.Columns>
 					<DataGridTextColumn IsReadOnly="True" Header="#"
 										Width="75"
 										Binding="{Binding No}"/>
-					<DataGridTextColumn Header="Item Name" IsReadOnly="True"
+					<DataGridTextColumn Header="Name" IsReadOnly="True"
 										Binding="{Binding ProductName}"/>
-					<DataGridTextColumn Header="Item Number" IsReadOnly="True"
+					<DataGridTextColumn Header="Number" IsReadOnly="True"
 										Binding="{Binding ProductNumber}"/>
 					<DataGridTextColumn Header="Quantity" IsReadOnly="True"
 										Binding="{Binding Quantity}"/>
 					<DataGridTextColumn Header="Status" IsReadOnly="True"
 										Binding="{Binding Status}"/>
-					<DataGridTextColumn Header="Added By" IsReadOnly="True"
+					<DataGridTextColumn Header="Created By" IsReadOnly="True"
 										Binding="{Binding Createdby}"/>
-					<DataGridTextColumn Header="Added Date" IsReadOnly="True"
-										Binding="{Binding Date}"/>
+					<DataGridTextColumn Header="Created Date" IsReadOnly="True"
+										Binding="{Binding Createddate}"/>
 					<DataGridTemplateColumn Header="Action" Width="100">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
