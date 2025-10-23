@@ -5,19 +5,28 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 Background="#f6f8f9"
 			 xmlns:vm="using:KBilling.ViewModel"
-			 x:DataType="vm:BillDetailsVM"
+			 x:DataType="vm:BillVM"
              x:Class="KBilling.BillingView">
 	<UserControl.DataContext>
-		<vm:BillDetailsVM/>
+		<vm:BillVM/>
 	</UserControl.DataContext>
 	<UserControl.Styles>
+		<Style Selector="Button.medium">
+			<Setter Property="Background" Value="#2b7fff"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Width" Value="125"/>
+			<Setter Property="Height" Value="35"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
 		<Style Selector="Border">
 			<Setter Property="BorderBrush" Value="LightGray"/>
 			<Setter Property="CornerRadius" Value="0"/>
 		</Style>
 		<Style Selector="Label.h1">
-			<Setter Property="FontSize" Value="18"/>
-			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="FontSize" Value="15"/>
+			<Setter Property="FontWeight" Value="Bold"/>
 			<Setter Property="Foreground" Value="Black"/>
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -29,78 +38,167 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 		</Style>
-		<Style Selector="TextBlock">
+		<Style Selector="Label.small">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="TextBlock.h1">
 			<Setter Property="FontSize" Value="18"/>
 			<Setter Property="FontWeight" Value="SemiBold"/>
-			<Setter Property="Margin" Value="0,5"/>
+			<Setter Property="Margin" Value="0,2"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
 	</UserControl.Styles>
 
 	<Grid ColumnDefinitions="80* 20*">
 		<Grid Grid.Column="0" RowDefinitions="10* 80* 10*">
-			<StackPanel Orientation="Horizontal">
-				<TextBox x:Name="txtSearch"
-						 Width="400" Height="40"
-						 Margin="5"
+			<Grid ColumnDefinitions="80* 20*">
+				<TextBox x:Name="txtSearch" Grid.Column="0"
+						 Width="425" Height="35"
+						 Margin="5" Padding="5"
 						 HorizontalAlignment="Left"
 						 VerticalContentAlignment="Center"
 						 Watermark="Search by Product Name or Number"/>
-				<TextBox x:Name="TextBoxQuanityt"
-						 Margin="5"
-						 Width="100" Height="40"/>
-			</StackPanel>
+				<TextBox x:Name="TextBoxQuanityt" Grid.Column="0"
+						 Watermark="Quantity"
+						 Width="100" Height="35"
+						 Margin="5"/>
+			</Grid>
 
-			<DataGrid  x:Name="DataGridProduct" Grid.Row="0"
-					   Margin="5" ColumnWidth="*">
-
-			</DataGrid>
-			<StackPanel Grid.Row="2" Orientation="Horizontal"
-						HorizontalAlignment="Right">
-			</StackPanel>
-		</Grid>
-
-		<Grid Grid.Column="1" RowDefinitions="* *">
-			<HeaderedContentControl Grid.Row="0" Margin="0,5,5,5"
-									Background="White"
-									Header="Bill Details">
-				<Grid RowDefinitions="* * .5*" ColumnDefinitions="* *">
-					<Label Grid.Row="0" Grid.Column="0" 
-						   Classes="h1"
-						   Content="Sub Total"/>
-					<Label Grid.Row="1" Grid.Column="0"
-						   Classes="h1"
-						   Content="Discount"/>
-				    <TextBlock Grid.Row="0" Grid.Column="1"
-							   HorizontalAlignment="Right"
-							   Text="Rs.500"/>
-					<TextBlock Grid.Row="1" Grid.Column="1"
-							   HorizontalAlignment="Right"
-							   Text="- Rs.50"/>
-
-					<Border Grid.Row="2" Grid.ColumnSpan="2"
-							Margin="-8"
-							Background="#e6f8e9">
-						<Grid ColumnDefinitions="* *">
-							<Label Grid.Column="0" 
-								   Content="Total Amount"  
-								   Classes="h2"/>
-							<TextBlock Grid.Column="1" 
-									   Text="Rs.4500" 
-									   HorizontalAlignment="Right"
-									   Margin="0,0,5,0"/>
-						</Grid>
-					</Border>
-					
-				</Grid>
-			</HeaderedContentControl>
-
-			<HeaderedContentControl Grid.Row="1" Margin="0,10,5,5"
-									Header="Payment Details">
+			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
+					  CornerRadius="5" Margin="5" Background="White"
+					  GridLinesVisibility="All" AutoGenerateColumns="False"
+					  ColumnWidth="*" BorderBrush="LightGray" BorderThickness="1"
+				  ItemsSource="{Binding BillItems}">
+				<DataGrid.Columns>
+					<DataGridTextColumn IsReadOnly="True" Header="#"
+										Width="75"
+										Binding="{Binding No}"/>
+					<DataGridTextColumn Header="Code" IsReadOnly="True"
+										Binding="{Binding ProductId}"/>
+					<DataGridTextColumn Header="Name" IsReadOnly="True"
+										Binding="{Binding ProductName}"/>
+					<DataGridTextColumn Header="Price" IsReadOnly="True"
+										Binding="{Binding Price}"/>
+					<DataGridTemplateColumn>
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Quantity}"/>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+					<DataGridTextColumn Header="Amount" IsReadOnly="True"
+										Binding="{Binding Amount}"/>
 				
-			</HeaderedContentControl>
+				</DataGrid.Columns>
+			</DataGrid>
+			<Grid Grid.Row="2" ColumnDefinitions="85* 15*">
+				<Label Grid.Column="0" Content="Total items: "
+					   Margin="5,0"
+					   Classes="small"/>
+				<Label Grid.Column="0" 
+					   Margin="77,0"
+					   Content="{Binding BillHeader.Itemcount}"
+					   Classes="small"/>
+				<Button Grid.Column="0"
+						Content="Clear All"
+						Classes="medium"
+						Margin="150,0"/>
+
+				<Button Grid.ColumnSpan="2" Grid.Column="1"
+						x:Name="BtnDiscount"
+						Content="Add Discount"
+						HorizontalAlignment="Center"
+						Classes="medium"
+						Margin="10,0"/>
+
+			</Grid>
 		</Grid>
 
+		<Border Grid.Column="1"
+				BorderBrush="LightGray" BorderThickness="1,0"
+				Padding="5,0">
+			<Grid  RowDefinitions="23* 13* 20* 46*">
+				<HeaderedContentControl Grid.Row="0" Margin="0,5,5,5"
+										Background="White"
+										Header="Bill Details">
+					<Grid RowDefinitions="30* 30* 20* 20*" ColumnDefinitions="* *">
+						<Label Grid.Row="0" Grid.Column="0"
+							   Classes="h1"
+							   Content="Total"/>
+						<Label Grid.Row="1" Grid.Column="0"
+							   Classes="h1"
+							   Content="Discount"/>
+						<TextBlock Grid.Row="0" Grid.Column="1"
+								   HorizontalAlignment="Right"
+								   Classes="h1"
+								    Text="{Binding BillHeader.SubTotal,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Row="1" Grid.Column="1"
+								   HorizontalAlignment="Right"
+								   Classes="h1"
+								   Text="{Binding BillHeader.Discount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+						<Border Grid.Row="3" Grid.ColumnSpan="2"
+								Margin="-8" BorderBrush="LightGray" BorderThickness="0,1,0,0"
+								Background="#e6f8e9">
+							<Grid ColumnDefinitions="* *">
+								<Label Grid.Column="0"
+									   Content="Total Amount"
+									   Classes="h2"/>
+								<TextBlock Grid.Column="1"
+										   Classes="h1"
+										   Text="{Binding BillHeader.Total,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+										   HorizontalAlignment="Right"
+										   Margin="0,0,5,0"/>
+							</Grid>
+						</Border>
+
+					</Grid>
+				</HeaderedContentControl>
+
+				<HeaderedContentControl Grid.Row="1" Margin="0,10,5,5"
+										Header="Payment Details">
+						<StackPanel Orientation="Horizontal"
+									HorizontalAlignment="Center" VerticalAlignment="Center">
+							<Button Content="Cash" Classes="medium"/>
+							<Button Content="Online" Classes="medium"/>
+						</StackPanel>
+				</HeaderedContentControl>
+
+				<HeaderedContentControl Grid.Row="2" Margin="0,10,5,5"
+										Header="Customer Details">
+					<Grid RowDefinitions="* *" ColumnDefinitions="25* 75*">
+						<Label Grid.Row="0" Grid.Column="0" Classes="h1"
+								   Content="Name"/>
+						<Label Grid.Row="1" Grid.Column="0" Classes="h1"
+							   Content="Ph.No"/>
+						
+						<TextBox Grid.Row="0" Grid.Column="1"
+								 x:Name="TextboxName"
+								 Margin="0,5"
+								 Width="200" Height="30"/>
+						<TextBox Grid.Row="1" Grid.Column="1"
+								 x:Name="TextboxPhone"
+								 Margin="2"
+								 Width="200" Height="30"/>
+					</Grid>
+
+				</HeaderedContentControl>
+				
+				<Button Grid.Row="3"
+					    Content="Pay Bill"
+						HorizontalAlignment="Center"
+						Width="250" Height="40"
+						Margin="5,5,5,15"
+						Background="#2b7fff"
+						Foreground="White"
+						VerticalAlignment="Bottom"
+						VerticalContentAlignment="Center"
+						HorizontalContentAlignment="Center"/>
+			</Grid>
+		</Border>
 	</Grid>
 
 </UserControl>

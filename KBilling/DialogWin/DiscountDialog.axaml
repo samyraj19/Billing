@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="250" Height="175"
+		WindowStartupLocation="CenterOwner"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		TransparencyLevelHint="AcrylicBlur"
+	    Background="Transparent"
+		CanResize="False"
+        x:Class="KBilling.DiscountDialog"
+        Title="DiscountDialog">
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#2b7fff"/>
+			<Setter Property="Width" Value="100"/>
+			<Setter Property="Height" Value="35"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+	</Window.Styles>
+	<Grid RowDefinitions="15* 50* 35*">
+		<Border Grid.Row="0" BorderBrush="LightGray" BorderThickness="0,0,0,1">
+			<Label Content="Add Discount"/>
+		</Border>
+
+		<Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,0,0,1">
+				<TextBox Grid.Row="1" 
+						 Watermark="Enter Discount amount"
+						 x:Name="TextboxDiscount"
+						 Width="200" Height="35"/>
+		</Border>
+
+		<StackPanel Grid.Row="2" Orientation="Horizontal" 
+					HorizontalAlignment="Center">
+			<Button x:Name="BtnAdd" Content="Add"/>
+			<Button x:Name="BtnCancel" Content="Cancel"/>
+		</StackPanel>
+	</Grid>
+</Window>

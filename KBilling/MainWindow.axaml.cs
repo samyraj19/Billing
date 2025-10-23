@@ -8,6 +8,7 @@ namespace KBilling {
       public MainWindow () {
          InitializeComponent ();
          Loaded += OnLoad;
+         Instance = this;
       }
 
       void OnLoad (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
@@ -17,5 +18,8 @@ namespace KBilling {
          if (AppSession.Role != EUserRoles.Staff) view.ShowView ("MainView");
          else view.ShowView ("BillingView");
       }
+
+      public static MainWindow Instance { get; private set; } = null!;
    }
+
 }

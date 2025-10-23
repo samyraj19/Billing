@@ -12,6 +12,7 @@ namespace KBilling.ViewManagement {
 
          var windowRegistry = WindowRegistry.Instance;
          windowRegistry.Register ("MainWindow", new MainWindow ());
+         windowRegistry.Register ("DiscountDialog", new DiscountDialog ());
       }
    }
 }
