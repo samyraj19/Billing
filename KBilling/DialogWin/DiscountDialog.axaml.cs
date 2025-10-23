@@ -30,7 +30,6 @@ public partial class DiscountDialog : Window {
       Close ();
    }
 
-
    #region Fields
    public decimal Discount { get; private set; } = 0m;
    #endregion
