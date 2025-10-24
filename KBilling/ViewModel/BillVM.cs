@@ -24,13 +24,11 @@ namespace KBilling.ViewModel {
          BillItems.Add (new Model.BillDetails () { BillId = "B003", Price = 75, ProductId = "P003", ProductName = "Product 3", Quantity = 2 });
       }
 
-      decimal SubTotal () {
-         decimal total = 0;
-         foreach (var item in BillItems) total += item.Amount;
-         return total;
-      }
+      public decimal SubTotal () => BillItems.Sum (item => item.Amount);
+      
+      public decimal Total (decimal discount) => SubTotal () - discount;
 
-      decimal Total (decimal discount) => SubTotal () - discount;
+      public decimal UpdateTotal() => SubTotal() - BillHeader.Discount;
 
       #region Fields
       [ObservableProperty] BillHeaderVM billHeader = new ();

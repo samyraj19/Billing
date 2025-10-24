@@ -11,8 +11,9 @@ namespace KBilling.ViewManagement {
          reg.Register ("BillingView", new BillingView ());
 
          var windowRegistry = WindowRegistry.Instance;
-         windowRegistry.Register ("MainWindow", new MainWindow ());
-         windowRegistry.Register ("DiscountDialog", new DiscountDialog ());
+         windowRegistry.Register<MainWindow> ("MainWindow");
+         windowRegistry.Register<DiscountDialog> ("DiscountDialog");
+         windowRegistry.Register<ProductLookupDialog> ("ProductLookupDialog"); 
       }
    }
 }

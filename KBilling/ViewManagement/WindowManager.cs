@@ -7,9 +7,12 @@ namespace KBilling.ViewManagement {
          window.Show ();
       }
 
-      public void ShowDialog (Window owner, string key) {
+      public Window ShowDialog (Window owner, string key) {
          var window = WindowRegistry.Instance.Get (key);
          window.ShowDialog (owner);
+         return window;
       }
+
+      public Window GetWindow (string key) => WindowRegistry.Instance.Get (key);
    }
 }

@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" Width="750" Height="250"
+			 ExtendClientAreaToDecorationsHint="True"
+			 ExtendClientAreaChromeHints="NoChrome"
+			 TransparencyLevelHint="AcrylicBlur"
+			 Background="Transparent"
+			 CanResize="False"
+		     xmlns:vm="using:KBilling.ViewModel"
+		     x:DataType="vm:UpdatePricingVM"
+             x:Class="KBilling.ProductLookupDialog">
+	<Window.DataContext>
+		<vm:UpdatePricingVM/>
+	</Window.DataContext>
+	<Grid RowDefinitions="20* 80*">
+		<TextBox x:Name="txtSearch" Grid.Row="0"
+				 Width="740" Height="35"
+				 Margin="2"
+				 Watermark="Search by Product Name or Number"/>
+		<DataGrid Grid.Row="1" ColumnWidth="*"
+				  ItemsSource="{Binding FilterProducts}">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Code" IsReadOnly="True"
+									Binding="{Binding ProductNumber}"/> 
+				<DataGridTextColumn Header="Name" IsReadOnly="True"
+									Binding="{Binding ProductName}"/>
+				<DataGridTextColumn Header="Stock" IsReadOnly="True"
+									Binding="{Binding Quantity}"/>
+				<DataGridTextColumn Header="Price" IsReadOnly="True"
+									Binding="{Binding SellingRate}"/>
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+
+</Window>

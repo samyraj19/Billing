@@ -26,7 +26,8 @@ namespace KBilling.ViewModel {
       public void UpdateFilter (string text) {
          IEnumerable<Product> filtered;
          if (string.IsNullOrEmpty (text)) filtered = AllProducts;
-         else filtered = AllProducts.Where (p => p.ProductName.Contains (text, StringComparison.OrdinalIgnoreCase));
+         else filtered = int.TryParse (text, out var number) ? AllProducts.Where (p => p.ProductNumber.ToString().Contains(text) || p.ProductName?.Contains (text, StringComparison.OrdinalIgnoreCase) == true)
+                                                             : AllProducts.Where (p => p.ProductName?.Contains (text, StringComparison.OrdinalIgnoreCase) == true);
 
          FilterProducts.Clear ();
          foreach (var item in filtered) FilterProducts.Add (item);

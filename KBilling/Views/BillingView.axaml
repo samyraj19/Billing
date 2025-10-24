@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 Background="#f6f8f9"
+			 xmlns:ctrl="using:KBilling.Controls"
 			 xmlns:vm="using:KBilling.ViewModel"
 			 x:DataType="vm:BillVM"
              x:Class="KBilling.BillingView">
@@ -55,26 +56,38 @@
 	<Grid ColumnDefinitions="80* 20*">
 		<Grid Grid.Column="0" RowDefinitions="10* 80* 10*">
 			<Grid ColumnDefinitions="80* 20*">
-				<TextBox x:Name="txtSearch" Grid.Column="0"
-						 Width="425" Height="35"
+				<StackPanel Grid.Column="0" Orientation="Horizontal">
+					<TextBox x:Name="txtSearch" Grid.Column="0"
+						 Width="750" Height="35"
 						 Margin="5" Padding="5"
 						 HorizontalAlignment="Left"
 						 VerticalContentAlignment="Center"
 						 Watermark="Search by Product Name or Number"/>
-				<TextBox x:Name="TextBoxQuanityt" Grid.Column="0"
-						 Watermark="Quantity"
-						 Width="100" Height="35"
-						 Margin="5"/>
+					<TextBox x:Name="TextBoxQuanityt" Grid.Column="0"
+							 Watermark="Quantity"
+							 Width="100" Height="35"
+							 Margin="5"/>
+				</StackPanel>
 			</Grid>
 
 			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
 					  CornerRadius="5" Margin="5" Background="White"
 					  GridLinesVisibility="All" AutoGenerateColumns="False"
 					  ColumnWidth="*" BorderBrush="LightGray" BorderThickness="1"
-				  ItemsSource="{Binding BillItems}">
+					  ItemsSource="{Binding BillItems}">
 				<DataGrid.Columns>
+					<DataGridTemplateColumn Width="25">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<ctrl:IconButton Width="25" Height="25"
+												 Tag="Delete"
+												 Click="IconButton_Click"
+												 Icon="avares://KBilling/Assets/cross.png"/>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 					<DataGridTextColumn IsReadOnly="True" Header="#"
-										Width="75"
+										Width="50"
 										Binding="{Binding No}"/>
 					<DataGridTextColumn Header="Code" IsReadOnly="True"
 										Binding="{Binding ProductId}"/>
@@ -85,7 +98,8 @@
 					<DataGridTemplateColumn>
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
-								<TextBox Text="{Binding Quantity}"/>
+								<TextBox Text="{Binding Quantity}"
+										 TextChanged="TextBox_TextChanged"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
@@ -103,6 +117,7 @@
 					   Content="{Binding BillHeader.Itemcount}"
 					   Classes="small"/>
 				<Button Grid.Column="0"
+						x:Name="BtnClearAll"
 						Content="Clear All"
 						Classes="medium"
 						Margin="150,0"/>

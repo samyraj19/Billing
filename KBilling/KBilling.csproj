@@ -10,6 +10,7 @@
     <RootNamespace>KBilling</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\cross.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
   </ItemGroup>
@@ -30,11 +31,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="Assets\cross.png" />
     <AvaloniaResource Include="Assets\delete.png" />
     <AvaloniaResource Include="Assets\edit.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DialogWin\ProductLookupDialog.axaml.cs">
+      <DependentUpon>ProductLookupDialog.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

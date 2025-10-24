@@ -14,15 +14,6 @@
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
-		<Style Selector="DataGrid">
-			<Setter Property="Background" Value="White"/>
-			<Setter Property="BorderBrush" Value="Gray"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="GridLinesVisibility" Value="All"/>
-			<Setter Property="ColumnWidth" Value="*"/>
-			<Setter Property="AutoGenerateColumns" Value="False"/>
-			<Setter Property="CornerRadius" Value="2"/>
-		</Style>
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" ColumnDefinitions="8* 98*">
 		<Border Grid.Row="0" BorderThickness="0,0,2,0" BorderBrush="LightGray">
