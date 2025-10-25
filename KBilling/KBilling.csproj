@@ -10,6 +10,12 @@
     <RootNamespace>KBilling</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <AvaloniaXaml Remove="Data\**" />
+    <Compile Remove="Data\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <None Remove="Data\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Assets\cross.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
@@ -34,10 +40,6 @@
     <AvaloniaResource Include="Assets\cross.png" />
     <AvaloniaResource Include="Assets\delete.png" />
     <AvaloniaResource Include="Assets\edit.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 
   <ItemGroup>

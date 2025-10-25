@@ -18,10 +18,11 @@ namespace KBilling.Helper {
       }
 
       /// <summary>Checks if the input string is a valid phone number (digits only, optional +).</summary>
-      public static bool PhoneNumber (string? input) {
+      public static bool IsTenDigit (string? input) {
          if (string.IsNullOrWhiteSpace (input)) return false;
-         var pattern = @"^\+?\d+$";
-         return Regex.IsMatch (input, pattern);
+         var s = input.Trim ();
+         if (s.Length > 10) return false;
+         return true;
       }
 
       /// <summary>Checks if the input string is not null or whitespace.</summary>

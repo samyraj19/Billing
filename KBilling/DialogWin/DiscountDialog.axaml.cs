@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -16,6 +17,15 @@ public partial class DiscountDialog : Window {
       Unloaded += Unload;
    }
 
+   void OnLoaded (object? sender, RoutedEventArgs e) {
+      BtnAdd.Click += (s, e) => AddDiscount ();
+      BtnCancel.Click += (s, e) => Close ();
+      KeyDown += OnKeyDown;
+      TextboxDiscount.AddHandler (InputElement.TextInputEvent, OnDisTextInput, RoutingStrategies.Tunnel);
+   }
+
+   void OnDisTextInput (object? sender, TextInputEventArgs e) => e.Handled = string.IsNullOrEmpty (e.Text) || !e.Text.All (char.IsDigit);
+
    void Unload (object? sender, RoutedEventArgs e) {
       BtnAdd.Click -= (s, e) => Close ();
       BtnCancel.Click -= (s, e) => Close ();
@@ -26,20 +36,14 @@ public partial class DiscountDialog : Window {
       else if (e.Key == Key.Escape) Close ();
    }
 
-   void OnLoaded (object? sender, RoutedEventArgs e) {
-      BtnAdd.Click += (s, e) => AddDiscount ();
-      BtnCancel.Click += (s, e) => Close ();
-      KeyDown += OnKeyDown;
-   }
-
    void AddDiscount () {
       Discount = decimal.TryParse (TextboxDiscount.Text, out var discount) ? discount : 0m;
-      DiscountApplied.Invoke(discount);
+      DiscountApplied?.Invoke (discount);
       Close ();
    }
 
    #region Fields
    public decimal Discount { get; private set; } = 0m;
-   public event Action<decimal> DiscountApplied;
+   public event Action<decimal>? DiscountApplied;
    #endregion
 }
