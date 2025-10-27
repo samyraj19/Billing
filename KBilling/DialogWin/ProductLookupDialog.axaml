@@ -20,6 +20,7 @@
 				 Margin="2"
 				 Watermark="Search by Product Name or Number"/>
 		<DataGrid Grid.Row="1" ColumnWidth="*"
+				  x:Name="DataGridProducts"
 				  ItemsSource="{Binding FilterProducts}">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Code" IsReadOnly="True"

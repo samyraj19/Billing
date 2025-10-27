@@ -13,13 +13,13 @@
 	</UserControl.DataContext>
 	<UserControl.Styles>
 		<Style Selector="Button.medium">
+			<Setter Property="Width" Value="120"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="Margin" Value="5,0"/>
 			<Setter Property="Background" Value="#2b7fff"/>
 			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="Width" Value="125"/>
-			<Setter Property="Height" Value="35"/>
-			<Setter Property="Margin" Value="5"/>
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
 		<Style Selector="Border">
 			<Setter Property="BorderBrush" Value="LightGray"/>
@@ -63,10 +63,6 @@
 						 HorizontalAlignment="Left"
 						 VerticalContentAlignment="Center"
 						 Watermark="Search by Product Name or Number"/>
-					<TextBox x:Name="TextBoxQuantity" Grid.Column="0"
-							 Watermark="Quantity"
-							 Width="100" Height="35"
-							 Margin="5"/>
 				</StackPanel>
 			</Grid>
 
@@ -87,7 +83,7 @@
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
 					<DataGridTextColumn IsReadOnly="True" Header="#"
-										Width="50"
+										Width="57"
 										Binding="{Binding No}"/>
 					<DataGridTextColumn Header="Code" IsReadOnly="True"
 										Binding="{Binding ProductId}"/>
@@ -95,11 +91,11 @@
 										Binding="{Binding ProductName}"/>
 					<DataGridTextColumn Header="Price" IsReadOnly="True"
 										Binding="{Binding Price}"/>
-					<DataGridTemplateColumn>
+					<DataGridTemplateColumn Header="Qty.">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<TextBox Text="{Binding Quantity}"
-										 TextChanged="TextBox_TextChanged"/>
+										 TextChanged="OnGridQtyTxtChaning"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
@@ -135,7 +131,7 @@
 		<Border Grid.Column="1"
 				BorderBrush="LightGray" BorderThickness="1,0"
 				Padding="5,0">
-			<Grid  RowDefinitions="23* 13* 20* 46*">
+			<Grid  RowDefinitions="23* 15* 20* 44*">
 				<HeaderedContentControl Grid.Row="0" Margin="0,5,5,5"
 										Background="White"
 										Header="Bill Details">
@@ -176,15 +172,21 @@
 				<HeaderedContentControl Grid.Row="1" Margin="0,10,5,5"
 										Header="Payment Details">
 						<StackPanel Orientation="Horizontal"
-									HorizontalAlignment="Center" VerticalAlignment="Center">
-							<Button Content="Cash" Classes="medium"/>
-							<Button Content="Online" Classes="medium"/>
+									x:Name="PayPanel"
+									Margin="0,5,0,5"
+									HorizontalAlignment="Center" 
+									VerticalAlignment="Center">
+							<ToggleButton Content="Cash"
+										  x:Name="ToggleCash"
+										  Classes="paytoggle"/>
+							<ToggleButton Content="Online" Classes="paytoggle"/>
 						</StackPanel>
 				</HeaderedContentControl>
 
 				<HeaderedContentControl Grid.Row="2" Margin="0,10,5,5"
 										Header="Customer Details">
-					<Grid RowDefinitions="* *" ColumnDefinitions="25* 75*">
+					<Grid RowDefinitions="* *" ColumnDefinitions="25* 75*"
+						  Margin="0,5,0,0">
 						<Label Grid.Row="0" Grid.Column="0" Classes="h1"
 								   Content="Name"/>
 						<Label Grid.Row="1" Grid.Column="0" Classes="h1"
@@ -192,10 +194,12 @@
 						
 						<TextBox Grid.Row="0" Grid.Column="1"
 								 x:Name="TextboxName"
+								 Text="{Binding BillHeader.CustomerName,Mode=TwoWay}"
 								 Margin="0,5"
 								 Width="200" Height="30"/>
 						<TextBox Grid.Row="1" Grid.Column="1"
 								 x:Name="TextboxPhone"
+								 Text="{Binding BillHeader.CustomerPhone,Mode=TwoWay}"
 								 Margin="2"
 								 Width="200" Height="30"/>
 					</Grid>
@@ -203,6 +207,7 @@
 				</HeaderedContentControl>
 				
 				<Button Grid.Row="3"
+						x:Name="BtnPayBill"
 					    Content="Pay Bill"
 						HorizontalAlignment="Center"
 						Width="250" Height="40"

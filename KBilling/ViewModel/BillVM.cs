@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,27 +9,36 @@ namespace KBilling.ViewModel {
    public partial class BillVM : BillDetails {
       public BillVM () {
          BillItems = new ();
-         BillItems.CollectionChanged += Collectionchanged;
-         TestData ();
+         BillItems.CollectionChanged += CollectionChanged;
       }
 
-      void Collectionchanged (object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
-         BillHeader.SubTotal = SubTotal ();  
+      void CollectionChanged (object? sender, NotifyCollectionChangedEventArgs e) {
+         BillHeader.SubTotal = SubTotal ();
          BillHeader.Total = Total (BillHeader.Discount);
          BillHeader.Itemcount = BillItems.Count (x => x.BillId != null);
       }
 
-      void TestData () {
-         BillItems.Add (new Model.BillDetails () { BillId = "B001", Price = 50, ProductId = "P001", ProductName = "Product 1", Quantity = 5 });
-         BillItems.Add (new Model.BillDetails () { BillId = "B002", Price = 100, ProductId = "P002", ProductName = "Product 2", Quantity = 2 });
-         BillItems.Add (new Model.BillDetails () { BillId = "B003", Price = 75, ProductId = "P003", ProductName = "Product 3", Quantity = 2 });
+      public void AddItem (Product product) {
+         BillItems.Add (new BillDetails {
+            BillId = BillHeader.BillId,
+            ProductId = product.ProductNumber,
+            ProductName = product.ProductName,
+            Price = product.SellingRate,
+         });
       }
 
+      public void ClearAll () => BillItems.Clear ();
+
       public decimal SubTotal () => BillItems.Sum (item => item.Amount);
-      
+
       public decimal Total (decimal discount) => SubTotal () - discount;
 
-      public decimal UpdateTotal() => SubTotal() - BillHeader.Discount;
+      public decimal UpdateTotal () => SubTotal () - BillHeader.Discount;
+
+      public void ResetBill () {
+         BillHeader = new ();
+         BillItems.Clear ();
+      }
 
       #region Fields
       [ObservableProperty] BillHeaderVM billHeader = new ();

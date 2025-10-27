@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using KBilling.Model;
 using KBilling.ViewModel;
 
 namespace KBilling;
@@ -21,6 +22,14 @@ public partial class ProductLookupDialog : Window {
    void OnLoad (object? sender, RoutedEventArgs e) {
       txtSearch.TextChanging += OnTextChanging;
       KeyDown += OnKeyDown;
+      DataGridProducts.DoubleTapped += OnDoubleTapped;
+   }
+
+   private void OnDoubleTapped (object? sender, TappedEventArgs e) {
+      if (DataGridProducts.SelectedItem is Product item) {
+         ProductSelected?.Invoke (item);
+         Close ();
+      }
    }
 
    void OnTextChanging (object? sender, TextChangingEventArgs e) {
@@ -33,5 +42,6 @@ public partial class ProductLookupDialog : Window {
 
    #region Fields
    UpdatePricingVM? VM => DataContext as UpdatePricingVM;
+   public event Action<Product>? ProductSelected;
    #endregion
 }

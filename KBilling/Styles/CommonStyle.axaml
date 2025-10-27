@@ -1,10 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
-    <Border Padding="20">
-      <!-- Add Controls for Previewer Here -->
-    </Border>
-  </Design.PreviewWith>
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<Style Selector="DataGrid">
 		<Setter Property="Background" Value="White"/>
@@ -14,5 +9,38 @@
 		<Setter Property="ColumnWidth" Value="*"/>
 		<Setter Property="AutoGenerateColumns" Value="False"/>
 		<Setter Property="CornerRadius" Value="2"/>
+	</Style>
+
+	<Style Selector="ToggleButton.paytoggle">
+		<Setter Property="Background" Value="LightGray"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Width" Value="125"/>
+		<Setter Property="Height" Value="35"/>
+		<Setter Property="Margin" Value="5"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border
+				Name="PART_BORDER"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="1"
+				CornerRadius="6"
+				Padding="{TemplateBinding Padding}"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch">
+					<ContentPresenter
+					Content="{TemplateBinding Content}"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"/>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	 <!-- When the ToggleButton with class 'medium' is checked, style its template's ContentPresenter -->
+	<Style Selector="ToggleButton.paytoggle:checked /template/ Border">
+		<Setter Property="Background" Value="#2b7fff"/>
 	</Style>
 </Styles>

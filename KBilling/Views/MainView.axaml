@@ -15,7 +15,7 @@
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
 	</UserControl.Styles>
-	<Grid x:Name="MainPanel" ColumnDefinitions="8* 98*">
+	<Grid x:Name="MainPanel" ColumnDefinitions="Auto 92*">
 		<Border Grid.Row="0" BorderThickness="0,0,2,0" BorderBrush="LightGray">
 			<Grid RowDefinitions="5* 95*" Background="White">
 				<Grid Grid.Row="0" Background="Transparent">
@@ -31,8 +31,6 @@
 				</StackPanel>
 			</Grid>
 		</Border>
-
-
 		<Grid Grid.Column="1" RowDefinitions="5* 95*">
 			<Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Background="#FFFFFF">
 				<Grid Grid.Row="0">
