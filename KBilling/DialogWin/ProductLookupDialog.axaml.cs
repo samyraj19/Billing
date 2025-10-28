@@ -41,7 +41,7 @@ public partial class ProductLookupDialog : Window {
    }
 
    #region Fields
-   UpdatePricingVM? VM => DataContext as UpdatePricingVM;
+   ProductVM? VM => DataContext as ProductVM;
    public event Action<Product>? ProductSelected;
    #endregion
 }

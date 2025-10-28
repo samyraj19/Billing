@@ -9,10 +9,10 @@
 			 Background="Transparent"
 			 CanResize="False"
 		     xmlns:vm="using:KBilling.ViewModel"
-		     x:DataType="vm:UpdatePricingVM"
+		     x:DataType="vm:ProductVM"
              x:Class="KBilling.ProductLookupDialog">
 	<Window.DataContext>
-		<vm:UpdatePricingVM/>
+		<vm:ProductVM/>
 	</Window.DataContext>
 	<Grid RowDefinitions="20* 80*">
 		<TextBox x:Name="txtSearch" Grid.Row="0"

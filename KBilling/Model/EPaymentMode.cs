@@ -1,14 +1,15 @@
 ﻿namespace KBilling.Model {
-   public enum PaymentMode {
+   public enum EPaymentMode {
+      None,
       Cash,
       Online,
    }
 
    public static class PaymentModeExtensions {
-      public static string Get (this PaymentMode mode) {
+      public static string Get (this EPaymentMode mode) {
          return mode switch {
-            PaymentMode.Cash => "Cash",
-            PaymentMode.Online => "Online",
+            EPaymentMode.Cash => "Cash",
+            EPaymentMode.Online => "Online",
             _ => "Unknown"
          };
       }

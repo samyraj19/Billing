@@ -16,23 +16,48 @@ public partial class AddProducts : UserControl {
    public AddProducts () {
       InitializeComponent ();
       Loaded += OnLoaded;
-      Unloaded += OnUnLoaded;
+      Unloaded += OnUnloaded;
+   }
+
+   void OnLoaded (object? sender, RoutedEventArgs e) {
+      // Attach events
       KeyDown += OnKeyDown;
-      SearchTxt.TextChanging += SearchTextChanging;
+      SearchTxt.TextChanging += OnSearchTextChanging;
+      BtnSubmit.Click += OnSubmitClicked;
+      BtnCancel.Click += OnCancelClicked;
+      DataGridProduct.SelectionChanged += OnSelectionChanged;
       EnterFocusHelper.Attach (MainPanel);
-      ProductNumberTextbox.AddHandler (InputElement.TextInputEvent, TextInputForInteger, RoutingStrategies.Tunnel);
-      txtQty.AddHandler (InputElement.TextInputEvent, TextInputForInteger, RoutingStrategies.Tunnel);
-      txtPurRate.AddHandler (InputElement.TextInputEvent, TextInputForDecimal, RoutingStrategies.Tunnel);
-      txtSellRate.AddHandler (InputElement.TextInputEvent, TextInputForDecimal, RoutingStrategies.Tunnel);
+
+      textCode.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
+      txtQty.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
+      txtPurRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
+      txtSellRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
    }
 
-   void SearchTextChanging (object? sender, TextChangingEventArgs e)
-      => VM?.UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
+   void OnUnloaded (object? sender, RoutedEventArgs e) {
+      // Detach events
+      KeyDown -= OnKeyDown;
+      SearchTxt.TextChanging -= OnSearchTextChanging;
+      BtnSubmit.Click -= OnSubmitClicked;
+      BtnCancel.Click -= OnCancelClicked;
+      DataGridProduct.SelectionChanged -= OnSelectionChanged;
 
-   void OnLoaded (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-      BtnSubmit.Click += (s, ev) => Submit();
-      BtnCancel.Click += (s, ev) => VM?.Clear ();
+      textCode.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
+      txtQty.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
+      txtPurRate.RemoveHandler (InputElement.TextInputEvent, OnTextInputDecimal);
+      txtSellRate.RemoveHandler (InputElement.TextInputEvent, OnTextInputDecimal);
    }
+
+   #region Event Handlers
+   void OnSearchTextChanging (object? sender, TextChangingEventArgs e) => VM ().UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
+
+   void OnSubmitClicked (object? sender, RoutedEventArgs e) => Submit ();
+
+   void OnCancelClicked (object? sender, RoutedEventArgs e) => Clear ();
+
+   void OnSelectionChanged (object? sender, SelectionChangedEventArgs e) => mSelItem = DataGridProduct.SelectedItem as Product;
+
+   void OnTextInputInteger (object? sender, TextInputEventArgs e) => e.Handled = !int.TryParse (e.Text, out _);
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
       if (e.Key == Key.Enter) {
@@ -41,58 +66,56 @@ public partial class AddProducts : UserControl {
       }
    }
 
-   void OnUnLoaded (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-      KeyDown -= OnKeyDown;
-      BtnCancel.Click -= (s, ev) => VM?.Clear ();
-      BtnCancel.Click -= (s, ev) => VM?.Clear ();
-      BtnSubmit.Click -= (s, ev) => Submit ();
+   void OnTextInputDecimal (object? sender, TextInputEventArgs e) {
+      if (e.Source is not TextBox tb || string.IsNullOrEmpty (e.Text)) return;
+
+      if (!e.Text.All (c => char.IsDigit (c) || c == '.') || (e.Text.Contains ('.') && tb.Text.Contains ('.')))
+         e.Handled = true;
    }
 
-   void TextInputForInteger (object? sender, TextInputEventArgs e)
-      => e.Handled = !int.TryParse (e.Text, out _);
-
-   void TextInputForDecimal (object? sender, TextInputEventArgs e) {  // Only digits or dot
-      if (!string.IsNullOrEmpty (e.Text) && !e.Text.All (c => char.IsDigit (c) || c == '.')) e.Handled = true;
-      // Prevent more than one dot
-      if (sender is TextBox tb && e.Text.Contains ('.') && tb.Text.Contains ('.')) e.Handled = true;
+   void OnIconButtonClick (object? sender, RoutedEventArgs e) {
+      if ((sender as Button)?.Tag?.ToString () is not string action) return;
+      mAction = action.GetEAction ();
+      if (mSelItem is Product item) {
+         if (action.IsDelete ()) DeleteAsync (item);
+         else if (action.IsEdit ()) {
+            textCode.IsEnabled = false;
+            VM ().Edit (item);
+         }
+      } else AppMsg.AskItem ();
    }
-
-   async void IconButton_Click (object? sender, RoutedEventArgs e) {
-      if ((sender as Button)?.Tag?.ToString () is string action) {
-         mAction = action.GetEAction ();
-         if (action.IsDelete ()) DeleteAsync ();
-         else if (action.IsEdit () && mSelectedItem.IsProductClass()) VM?.Edit (mSelectedItem);
-      }
-   }
-
-   void DataGrid_SelectionChanged (object? sender, SelectionChangedEventArgs e)
-      => mSelectedItem = DataGridProduct.SelectedItem as Product;
+   #endregion
 
    #region Methods
    void Submit () {
-      if (VM.CanSubmit ()) {
-         VM.AddOrUpdateProductInList (VM, mAction);
-         VM?.Clear ();
-         mAction = EAction.None;
+      if (VM ().CanSubmit ()) {
+         int code = mAction.IsEdit () ? mSelItem?.ProductNumber ?? 0 : -1;
+         VM ().AddOrUpdate (VM (), code);
+         Clear ();
       }
    }
 
-   async void DeleteAsync () {
+   async void DeleteAsync (Product item) {
+      var box = await AppMsg.AskDelItem ();
+      if (box == ButtonResult.Yes) VM ().DeleteItem (item);
+   }
 
-      if (!mSelectedItem.IsProductClass()) {
-         await MessageBoxManager.GetMessageBoxStandard ("Select Item", "Please select an item.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
-         return;
-      }
-      var box = MessageBoxManager.GetMessageBoxStandard ("Delete Item", "Are you sure you want to delete this item?", ButtonEnum.YesNo, Icon.Success);
-      var result = await box.ShowAsync ();
-      if (result == ButtonResult.Yes) VM?.DeleteItem (mSelectedItem!);
+   ProductVM VM () {
+      if (DataContext is ProductVM vm) return vm;
+      else throw new InvalidOperationException ("DataContext is not of type ProductVM");
+   }
+
+   void Clear () {
+      VM ().Clear ();
+      VM ().Refersh ();
+      textCode.IsEnabled = true;
+      mAction = EAction.None;
    }
 
    #endregion
 
    #region Fields
-   ProductVM? VM => DataContext as ProductVM;
-   Product? mSelectedItem = null;
+   Product? mSelItem = null;
    EAction mAction = EAction.None;
    #endregion
 }

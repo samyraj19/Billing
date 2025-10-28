@@ -24,4 +24,10 @@ namespace KBilling.Helper {
               .GetMessageBoxStandard (title, message, ButtonEnum.YesNo, Icon.Question)
               .ShowAsync ();
    }
+
+   public static class AppMsg {
+      public static Task<ButtonResult> AskItem () => MsgBox.ShowErrorAsync ("Select Item", "Please select an item.");
+
+      public static Task<ButtonResult> AskDelItem () => MsgBox.ShowConfirmAsync ("Delete Item", "Are you sure you want to delete this item?");
+   }
 }

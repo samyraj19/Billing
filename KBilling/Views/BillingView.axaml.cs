@@ -37,6 +37,17 @@ public partial class BillingView : UserControl {
       txtSearch.Focus ();
    }
 
+   void OnUnloaded (object? sender, RoutedEventArgs e) {
+      // detach handlers to avoid leaks and double subscriptions
+      if (BtnDiscount is not null) BtnDiscount.Click -= OnDiscountClick;
+      if (DataGridProduct is not null) DataGridProduct.SelectionChanged -= DataGridSelectionChanged;
+      if (BtnClearAll is not null) BtnClearAll.Click -= BtnClearAllClick;
+      if (txtSearch is not null) txtSearch.KeyDown -= OnSearchTextKeyDown;
+
+      if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.TextInputEvent, OnTextBoxTextInput);
+      if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp);
+   }
+
    void SetUpToggleEvent () {
       var toggles = PayPanel.Children.OfType<ToggleButton> ().ToList ();
       foreach (var btn in toggles) btn.IsCheckedChanged += OnToggleChecked;
@@ -50,31 +61,22 @@ public partial class BillingView : UserControl {
          if (!ReferenceEquals (other, clicked)) other.IsChecked = false;
 
       // Update payment mode
-      mPaymode = ToggleCash.IsChecked == true ? PaymentMode.Cash : PaymentMode.Online;
+      mPaymode = ToggleCash.IsChecked == true ? EPaymentMode.Cash : EPaymentMode.Online;
       GetVM ().BillHeader.PaymentMethod = mPaymode.Get ();
    }
 
    async void OnPayClick (object? sender, RoutedEventArgs e) {
+      if (!GetVM ().CanPay ()) return;
       var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", "Are you sure you want to proceed to payment?" + mPaymode.Get ());
-      if (confirm == ButtonResult.Yes) GetVM ().ResetBill ();
-      await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
-   }
-
-   void OnUnloaded (object? sender, RoutedEventArgs e) {
-      // detach handlers to avoid leaks and double subscriptions
-      if (BtnDiscount is not null) BtnDiscount.Click -= OnDiscountClick;
-      if (DataGridProduct is not null) DataGridProduct.SelectionChanged -= DataGridSelectionChanged;
-      if (BtnClearAll is not null) BtnClearAll.Click -= BtnClearAllClick;
-      if (txtSearch is not null) txtSearch.KeyDown -= OnSearchTextKeyDown;
-
-      if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.TextInputEvent, OnTextBoxTextInput);
-      if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp);
+      if (confirm == ButtonResult.Yes) {
+         await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
+         GetVM ().ResetBill ();
+         ClearPaymethod ();
+      } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
    }
 
    void OnTxtPhoneKeyUp (object? sender, KeyEventArgs e) {
-      if (TextboxPhone?.Text is { Length: > 10 } text) {
-         TextboxPhone.Text = text[..10]; // take first 10 digits only
-      }
+      if (TextboxPhone?.Text is { Length: > 10 } text) TextboxPhone.Text = text[..10]; // take first 10 digits only
    }
 
    void OnTextBoxTextInput (object? sender, TextInputEventArgs e) => e.Handled = string.IsNullOrEmpty (e.Text) || !e.Text.All (char.IsDigit);
@@ -92,7 +94,7 @@ public partial class BillingView : UserControl {
    }
 
    void BtnClearAllClick (object? sender, RoutedEventArgs e) {
-      VM?.ResetBill ();
+      GetVM ().ResetBill ();
       GetVM ().BillItems.Clear ();
    }
 
@@ -108,9 +110,7 @@ public partial class BillingView : UserControl {
       if (sender is not TextBox textBox) return;
 
       string input = textBox.Text ?? string.Empty;
-      if (input.Trim ().Length > 0 && !Is.Integer (input)) {
-         textBox.Text = input[..^1]; // remove last invalid char
-      }
+      if (input.Trim ().Length > 0 && !Is.Integer (input)) textBox.Text = input[..^1]; // remove last invalid char
 
       if (Is.NotEmpty (textBox.Text)) UpdateTot ();
    }
@@ -141,15 +141,22 @@ public partial class BillingView : UserControl {
       GetVM ().BillHeader.Total = GetVM ().UpdateTotal ();
    }
 
-   BillVM GetVM () => VM ?? throw new InvalidOperationException ("DataContext is not BillVM");
+   void ClearPaymethod () {
+      GetVM ().BillHeader.PaymentMethod = EPaymentMode.None.Get ();
+      PayPanel.Children.OfType<ToggleButton> ().ToList ().ForEach (btn => btn.IsChecked = false);
+   }
+
+   BillVM GetVM () {
+      if (DataContext is BillVM vm) return vm;
+      throw new InvalidOperationException ("DataContext is not set or not of type BillVM.");
+   }
 
    #endregion
 
    #region Fields
    readonly WindowManager mManager = new ();
-   BillVM? VM => DataContext as BillVM;
    BillDetails? mSelectedItem;
-   PaymentMode mPaymode;
+   EPaymentMode mPaymode;
    #endregion
 
 }

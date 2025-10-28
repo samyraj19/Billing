@@ -33,7 +33,7 @@
 				<TextBox Grid.Row="1" Grid.Column="0"
 						 Text="{Binding ProductName,Mode=TwoWay}"/>
 				<TextBox Grid.Row="1" Grid.Column="1"
-						 x:Name="ProductNumberTextbox"
+						 x:Name="textCode"
 						 Text="{Binding ProductNumber,Mode=TwoWay}"/>
 				<TextBox x:Name="txtPurRate"
 						 Grid.Row="1" Grid.Column="2"
@@ -74,7 +74,6 @@
 										 Icon="avares://KBilling/Assets/search.png" Margin="5,0"/>-->
 			</StackPanel>
 			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
-				  SelectionChanged="DataGrid_SelectionChanged"
 				  ItemsSource="{Binding FilterProducts}">
 				<DataGrid.Columns>
 					<DataGridTextColumn IsReadOnly="True" Header="#"
@@ -98,11 +97,11 @@
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 									<CustomContrl:IconButton Width="25" Height="25" 
 															 Tag="Delete"
-															 Click="IconButton_Click"
+															 Click="OnIconButtonClick"
 															 Icon="avares://KBilling/Assets/delete.png"/>
 									<CustomContrl:IconButton Width="25" Height="25" 
 															 Tag="Edit"
-															 Click="IconButton_Click"
+															 Click="OnIconButtonClick"
 															 Icon="avares://KBilling/Assets/edit.png"/>
 								</StackPanel>
 							</DataTemplate>
