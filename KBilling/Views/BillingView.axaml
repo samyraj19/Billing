@@ -85,11 +85,11 @@
 					<DataGridTextColumn IsReadOnly="True" Header="#"
 										Width="57"
 										Binding="{Binding No}"/>
-					<DataGridTextColumn Header="Code" IsReadOnly="True"
-										Binding="{Binding ProductId}"/>
-					<DataGridTextColumn Header="Name" IsReadOnly="True"
+					<DataGridTextColumn Header="Items" IsReadOnly="True"
 										Binding="{Binding ProductName}"/>
-					<DataGridTextColumn Header="Price" IsReadOnly="True"
+					<DataGridTextColumn Header="Item Code" IsReadOnly="True"
+										Binding="{Binding ProductId}"/>
+					<DataGridTextColumn Header="SP (₹)" IsReadOnly="True"
 										Binding="{Binding Price}"/>
 					<DataGridTemplateColumn Header="Qty.">
 						<DataGridTemplateColumn.CellTemplate>
@@ -99,7 +99,7 @@
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
-					<DataGridTextColumn Header="Amount" IsReadOnly="True"
+					<DataGridTextColumn Header="Amount (₹)" IsReadOnly="True"
 										Binding="{Binding Amount}"/>
 				
 				</DataGrid.Columns>
@@ -131,7 +131,7 @@
 		<Border Grid.Column="1"
 				BorderBrush="LightGray" BorderThickness="1,0"
 				Padding="5,0">
-			<Grid  RowDefinitions="23* 15* 20* 44*">
+			<Grid  RowDefinitions="23* 15* 20* 15* 29*">
 				<HeaderedContentControl Grid.Row="0" Margin="0,5,5,5"
 										Background="White"
 										Header="Bill Details">
@@ -205,8 +205,23 @@
 					</Grid>
 
 				</HeaderedContentControl>
+
+				<HeaderedContentControl Grid.Row="3" Margin="0,10,5,5"
+										Header="Received Amount">
+					<Grid RowDefinitions="* *"
+						  Margin="0,5,0,0">
+						<CheckBox x:Name="chkReceived" Grid.Row="0"  
+								  IsChecked="true"
+								  Content="Same As total amount"/>
+						<TextBox Grid.Row="1" x:Name="txtRecvAmt"
+								 IsEnabled="{Binding !IsChecked, ElementName=chkReceived}"
+								 Text="{Binding BillHeader.ReceivedAmount,Mode=TwoWay}"/>
+						
+					</Grid>
+
+				</HeaderedContentControl>
 				
-				<Button Grid.Row="3"
+				<Button Grid.Row="4"
 						x:Name="BtnPayBill"
 					    Content="Pay Bill"
 						HorizontalAlignment="Center"

@@ -18,20 +18,21 @@ namespace KBilling.ViewModel {
       public ProductVM () {
          AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
          FilterProducts.CollectionChanged += RenumberProducts;
-         TestData ();
       }
 
       #region Methods
 
-      void TestData () {
+      public void LoadData () {
+         string? user = AppSession.CurrentUser?.Username;
+         string? date = DateTime.Now.ToString ("dd-MM-yyyy HH:mm:ss");
          var products = new[]
          {
-            new Product { ProductName = "Product A", ProductNumber = 101, PurchaseRate = 100, SellingRate = 150, Quantity = 50 },
-            new Product { ProductName = "Product B", ProductNumber = 102, PurchaseRate = 200, SellingRate = 300, Quantity = 30 },
-            new Product { ProductName = "Product C", ProductNumber = 103, PurchaseRate = 150, SellingRate = 225, Quantity = 20 },
-            new Product { ProductName = "Product D", ProductNumber = 104, PurchaseRate = 250, SellingRate = 375, Quantity = 10 },
+            new Product { ProductName = "Product A", ProductNumber = 101, PurchaseRate = 100, SellingRate = 150, Quantity = 50,Createdby = user,Createddate = date },
+            new Product { ProductName = "Product B", ProductNumber = 102, PurchaseRate = 200, SellingRate = 300, Quantity = 30 ,Createdby = user,Createddate = date},
+            new Product { ProductName = "Product C", ProductNumber = 103, PurchaseRate = 150, SellingRate = 225, Quantity = 20,Createdby = user ,Createddate = date},
+            new Product { ProductName = "Product D", ProductNumber = 104, PurchaseRate = 250, SellingRate = 375, Quantity = 10,Createdby = user,Createddate = date },
         };
-
+         AllProducts?.Clear ();
          AllProducts?.AddRange (products);
          UpdateFilter (string.Empty);
       }

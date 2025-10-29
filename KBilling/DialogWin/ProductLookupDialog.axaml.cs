@@ -23,6 +23,7 @@ public partial class ProductLookupDialog : Window {
       txtSearch.TextChanging += OnTextChanging;
       KeyDown += OnKeyDown;
       DataGridProducts.DoubleTapped += OnDoubleTapped;
+      VM ().LoadData ();
    }
 
    private void OnDoubleTapped (object? sender, TappedEventArgs e) {
@@ -33,15 +34,19 @@ public partial class ProductLookupDialog : Window {
    }
 
    void OnTextChanging (object? sender, TextChangingEventArgs e) {
-      VM?.UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
+      VM().UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
    }
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
       if (e.Key == Key.Escape) Close ();
    }
 
+   ProductVM VM () {
+      if (DataContext is ProductVM vm) return vm;
+      else throw new InvalidOperationException ("DataContext is not of type ProductVM");
+   }
+
    #region Fields
-   ProductVM? VM => DataContext as ProductVM;
    public event Action<Product>? ProductSelected;
    #endregion
 }

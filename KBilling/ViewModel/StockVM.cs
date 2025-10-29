@@ -1,20 +1,22 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using KBilling.Model;
 
 namespace KBilling.ViewModel {
-   public class StockVM : Stock {
-      public StockVM () { 
-         TestData (); 
+   public partial class StockVM : ProductVM {
+
+      public StockVM () {
+         UpdateStock ();
       }
 
-      void TestData () {
-         Stocks.Add (new Stock { ProductName = "Test Product 1", ProductNumber = 1001, Quantity = 50 });
-         Stocks.Add (new Stock { ProductName = "Test Product 2", ProductNumber = 1002, Quantity = 30 });
-         Stocks.Add (new Stock { ProductName = "Test Product 3", ProductNumber = 1003, Quantity = 20 });
-      }
+      void UpdateStock () => FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToDisplay ());
 
-      #region Fields
-      public ObservableCollection<Stock> Stocks { get; set; } = [];
-      #endregion
+      StockLevel Get (decimal? qty) => qty switch {
+         <= 0 => StockLevel.OutOfStock,
+         <= 5 => StockLevel.Low,
+         <= 20 => StockLevel.Medium,
+         _ => StockLevel.High
+      };
    }
 }

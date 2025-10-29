@@ -12,7 +12,7 @@
 	<Grid RowDefinitions="5* 95*">
 		<DataGrid x:Name="DataGridStock" Grid.Row="1"
 				  Margin="5" ColumnWidth="*"
-				  ItemsSource="{Binding Stocks}">
+				  ItemsSource="{Binding FilterProducts}">
 			<DataGrid.Columns>
 				<DataGridTextColumn IsReadOnly="True" Header="#"
 									Width="60"
@@ -24,7 +24,7 @@
 				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
 									Binding="{Binding Quantity}"/>
 				<DataGridTextColumn Header="Selling ate" IsReadOnly="True"
-									Binding="{Binding Sellingrate}"/>
+									Binding="{Binding SellingRate}"/>
 				<DataGridTextColumn Header="Status" IsReadOnly="True"
 									Binding="{Binding Status}"/>
 				<DataGridTextColumn Header="Level" IsReadOnly="True"

@@ -17,7 +17,10 @@ public partial class MainView : UserControl {
 
    void OnLoad (object? sender, RoutedEventArgs e) {
       bool isAdmin = AppSession.Role == EUserRoles.Admin;
-      if (isAdmin) mViewManager.ShowView ("DashBoard");
+      if (isAdmin) {
+         mViewManager.ShowView ("DashBoard");
+         ToDisplayHeader ("DashBoard");
+      }
       BtnPricing.IsVisible = isAdmin;
       BtnStock.IsVisible = isAdmin;
       BtnDashboard.IsVisible = isAdmin;
@@ -40,7 +43,12 @@ public partial class MainView : UserControl {
       BtnStock.Click -= (s, e) => ShowView ("StocksView");
    }
 
-   void ShowView (string key) => mViewManager.ShowView (key);
+   void ShowView (string key) {
+      mViewManager.ShowView (key);
+      ToDisplayHeader (key);
+   }
+
+   void ToDisplayHeader (string key) => lblHeader.Content = AppViewHeader.Get (key);
 
    #region Fields
    ViewManager mViewManager => new (ContentPanel);

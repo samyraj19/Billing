@@ -32,8 +32,10 @@ public partial class DiscountDialog : Window {
    }
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
-      if (e.Key == Key.Enter) AddDiscount ();
-      else if (e.Key == Key.Escape) Close ();
+      if (e.Key == Key.Enter) {
+         AddDiscount ();
+         e.Handled = true;
+      } else if (e.Key == Key.Escape) Close ();
    }
 
    void AddDiscount () {

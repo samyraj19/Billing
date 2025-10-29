@@ -25,6 +25,7 @@ namespace KBilling.Model {
       [ObservableProperty] decimal subTotal;
       [ObservableProperty] decimal discount;
       [ObservableProperty] decimal total;
+      [ObservableProperty] decimal receivedAmount;
       [ObservableProperty] string? paymentMethod = EPaymentMode.None.Get();
    }
 }

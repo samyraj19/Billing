@@ -21,64 +21,76 @@
 			<Setter Property="Margin" Value="5"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 		</Style>
-		<Style Selector="Border">
+		<Style Selector="Border.h1">
+			<Setter Property="BorderBrush" Value="LightGray"/>
+			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="Margin" Value="10"/>
 			<Setter Property="CornerRadius" Value="10"/>
 			<Setter Property="Padding" Value="5"/>
 		</Style>
+		
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" RowDefinitions="10* 20* 70*">
 		<Grid ColumnDefinitions="25* 75*" Grid.Row="0">
-			<Label Grid.Column="0" Content="Dashboard Overview" Classes="h1"/>
+			<Label Grid.Column="0" Content="📊 Dashboard Overview" Classes="h1"/>
+
+			<StackPanel Grid.Column="1"
+						x:Name="TogglePanel"
+						HorizontalAlignment="Right"
+						Orientation="Horizontal">
+				<ToggleButton Content="Daily" Classes="paytoggle"/>
+				<ToggleButton Content="Weekly" Classes="paytoggle"/>
+				<ToggleButton Content="Monthly" Classes="paytoggle"/>
+			</StackPanel>
 		</Grid>
 
 		<Grid Grid.Row="1" ColumnDefinitions="* * *">
-			<Border Grid.Column="0">
+			<Border Grid.Column="0" Classes="h1">
 				<StackPanel>
-					<Label Content="Total Items"/>
+					<Label Content="🧾 Total Items"/>
 					<Label Content="150" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
-			<Border Grid.Column="1">
+			<Border Grid.Column="1" Classes="h1">
 				<StackPanel>
-					<Label Content="Total Sales"/>
-					<Label Content="Rs.25,000" FontSize="24" FontWeight="Bold"/>
+					<Label Content="💰 Total Sales"/>
+					<Label Content="₹ 25,000" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
-			<Border Grid.Column="2">
+			<Border Grid.Column="2" Classes="h1">
 				<StackPanel>
-					<Label Content="Total Profits"/>
-					<Label Content="Rs.2,000" FontSize="24" FontWeight="Bold"/>
+					<Label Content="📈 Total Profits"/>
+					<Label Content="₹ 2,000" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 		</Grid>
 
 		<DataGrid Grid.Row="2" AutoGenerateColumns="False" x:Name="DataGridProduct"
-					  BorderThickness="1" BorderBrush="Gray"
+					  BorderThickness="1.5" BorderBrush="LightGray" Margin="10,5,10,5"
 					  GridLinesVisibility="All"
 					  ColumnWidth="*">
 			<DataGrid.Columns>
 				<DataGridTextColumn IsReadOnly="True" Header="#"
 									Width="75"/>
 				<DataGridTextColumn Header="Name" IsReadOnly="True"
-									/>
+									Width="150"/>
 				<DataGridTextColumn Header="Number" IsReadOnly="True"
-									/>
-				<DataGridTextColumn Header="Purchase Rate" IsReadOnly="True"
-									/>
-				<DataGridTextColumn Header="Selling Rate" IsReadOnly="True"
-									/>
+									Width="200"/>
+				<DataGridTextColumn Header="Pur. Rate" IsReadOnly="True"
+									Width="150"/>
+				<DataGridTextColumn Header="Sell. Rate" IsReadOnly="True"
+									Width="150"/>
 				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
-									/>
+									Width="125"/>
 				<DataGridTextColumn Header="Status" IsReadOnly="True"
-									/>
+									Width="125"/>
 				<DataGridTextColumn Header="Stock" IsReadOnly="True"
-									/>
+									Width="125"/>
 				<DataGridTextColumn Header="Added By" IsReadOnly="True"
-									/>
+									Width="125"/>
 				<DataGridTextColumn Header="Added Date" IsReadOnly="True"
-									/>
+									Width="125"/>
 
 			</DataGrid.Columns>
 		</DataGrid>

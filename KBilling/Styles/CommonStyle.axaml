@@ -11,6 +11,32 @@
 		<Setter Property="CornerRadius" Value="2"/>
 	</Style>
 
+	<Style Selector="DataGridColumnHeader">
+		<Setter Property="Background" Value="#fbfbfd" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="BorderBrush" Value="LightGray" />
+		<Setter Property="BorderThickness" Value="0,0,1,1" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+	</Style>
+
+	<Style Selector="DataGridRow">
+		<Setter Property="Background" Value="White"/>
+	</Style>
+
+	<!-- Hover (Pointer Over) -->
+	<Style Selector="DataGridRow:pointerover">
+		<Setter Property="Background" Value="#ccd5f0" />
+	</Style>
+
+	<!-- Selected Row -->
+	<Style Selector="DataGridRow:selected">
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="FontWeight" Value="Normal" />
+	</Style>
+
 	<Style Selector="ToggleButton.paytoggle">
 		<Setter Property="Background" Value="LightGray"/>
 		<Setter Property="Foreground" Value="White"/>

@@ -12,7 +12,7 @@ namespace KBilling.Services {
             RoleChanged?.Invoke (null, EventArgs.Empty); // notify everyone
          }
       }
-
+      public static string? HeaderTitle;
       public static bool IsLoggedIn => CurrentUser != null;
       public static EUserRoles? Role => CurrentUser?.Role;
 

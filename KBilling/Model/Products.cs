@@ -1,18 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using KBilling.ViewModel;
 
 namespace KBilling.Model {
    public partial class Product : ObservableObject {
-      [ObservableProperty] private int? no;
-      [ObservableProperty] private string? productName;
-      [ObservableProperty] private int? productNumber;
-      [ObservableProperty] private decimal? purchaseRate;
-      [ObservableProperty] private decimal? sellingRate;
-      [ObservableProperty] private decimal? quantity;
-      [ObservableProperty] private string? status;
-      [ObservableProperty] private string? createdby;
-      [ObservableProperty] private string? createddate;
-      [ObservableProperty] private string? modifiedby;
-      [ObservableProperty] private string? modifieddate;
+      [ObservableProperty] int? no;
+      [ObservableProperty] string? productName;
+      [ObservableProperty] int? productNumber;
+      [ObservableProperty] decimal? purchaseRate;
+      [ObservableProperty] decimal? sellingRate;
+      [ObservableProperty] decimal? quantity;
+      [ObservableProperty] string? status;
+      [ObservableProperty] string? stocklevel;
+      [ObservableProperty] string? createdby;
+      [ObservableProperty] string? createddate;
+      [ObservableProperty] string? modifiedby;
+      [ObservableProperty] string? modifieddate;
 
       Product? mOriginal;
 

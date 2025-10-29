@@ -11,14 +11,25 @@ namespace KBilling;
 public partial class PriceUpdateView : UserControl {
    public PriceUpdateView () {
       InitializeComponent ();
+      Loaded += OnLoad;
+      Unloaded += OnUnloaded;
+   }
+
+   void OnUnloaded (object? sender, RoutedEventArgs e) {
+      BtnUpdatePrices.Click -= BtnUpdatePrices_Click;
+   }
+
+   void OnLoad (object? sender, RoutedEventArgs e) {
       BtnUpdatePrices.Click += BtnUpdatePrices_Click;
+      VM ().LoadData ();
    }
 
    void BtnUpdatePrices_Click (object? sender, RoutedEventArgs e) {
-      var items = VM?.FilterProducts?.Where (p => p.IsModified()).ToList(); // Get modified items
+      var items = VM ().FilterProducts?.Where (p => p.IsModified ()).ToList (); // Get modified items
    }
 
-   #region Fields
-   UpdatePricingVM? VM => DataContext as UpdatePricingVM;
-   #endregion
+   UpdatePricingVM VM () {
+      if (DataContext is UpdatePricingVM vm) return vm;
+      throw new InvalidOperationException ("DataContext is not of type UpdatePricingVM");
+   }
 }

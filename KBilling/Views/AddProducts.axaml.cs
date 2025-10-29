@@ -32,6 +32,8 @@ public partial class AddProducts : UserControl {
       txtQty.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
       txtPurRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
       txtSellRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
+
+      VM ().LoadData ();
    }
 
    void OnUnloaded (object? sender, RoutedEventArgs e) {

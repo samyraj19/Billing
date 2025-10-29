@@ -12,6 +12,7 @@ using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using Avalonia.Input;
 using Avalonia.Controls.Primitives;
+using Avalonia.Threading;
 
 namespace KBilling;
 public partial class BillingView : UserControl {
@@ -31,6 +32,9 @@ public partial class BillingView : UserControl {
 
       TextboxPhone.AddHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp, RoutingStrategies.Tunnel);
       TextboxPhone.AddHandler (InputElement.TextInputEvent, OnTextBoxTextInput, RoutingStrategies.Tunnel);
+
+      //check box
+      chkReceived.IsCheckedChanged += OnReceivedAmtChanged;
 
       SetUpToggleEvent ();
       // focus on search box
@@ -62,17 +66,27 @@ public partial class BillingView : UserControl {
 
       // Update payment mode
       mPaymode = ToggleCash.IsChecked == true ? EPaymentMode.Cash : EPaymentMode.Online;
-      GetVM ().BillHeader.PaymentMethod = mPaymode.Get ();
+      VM ().BillHeader.PaymentMethod = mPaymode.Get ();
    }
 
    async void OnPayClick (object? sender, RoutedEventArgs e) {
-      if (!GetVM ().CanPay ()) return;
+      if (!VM ().CanPay ()) return;
       var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", "Are you sure you want to proceed to payment?" + mPaymode.Get ());
       if (confirm == ButtonResult.Yes) {
          await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
-         GetVM ().ResetBill ();
-         ClearPaymethod ();
+         VM ().ResetBill ();
+         ClearPaydetails ();
       } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+   }
+
+   void OnReceivedAmtChanged (object? sender, RoutedEventArgs e) {
+      // Always get the latest value safely
+      Dispatcher.UIThread.Post (() => {
+         bool isChecked = chkReceived.IsChecked == true;
+         txtRecvAmt.IsEnabled = !isChecked;
+
+         if (isChecked) VM ().BillHeader.ReceivedAmount = VM ().UpdateTotal ();
+      });
    }
 
    void OnTxtPhoneKeyUp (object? sender, KeyEventArgs e) {
@@ -94,8 +108,8 @@ public partial class BillingView : UserControl {
    }
 
    void BtnClearAllClick (object? sender, RoutedEventArgs e) {
-      GetVM ().ResetBill ();
-      GetVM ().BillItems.Clear ();
+      VM ().ResetBill ();
+      VM ().BillItems.Clear ();
    }
 
    void DataGridSelectionChanged (object? sender, SelectionChangedEventArgs e) => mSelectedItem = DataGridProduct.SelectedItem as BillDetails;
@@ -103,7 +117,7 @@ public partial class BillingView : UserControl {
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       var dialog = mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") as DiscountDialog;
       if (dialog is null) return;
-      dialog.DiscountApplied += (discount) => UpdateDisc (discount);
+      dialog.DiscountApplied += (discount) => UpdateBill (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
@@ -112,13 +126,13 @@ public partial class BillingView : UserControl {
       string input = textBox.Text ?? string.Empty;
       if (input.Trim ().Length > 0 && !Is.Integer (input)) textBox.Text = input[..^1]; // remove last invalid char
 
-      if (Is.NotEmpty (textBox.Text)) UpdateTot ();
+      if (Is.NotEmpty (textBox.Text)) UpdateBill ();
    }
 
    async void IconButton_Click (object? sender, RoutedEventArgs e) {
       var confirm = await MsgBox.ShowConfirmAsync ("Delete Item", "Are you sure?");
       if (confirm == ButtonResult.Yes) {
-         if (mSelectedItem is not null) GetVM ().BillItems.Remove (mSelectedItem);
+         if (mSelectedItem is not null) VM ().BillItems.Remove (mSelectedItem);
          else await MsgBox.ShowWarningAsync ("Select Item", "Please select an item.");
       }
    }
@@ -126,30 +140,28 @@ public partial class BillingView : UserControl {
 
    #region Medthods
    void Add (Product product) {
-      GetVM ().AddItem (product);
+      VM ().AddItem (product);
       txtSearch.Text = string.Empty;
       txtSearch.Focus ();
    }
 
-   void UpdateDisc (decimal discount) {
-      GetVM ().BillHeader.Discount = discount;
-      GetVM ().BillHeader.Total = GetVM ().Total (discount);
+   void UpdateBill (decimal? discount = null) {
+      var vm = VM ();
+
+      vm.BillHeader.SubTotal = vm.SubTotal ();
+      vm.BillHeader.Discount = discount ?? vm.BillHeader.Discount;
+
+      var total = discount.HasValue ? vm.Total (discount.Value) : vm.UpdateTotal ();
+      vm.BillHeader.Total = vm.BillHeader.ReceivedAmount = total;
    }
 
-   void UpdateTot () {
-      GetVM ().BillHeader.SubTotal = GetVM ().SubTotal ();
-      GetVM ().BillHeader.Total = GetVM ().UpdateTotal ();
-   }
-
-   void ClearPaymethod () {
-      GetVM ().BillHeader.PaymentMethod = EPaymentMode.None.Get ();
+   void ClearPaydetails () {
+      VM ().BillHeader.PaymentMethod = EPaymentMode.None.Get ();
       PayPanel.Children.OfType<ToggleButton> ().ToList ().ForEach (btn => btn.IsChecked = false);
+      chkReceived.IsChecked = true;
    }
 
-   BillVM GetVM () {
-      if (DataContext is BillVM vm) return vm;
-      throw new InvalidOperationException ("DataContext is not set or not of type BillVM.");
-   }
+   BillVM VM () => DataContext as BillVM ?? throw new InvalidOperationException ("DataContext is not of type BillVM");
 
    #endregion
 
