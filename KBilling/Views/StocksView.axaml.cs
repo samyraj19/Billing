@@ -18,7 +18,8 @@ public partial class StocksView : UserControl {
    }
 
    void OnLoaded (object? sender, RoutedEventArgs e) {
-     VM().LoadData ();
+      VM ().LoadData ();
+      VM ().UpdateStock ();
    }
 
    StockVM VM () {

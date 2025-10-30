@@ -32,8 +32,8 @@
 		
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" RowDefinitions="10* 20* 70*">
-		<Grid ColumnDefinitions="25* 75*" Grid.Row="0">
-			<Label Grid.Column="0" Content="📊 Dashboard Overview" Classes="h1"/>
+		<Grid ColumnDefinitions="30* 70*" Grid.Row="0">
+			<Label Grid.Column="0" Content="🧾 Business Overview" Classes="h1"/>
 
 			<StackPanel Grid.Column="1"
 						x:Name="TogglePanel"

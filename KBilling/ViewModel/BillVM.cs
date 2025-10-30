@@ -16,10 +16,7 @@ namespace KBilling.ViewModel {
 
       void CollectionChanged (object? sender, NotifyCollectionChangedEventArgs e) {
          for (int i = 0; i < BillItems?.Count; i++) BillItems[i].No = i + 1;
-         BillHeader.SubTotal = SubTotal ();
-         BillHeader.Total = Total (BillHeader.Discount);
-         BillHeader.ReceivedAmount = Total (BillHeader.Discount);
-         BillHeader.Itemcount = BillItems.Count ();
+         UpdateBill ();
       }
 
       public void AddItem (Product product) {
@@ -31,13 +28,14 @@ namespace KBilling.ViewModel {
          });
       }
 
-      public void ClearAll () => BillItems.Clear ();
-
-      public decimal SubTotal () => BillItems.Sum (item => item.Amount);
-
-      public decimal Total (decimal discount) => SubTotal () - discount;
-
-      public decimal UpdateTotal () => SubTotal () - BillHeader.Discount;
+      public void UpdateBill (decimal? discount = null) {
+         if(BillHeader == null || BillItems == null) return;
+         BillHeader.Discount = discount.HasValue ? discount.Value : BillHeader.Discount;
+         BillHeader.Itemcount = BillItems.Count;
+         BillHeader.SubTotal = BillItems.Sum (item => item.Amount);
+         BillHeader.Total = BillHeader.SubTotal - BillHeader.Discount;
+         BillHeader.ReceivedAmount = BillHeader.Total;
+      }
 
       public bool CanPay () {
          var errors = new List<string> ();

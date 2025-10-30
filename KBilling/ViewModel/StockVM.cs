@@ -6,11 +6,9 @@ using KBilling.Model;
 namespace KBilling.ViewModel {
    public partial class StockVM : ProductVM {
 
-      public StockVM () {
-         UpdateStock ();
-      }
+      public StockVM () { }
 
-      void UpdateStock () => FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToDisplay ());
+      public void UpdateStock () => FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToDisplay ());
 
       StockLevel Get (decimal? qty) => qty switch {
          <= 0 => StockLevel.OutOfStock,

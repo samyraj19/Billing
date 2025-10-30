@@ -85,7 +85,7 @@ public partial class BillingView : UserControl {
          bool isChecked = chkReceived.IsChecked == true;
          txtRecvAmt.IsEnabled = !isChecked;
 
-         if (isChecked) VM ().BillHeader.ReceivedAmount = VM ().UpdateTotal ();
+         if (isChecked) VM ().UpdateBill ();
       });
    }
 
@@ -117,7 +117,7 @@ public partial class BillingView : UserControl {
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       var dialog = mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") as DiscountDialog;
       if (dialog is null) return;
-      dialog.DiscountApplied += (discount) => UpdateBill (discount);
+      dialog.DiscountApplied += (discount) => VM ().UpdateBill (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
@@ -126,7 +126,7 @@ public partial class BillingView : UserControl {
       string input = textBox.Text ?? string.Empty;
       if (input.Trim ().Length > 0 && !Is.Integer (input)) textBox.Text = input[..^1]; // remove last invalid char
 
-      if (Is.NotEmpty (textBox.Text)) UpdateBill ();
+      if (Is.NotEmpty (textBox.Text)) VM().UpdateBill ();
    }
 
    async void IconButton_Click (object? sender, RoutedEventArgs e) {
@@ -143,16 +143,6 @@ public partial class BillingView : UserControl {
       VM ().AddItem (product);
       txtSearch.Text = string.Empty;
       txtSearch.Focus ();
-   }
-
-   void UpdateBill (decimal? discount = null) {
-      var vm = VM ();
-
-      vm.BillHeader.SubTotal = vm.SubTotal ();
-      vm.BillHeader.Discount = discount ?? vm.BillHeader.Discount;
-
-      var total = discount.HasValue ? vm.Total (discount.Value) : vm.UpdateTotal ();
-      vm.BillHeader.Total = vm.BillHeader.ReceivedAmount = total;
    }
 
    void ClearPaydetails () {

@@ -23,21 +23,10 @@
 				<DataGridTextColumn Header="Number" IsReadOnly="True"
 									Binding="{Binding ProductNumber}"/>
 
-				<DataGridTemplateColumn Header="Purchase Rate">
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<TextBox Text="{Binding PurchaseRate}"/>
-						</DataTemplate>
-						</DataGridTemplateColumn.CellTemplate>
-				</DataGridTemplateColumn>
-
-				<DataGridTemplateColumn Header="Selling Rate">
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<TextBox Text="{Binding SellingRate}"/>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-				</DataGridTemplateColumn>
+				<DataGridTextColumn Header="Purchase Rate"
+									Binding="{Binding PurchaseRate}"/>
+				<DataGridTextColumn Header="Selling Rate"
+									Binding="{Binding SellingRate}"/>
 				
 				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
 									Binding="{Binding Quantity}"/>
@@ -53,7 +42,7 @@
 					Content="Update"
 					Width="200"
 					Height="45"
-					HorizontalAlignment="Right"
+					HorizontalAlignment="Center"
 					Margin="5"
 					VerticalContentAlignment="Center"
 					HorizontalContentAlignment="Center"/>
