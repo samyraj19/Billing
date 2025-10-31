@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using KBilling.Core;
 using KBilling.Helper;
 using KBilling.Model;
 
@@ -57,7 +58,7 @@ namespace KBilling.ViewModel {
 
       #region Fields
       [ObservableProperty] BillHeaderVM billHeader = new ();
-      [ObservableProperty] ObservableCollection<BillDetails> billItems;
+      [ObservableProperty] BillCollection<BillDetails> billItems;
       #endregion
 
    }

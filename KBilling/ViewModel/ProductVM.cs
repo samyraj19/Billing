@@ -11,11 +11,14 @@ using System;
 using static System.Collections.Specialized.BitVector32;
 using KBilling.Helper;
 using KBilling.Extension;
+using KBilling.Interfaces;
+using KBilling.Core;
 
 namespace KBilling.ViewModel {
    public class ProductVM : Product {
 
       public ProductVM () {
+         repo = new ProductRepo ();
          AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
          FilterProducts.CollectionChanged += RenumberProducts;
       }
@@ -23,17 +26,22 @@ namespace KBilling.ViewModel {
       #region Methods
 
       public void LoadData () {
-         string? user = AppSession.CurrentUser?.Username;
-         string? date = DateTime.Now.ToString ("dd-MM-yyyy HH:mm:ss");
-         var products = new[]
-         {
-            new Product { ProductName = "Product A", ProductNumber = 101, PurchaseRate = 100, SellingRate = 150, Quantity = 50,Createdby = user,Createddate = date },
-            new Product { ProductName = "Product B", ProductNumber = 102, PurchaseRate = 200, SellingRate = 300, Quantity = 30 ,Createdby = user,Createddate = date},
-            new Product { ProductName = "Product C", ProductNumber = 103, PurchaseRate = 150, SellingRate = 225, Quantity = 20,Createdby = user ,Createddate = date},
-            new Product { ProductName = "Product D", ProductNumber = 104, PurchaseRate = 250, SellingRate = 375, Quantity = 10,Createdby = user,Createddate = date },
-        };
+         var datas = repo.GetAll ();
+
+         // string? user = AppSession.CurrentUser?.Username;
+         // string? date = DateTime.Now.ToString ("dd-MM-yyyy HH:mm:ss");
+         // var products = new[]
+         // {
+         //    new Product { ProductName = "Product A", ProductNumber = 101, PurchaseRate = 100, SellingRate = 150, Quantity = 50,Createdby = user,Createddate = date },
+         //    new Product { ProductName = "Product B", ProductNumber = 102, PurchaseRate = 200, SellingRate = 300, Quantity = 30 ,Createdby = user,Createddate = date},
+         //    new Product { ProductName = "Product C", ProductNumber = 103, PurchaseRate = 150, SellingRate = 225, Quantity = 20,Createdby = user ,Createddate = date},
+         //    new Product { ProductName = "Product D", ProductNumber = 104, PurchaseRate = 250, SellingRate = 375, Quantity = 10,Createdby = user,Createddate = date },
+         //};
+         //AllProducts?.Clear ();
+         //AllProducts?.AddRange (products);
+
          AllProducts?.Clear ();
-         AllProducts?.AddRange (products);
+         AllProducts?.AddRange (datas);
          UpdateFilter (string.Empty);
       }
 
@@ -80,13 +88,15 @@ namespace KBilling.ViewModel {
                              .ShowAsync ();
             return;
          }
-         AllProducts?.Add (new () {
-            ProductName = product.ProductName,
-            ProductNumber = product.ProductNumber,
-            PurchaseRate = product.PurchaseRate,
-            SellingRate = product.SellingRate,
-            Quantity = product.Quantity
-         });
+         //AllProducts?.Add (new () {
+         //   ProductName = product.ProductName,
+         //   ProductNumber = product.ProductNumber,
+         //   PurchaseRate = product.PurchaseRate,
+         //   SellingRate = product.SellingRate,
+         //   Quantity = product.Quantity
+         //});
+         product.Createdby = product.Modifiedby = AppSession.CurrentUser?.Username;
+         var success = repo.Insert (product);
          MessageBoxManager.GetMessageBoxStandard ("Add product", "Product added successfully.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
       }
 
@@ -96,11 +106,17 @@ namespace KBilling.ViewModel {
          existing.PurchaseRate = current.PurchaseRate;
          existing.SellingRate = current.SellingRate;
          existing.Quantity = current.Quantity;
-         MessageBoxManager.GetMessageBoxStandard ("Add product", "Product updated successfully.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
+
+         var success = repo.Update (current);
+         if (success) MsgBox.ShowSuccessAsync ("Success", "Product updated successfully.");
+         else MsgBox.ShowErrorAsync ("Update product Error", "Failed to update product.");
       }
 
       public void DeleteItem (Product item) {
          AllProducts?.Remove (item);
+         var success = repo.Delete (item.ProductNumber);
+         if (success) MsgBox.ShowSuccessAsync ("Success", "Product deleted successfully.");
+         else MsgBox.ShowErrorAsync ("Delete Error", "Failde to delete");
          UpdateFilter (string.Empty);
       }
 
@@ -123,9 +139,11 @@ namespace KBilling.ViewModel {
       #endregion
 
       #region Fields
-      ObservableCollection<Product>? AllProducts { get; } = new ();
-      public ObservableCollection<Product>? FilterProducts { get; } = new ();
+      BillCollection<Product>? AllProducts { get; } = new ();
+      public BillCollection<Product>? FilterProducts { get; } = new ();
       public EUserRoles? Role => AppSession.Role;
+
+      readonly IProductRepo repo;
       #endregion
    }
 }

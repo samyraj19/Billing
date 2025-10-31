@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using KBilling.Extension;
 using KBilling.ViewModel;
 
 namespace KBilling.Model {
@@ -8,13 +10,14 @@ namespace KBilling.Model {
       [ObservableProperty] int? productNumber;
       [ObservableProperty] decimal? purchaseRate;
       [ObservableProperty] decimal? sellingRate;
-      [ObservableProperty] decimal? quantity;
+      [ObservableProperty] int? quantity;
       [ObservableProperty] string? status;
       [ObservableProperty] string? stocklevel;
+      [ObservableProperty] bool? isActive;
       [ObservableProperty] string? createdby;
-      [ObservableProperty] string? createddate;
+      [ObservableProperty] string? createddate = DateTime.Now.ToSql();
       [ObservableProperty] string? modifiedby;
-      [ObservableProperty] string? modifieddate;
+      [ObservableProperty] string? modifieddate = DateTime.Now.ToSql ();
 
       Product? mOriginal;
 

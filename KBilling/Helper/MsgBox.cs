@@ -23,6 +23,11 @@ namespace KBilling.Helper {
           MessageBoxManager
               .GetMessageBoxStandard (title, message, ButtonEnum.YesNo, Icon.Question)
               .ShowAsync ();
+
+      public static Task<ButtonResult> ShowSuccessAsync (string title, string message) =>
+           MessageBoxManager
+               .GetMessageBoxStandard (title, message, ButtonEnum.Ok, Icon.Success)
+               .ShowAsync ();
    }
 
    public static class AppMsg {

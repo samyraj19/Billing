@@ -19,9 +19,9 @@ namespace KBilling.DataBase {
       }
 
       // 🔹 INSERT / UPDATE / DELETE — returns affected rows
-      public int ExecuteSP (string spName, params SqlParameter[]? parameters) {
+      public void ExecuteSP (string spName, params SqlParameter[]? parameters) {
          using var cmd = CreateCommand (spName, parameters);
-         return cmd.ExecuteNonQuery ();
+         cmd.ExecuteNonQuery ();
       }
 
       // 🔹 Single value (e.g., COUNT(*))
