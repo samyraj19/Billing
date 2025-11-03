@@ -7,7 +7,7 @@
          public const string Delete = "sp_DeleteProduct";
       }
       public static class  BillSP {
-         public const string GetBillsHeader = "sp_GetBillsHeader";
+         public const string GetBillsHeader = "sp_GetAllBills";
          public const string GetBillDetails = "sp_GetBillDetails";
          public const string InsertHeader = "sp_InsertBillHeader";
          public const string InsertDetails = "sp_InsertBillDetails";

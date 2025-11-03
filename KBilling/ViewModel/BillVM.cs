@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using KBilling.Core;
+using KBilling.Extension;
 using KBilling.Helper;
+using KBilling.Interfaces;
 using KBilling.Model;
+using KBilling.Services;
 
 namespace KBilling.ViewModel {
    public partial class BillVM : BillDetails {
@@ -48,7 +52,9 @@ namespace KBilling.ViewModel {
             var msgBox = MsgBox.ShowErrorAsync ("Error", message);
             return false;
          }
-         return true;
+         BillHeader.CreatedDate = DateTime.Now.ToSql ();
+         BillHeader.CreatedBy = AppSession.CurrentUser?.Username;
+         return Repo.Bills.Insert (BillHeader,billItems);
       }
 
       public void ResetBill () {

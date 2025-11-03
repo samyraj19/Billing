@@ -4,7 +4,7 @@ using KBilling.Extension;
 using KBilling.ViewModel;
 
 namespace KBilling.Model {
-   public partial class Product : ObservableObject {
+   public partial class Product : BaseModel {
       [ObservableProperty] int? no;
       [ObservableProperty] string? productName;
       [ObservableProperty] int? productNumber;

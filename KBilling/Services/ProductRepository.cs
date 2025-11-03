@@ -11,7 +11,7 @@ using Microsoft.Data.SqlClient;
 namespace KBilling.Services {
    public class ProductRepo : IProductRepo {
       public IEnumerable<Product> GetAll () {
-         DataTable dt = mQueruexe.QuerySP (ProductsSP.GetAll);
+         DataTable dt = App.Repo.QueryExe.QuerySP (ProductsSP.GetAll);
          if (dt.Rows.Count == 0) return Enumerable.Empty<Product> (); // safe, no nulls
          var products = new List<Product> ();
          foreach (DataRow row in dt.Rows) {
@@ -44,7 +44,7 @@ namespace KBilling.Services {
               new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
               new SqlParameter("@ModifyDate", SqlDbType.DateTime, 150) { Value = p.Createddate ?? string.Empty },
          };
-         mQueruexe.ExecuteSP ("sp_InsertProduct", parameters);
+         App.Repo.QueryExe.ExecuteSP ("sp_InsertProduct", parameters);
          return true;
       }
       public bool Update (Product p) {
@@ -58,7 +58,7 @@ namespace KBilling.Services {
               new SqlParameter("@IsActive", SqlDbType.Bit) { Value = p.IsActive ?? true},
               new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
          };
-         mQueruexe.ExecuteSP ("sp_UpdateProduct", parameters);
+         App.Repo.QueryExe.ExecuteSP ("sp_UpdateProduct", parameters);
          return true;
       }
 
@@ -66,13 +66,8 @@ namespace KBilling.Services {
          var parameters = new[]{
               new SqlParameter("@ProductCode", SqlDbType.Int) { Value = code },
          };
-         mQueruexe.ExecuteSP ("sp_DeleteProduct", parameters);
+         App.Repo.QueryExe.ExecuteSP ("sp_DeleteProduct", parameters);
          return true;
       }
-
-
-      #region Fields
-      QueryExecutor mQueruexe = new ();
-      #endregion
    }
 }

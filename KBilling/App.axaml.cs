@@ -2,7 +2,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using KBilling.DataBase;
+using KBilling.Interfaces;
 using KBilling.ViewManagement;
+using KBilling.Services;
 
 namespace KBilling {
    public partial class App : Application {
@@ -13,11 +15,14 @@ namespace KBilling {
       public override void OnFrameworkInitializationCompleted () {
          Db.Connect ();
          AppView.RegAll ();
+         Repo = new GlobalRepo ();
          if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
             desktop.MainWindow = new Login ();
          }
 
          base.OnFrameworkInitializationCompleted ();
       }
+
+      public static IGlobalRepo Repo { get; private set; }
    }
 }

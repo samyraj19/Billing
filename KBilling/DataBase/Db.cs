@@ -7,9 +7,8 @@ namespace KBilling.DataBase {
    public static class Db {
       public static void Connect () {
          string connstr = ConfigurationManager.ConnectionStrings["kbilling"].ConnectionString;
-         
-         if (conn is { State: System.Data.ConnectionState.Open })
-            return;
+
+         if (conn is { State: ConnectionState.Open }) return;
 
          conn = new SqlConnection (connstr);
          conn.Open ();

@@ -18,7 +18,6 @@ namespace KBilling.ViewModel {
    public class ProductVM : Product {
 
       public ProductVM () {
-         repo = new ProductRepo ();
          AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
          FilterProducts.CollectionChanged += RenumberProducts;
       }
@@ -26,7 +25,7 @@ namespace KBilling.ViewModel {
       #region Methods
 
       public void LoadData () {
-         var datas = repo.GetAll ();
+         var datas = Repo.Products.GetAll ();
 
          // string? user = AppSession.CurrentUser?.Username;
          // string? date = DateTime.Now.ToString ("dd-MM-yyyy HH:mm:ss");
@@ -96,7 +95,7 @@ namespace KBilling.ViewModel {
          //   Quantity = product.Quantity
          //});
          product.Createdby = product.Modifiedby = AppSession.CurrentUser?.Username;
-         var success = repo.Insert (product);
+         var success = Repo.Products.Insert (product);
          MessageBoxManager.GetMessageBoxStandard ("Add product", "Product added successfully.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
       }
 
@@ -107,14 +106,14 @@ namespace KBilling.ViewModel {
          existing.SellingRate = current.SellingRate;
          existing.Quantity = current.Quantity;
 
-         var success = repo.Update (current);
+         var success = Repo.Products.Update (current);
          if (success) MsgBox.ShowSuccessAsync ("Success", "Product updated successfully.");
          else MsgBox.ShowErrorAsync ("Update product Error", "Failed to update product.");
       }
 
       public void DeleteItem (Product item) {
          AllProducts?.Remove (item);
-         var success = repo.Delete (item.ProductNumber);
+         var success = Repo.Products.Delete (item.ProductNumber);
          if (success) MsgBox.ShowSuccessAsync ("Success", "Product deleted successfully.");
          else MsgBox.ShowErrorAsync ("Delete Error", "Failde to delete");
          UpdateFilter (string.Empty);
@@ -143,7 +142,6 @@ namespace KBilling.ViewModel {
       public BillCollection<Product>? FilterProducts { get; } = new ();
       public EUserRoles? Role => AppSession.Role;
 
-      readonly IProductRepo repo;
       #endregion
    }
 }

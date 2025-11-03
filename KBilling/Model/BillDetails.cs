@@ -2,9 +2,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace KBilling.Model {
-   public partial class BillDetails : ObservableObject{
+   public partial class BillDetails : BaseModel {
       [ObservableProperty] int no;
-      [ObservableProperty] string? billId;
+      [ObservableProperty] long billId;
+      [ObservableProperty] string? billNo;
       [ObservableProperty] int? productId;
       [ObservableProperty] string? productName;
       [ObservableProperty] decimal? price;
@@ -16,8 +17,9 @@ namespace KBilling.Model {
       partial void OnQuantityChanged (int value) => OnPropertyChanged (nameof (Amount));
    }
 
-   public partial class BillHeader : ObservableObject {
-      [ObservableProperty] string? billId;
+   public partial class BillHeader : BaseModel {
+      [ObservableProperty] long billId;
+      [ObservableProperty] string? billNumber;
       [ObservableProperty] string? customerName;
       [ObservableProperty] string? customerPhone;
       [ObservableProperty] DateTime billDate;
@@ -27,5 +29,8 @@ namespace KBilling.Model {
       [ObservableProperty] decimal total;
       [ObservableProperty] decimal receivedAmount;
       [ObservableProperty] string? paymentMethod = EPaymentMode.None.Get();
+      [ObservableProperty] string? remarks;
+      [ObservableProperty] string? createdBy;
+      [ObservableProperty] string? createdDate;
    }
 }
