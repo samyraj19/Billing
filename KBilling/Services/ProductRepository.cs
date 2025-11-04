@@ -11,11 +11,11 @@ using Microsoft.Data.SqlClient;
 namespace KBilling.Services {
    public class ProductRepo : IProductRepo {
       public IEnumerable<Product> GetAll () {
-         DataTable dt = App.Repo.QueryExe.QuerySP (ProductsSP.GetAll);
-         if (dt.Rows.Count == 0) return Enumerable.Empty<Product> (); // safe, no nulls
-         var products = new List<Product> ();
+         DataTable dt = App.Repo.QueryExe.QuerySP (SP.Products.GetAll);
+         if (dt.Rows.Count == 0) return Enumerable.Empty<Model.Product> (); // safe, no nulls
+         var products = new List<Model.Product> ();
          foreach (DataRow row in dt.Rows) {
-            var product = new Product {
+            var product = new Model.Product {
                ProductNumber = (int)row["ProductCode"],
                ProductName = (string)row["ProductName"],
                PurchaseRate = (decimal)row["PurchasePrice"],
@@ -29,7 +29,7 @@ namespace KBilling.Services {
          return products;
       }
 
-      public bool Insert (Product p) {
+      public bool Insert (Model.Product p) {
          ArgumentNullException.ThrowIfNull (p);
          var parameters = new[]
          {
@@ -47,7 +47,7 @@ namespace KBilling.Services {
          App.Repo.QueryExe.ExecuteSP ("sp_InsertProduct", parameters);
          return true;
       }
-      public bool Update (Product p) {
+      public bool Update (Model.Product p) {
          ArgumentNullException.ThrowIfNull (p);
          var parameters = new[]{
               new SqlParameter("@ProductCode", SqlDbType.Int) { Value = p.ProductNumber },

@@ -5,8 +5,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using KBilling.Model;
 using KBilling.Services;
 using KBilling.ViewManagement;
+using KBilling.ViewModel;
 
 namespace KBilling;
 public partial class Dashboard : UserControl {
@@ -19,6 +21,7 @@ public partial class Dashboard : UserControl {
    void OnLoad (object? sender, RoutedEventArgs e) {
       RegEvents ();
       DefaultSelection ();
+      VM ().LoadReport (mType);
    }
 
    void OnUnloaded (object? sender, RoutedEventArgs e) {
@@ -38,6 +41,9 @@ public partial class Dashboard : UserControl {
       if(TogglePanel.Children[0] is ToggleButton btn) btn.IsChecked = true;
    }
 
+   SalesVM VM() => DataContext is SalesVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type SalesVM");
+
    #region Fields
+   EReportType mType = EReportType.Daily;
    #endregion
 }

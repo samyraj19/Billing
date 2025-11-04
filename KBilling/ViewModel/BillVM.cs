@@ -16,55 +16,69 @@ namespace KBilling.ViewModel {
    public partial class BillVM : BillDetails {
       public BillVM () {
          BillItems = new ();
-         BillItems.CollectionChanged += CollectionChanged;
-      }
-
-      void CollectionChanged (object? sender, NotifyCollectionChangedEventArgs e) {
-         for (int i = 0; i < BillItems?.Count; i++) BillItems[i].No = i + 1;
-         UpdateBill ();
+         BillItems.CollectionChanged += (_, __) => UpdateBill ();
       }
 
       public void AddItem (Product product) {
+         if (BillItems is null) return;
          BillItems.Add (new BillDetails {
             BillId = BillHeader.BillId,
-            ProductId = product.ProductNumber,
+            ProductCode = product.ProductNumber,
             ProductName = product.ProductName,
             Price = product.SellingRate,
          });
       }
 
       public void UpdateBill (decimal? discount = null) {
-         if(BillHeader == null || BillItems == null) return;
-         BillHeader.Discount = discount.HasValue ? discount.Value : BillHeader.Discount;
+         if (BillHeader == null || BillItems == null) return;
+         
+         decimal discountValue = discount ?? BillHeader.Discount;
+         BillHeader.Discount = discountValue;
          BillHeader.Itemcount = BillItems.Count;
          BillHeader.SubTotal = BillItems.Sum (item => item.Amount);
-         BillHeader.Total = BillHeader.SubTotal - BillHeader.Discount;
+         BillHeader.Total = BillHeader.SubTotal - discountValue;
          BillHeader.ReceivedAmount = BillHeader.Total;
       }
 
       public bool CanPay () {
-         var errors = new List<string> ();
-         if (BillItems.Count == 0) errors.Add ("Add at least one item to the bill.");
-         if (BillItems.Any (item => item.Quantity <= 0)) errors.Add ("All items must have quantity greater than zero.");
-         if (BillHeader.PaymentMethod == EPaymentMode.None.Get ()) errors.Add ("Select a payment method.");
+         if (BillItems is null) return false;
+
+         var errors = GetValidationErrors ();
          if (errors.Count > 0) {
             var message = "• " + string.Join ("\n• ", errors);
-            var msgBox = MsgBox.ShowErrorAsync ("Error", message);
+            MsgBox.ShowErrorAsync ("Error", message);
             return false;
          }
+
          BillHeader.CreatedDate = DateTime.Now.ToSql ();
          BillHeader.CreatedBy = AppSession.CurrentUser?.Username;
-         return Repo.Bills.Insert (BillHeader,billItems);
+         return Repo.Bills.Insert (BillHeader, BillItems);
+      }
+
+      /// <summary>Returns a list of validation error messages for the current bill.</summary>
+      List<string> GetValidationErrors () {
+         var errors = new List<string> ();
+
+         if (BillItems is null || BillItems.Count == 0)
+            errors.Add ("Add at least one item to the bill.");
+         if (BillItems?.Any (item => item.Quantity <= 0) == true)
+            errors.Add ("All items must have quantity greater than zero.");
+         if (BillHeader?.Total <= 0)
+            errors.Add ("Total amount must be greater than zero.");
+         if (BillHeader?.PaymentMethod == EPaymentMode.None.Get ())
+            errors.Add ("Select a payment method.");
+
+         return errors;
       }
 
       public void ResetBill () {
          BillHeader = new ();
-         BillItems.Clear ();
+         BillItems?.Clear ();
       }
 
       #region Fields
-      [ObservableProperty] BillHeaderVM billHeader = new ();
-      [ObservableProperty] BillCollection<BillDetails> billItems;
+      [ObservableProperty] BillHeaderVM? billHeader = new ();
+      [ObservableProperty] AutoNumberedCollection<BillDetails>? billItems;
       #endregion
 
    }

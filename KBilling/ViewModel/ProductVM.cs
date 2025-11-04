@@ -19,26 +19,13 @@ namespace KBilling.ViewModel {
 
       public ProductVM () {
          AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
-         FilterProducts.CollectionChanged += RenumberProducts;
+         //FilterProducts.CollectionChanged += RenumberProducts;
       }
 
       #region Methods
 
       public void LoadData () {
          var datas = Repo.Products.GetAll ();
-
-         // string? user = AppSession.CurrentUser?.Username;
-         // string? date = DateTime.Now.ToString ("dd-MM-yyyy HH:mm:ss");
-         // var products = new[]
-         // {
-         //    new Product { ProductName = "Product A", ProductNumber = 101, PurchaseRate = 100, SellingRate = 150, Quantity = 50,Createdby = user,Createddate = date },
-         //    new Product { ProductName = "Product B", ProductNumber = 102, PurchaseRate = 200, SellingRate = 300, Quantity = 30 ,Createdby = user,Createddate = date},
-         //    new Product { ProductName = "Product C", ProductNumber = 103, PurchaseRate = 150, SellingRate = 225, Quantity = 20,Createdby = user ,Createddate = date},
-         //    new Product { ProductName = "Product D", ProductNumber = 104, PurchaseRate = 250, SellingRate = 375, Quantity = 10,Createdby = user,Createddate = date },
-         //};
-         //AllProducts?.Clear ();
-         //AllProducts?.AddRange (products);
-
          AllProducts?.Clear ();
          AllProducts?.AddRange (datas);
          UpdateFilter (string.Empty);
@@ -87,13 +74,6 @@ namespace KBilling.ViewModel {
                              .ShowAsync ();
             return;
          }
-         //AllProducts?.Add (new () {
-         //   ProductName = product.ProductName,
-         //   ProductNumber = product.ProductNumber,
-         //   PurchaseRate = product.PurchaseRate,
-         //   SellingRate = product.SellingRate,
-         //   Quantity = product.Quantity
-         //});
          product.Createdby = product.Modifiedby = AppSession.CurrentUser?.Username;
          var success = Repo.Products.Insert (product);
          MessageBoxManager.GetMessageBoxStandard ("Add product", "Product added successfully.", ButtonEnum.Ok, Icon.Success).ShowAsync ();
@@ -128,18 +108,18 @@ namespace KBilling.ViewModel {
                          p.ProductNumber.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase));
       }
 
-      void RenumberProducts (object? sender, NotifyCollectionChangedEventArgs e) {
-         int no = 1;
-         if (AllProducts is null) return;
-         foreach (Product item in AllProducts) item.No = no++;
-      }
+      //void RenumberProducts (object? sender, NotifyCollectionChangedEventArgs e) {
+      //   int no = 1;
+      //   if (AllProducts is null) return;
+      //   foreach (Product item in AllProducts) item.No = no++;
+      //}
 
       public void Refersh () => UpdateFilter (string.Empty);
       #endregion
 
       #region Fields
-      BillCollection<Product>? AllProducts { get; } = new ();
-      public BillCollection<Product>? FilterProducts { get; } = new ();
+      AutoNumberedCollection<Product>? AllProducts { get; } = new ();
+      public AutoNumberedCollection<Product>? FilterProducts { get; } = new ();
       public EUserRoles? Role => AppSession.Role;
 
       #endregion

@@ -3,6 +3,6 @@ using KBilling.Model;
 
 namespace KBilling.Interfaces {
    public interface IBillRepo {
-      bool Insert (BillHeader? bill,IEnumerable<BillDetails> details);
+      bool Insert (BillHeader? bill,IEnumerable<BillDetails>? details);
    }
 }

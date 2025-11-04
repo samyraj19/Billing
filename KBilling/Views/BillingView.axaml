@@ -6,8 +6,13 @@
 			 Background="#f6f8f9"
 			 xmlns:ctrl="using:KBilling.Controls"
 			 xmlns:vm="using:KBilling.ViewModel"
+			 xmlns:conv="using:KBilling.Converters"
 			 x:DataType="vm:BillVM"
              x:Class="KBilling.BillingView">
+	<UserControl.Resources>
+		<conv:RupeesConverter x:Key="RupeesConverter"/>
+		<conv:DsicountRupeesConverter x:Key="DiscountConverter"/>
+	</UserControl.Resources>
 	<UserControl.DataContext>
 		<vm:BillVM/>
 	</UserControl.DataContext>
@@ -88,7 +93,7 @@
 					<DataGridTextColumn Header="Items" IsReadOnly="True"
 										Binding="{Binding ProductName}"/>
 					<DataGridTextColumn Header="Item Code" IsReadOnly="True"
-										Binding="{Binding ProductId}"/>
+										Binding="{Binding ProductCode}"/>
 					<DataGridTextColumn Header="SP (₹)" IsReadOnly="True"
 										Binding="{Binding Price}"/>
 					<DataGridTemplateColumn Header="Qty.">
@@ -145,11 +150,13 @@
 						<TextBlock Grid.Row="0" Grid.Column="1"
 								   HorizontalAlignment="Right"
 								   Classes="h1"
-								    Text="{Binding BillHeader.SubTotal,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+								    Text="{Binding BillHeader.SubTotal,Mode=TwoWay,Converter={StaticResource RupeesConverter},
+												   UpdateSourceTrigger=PropertyChanged}"/>
 						<TextBlock Grid.Row="1" Grid.Column="1"
 								   HorizontalAlignment="Right"
 								   Classes="h1"
-								   Text="{Binding BillHeader.Discount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+								   Text="{Binding BillHeader.Discount,Mode=TwoWay,Converter={StaticResource DiscountConverter},
+												  UpdateSourceTrigger=PropertyChanged}"/>
 
 						<Border Grid.Row="3" Grid.ColumnSpan="2"
 								Margin="-8" BorderBrush="LightGray" BorderThickness="0,1,0,0"
@@ -160,7 +167,8 @@
 									   Classes="h2"/>
 								<TextBlock Grid.Column="1"
 										   Classes="h1"
-										   Text="{Binding BillHeader.Total,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+										   Text="{Binding BillHeader.Total,Mode=TwoWay, Converter={StaticResource RupeesConverter},
+														  UpdateSourceTrigger=PropertyChanged}"
 										   HorizontalAlignment="Right"
 										   Margin="0,0,5,0"/>
 							</Grid>

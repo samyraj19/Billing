@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 Background="#f6f8f9"
+			 xmlns:vm="using:KBilling.ViewModel"
+			 x:DataType="vm:SalesVM"
              x:Class="KBilling.Dashboard">
+	<UserControl.DataContext>
+		<vm:SalesVM/>
+	</UserControl.DataContext>
 	<UserControl.Styles>
 		<Style Selector="Button">
 			<Setter Property="Background" Value="#2b7fff"/>
@@ -45,54 +50,75 @@
 			</StackPanel>
 		</Grid>
 
-		<Grid Grid.Row="1" ColumnDefinitions="* * *">
+		<Grid Grid.Row="1" ColumnDefinitions="* * * *">
 			<Border Grid.Column="0" Classes="h1">
 				<StackPanel>
-					<Label Content="🧾 Total Items"/>
-					<Label Content="150" FontSize="24" FontWeight="Bold"/>
+					<Label Content="📦 Total Items"/>
+					<Label Content="{Binding TotalItems}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 			<Border Grid.Column="1" Classes="h1">
 				<StackPanel>
-					<Label Content="💰 Total Sales"/>
-					<Label Content="₹ 25,000" FontSize="24" FontWeight="Bold"/>
+					<Label Content="🧾 Total Bills"/>
+					<Label Content="{Binding TotalBills}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 			<Border Grid.Column="2" Classes="h1">
 				<StackPanel>
-					<Label Content="📈 Total Profits"/>
-					<Label Content="₹ 2,000" FontSize="24" FontWeight="Bold"/>
+					<Label Content="💰 Total Sales Amt"/>
+					<Label Content="{Binding SalesAmount}" FontSize="24" FontWeight="Bold"/>
+				</StackPanel>
+			</Border>
+			<Border Grid.Column="3" Classes="h1">
+				<StackPanel>
+					<Label Content="📈 Total Profits Amt"/>
+					<Label Content="{Binding TotalProfit}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 		</Grid>
 
-		<DataGrid Grid.Row="2" AutoGenerateColumns="False" x:Name="DataGridProduct"
+		<Grid Grid.Row="2" ColumnDefinitions="70* 30*">
+			<DataGrid Grid.Column="0" AutoGenerateColumns="False" x:Name="DataGridProduct"
 					  BorderThickness="1.5" BorderBrush="LightGray" Margin="10,5,10,5"
 					  GridLinesVisibility="All"
 					  ColumnWidth="*">
-			<DataGrid.Columns>
-				<DataGridTextColumn IsReadOnly="True" Header="#"
-									Width="75"/>
-				<DataGridTextColumn Header="Name" IsReadOnly="True"
-									Width="150"/>
-				<DataGridTextColumn Header="Number" IsReadOnly="True"
-									Width="200"/>
-				<DataGridTextColumn Header="Pur. Rate" IsReadOnly="True"
-									Width="150"/>
-				<DataGridTextColumn Header="Sell. Rate" IsReadOnly="True"
-									Width="150"/>
-				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
-									Width="125"/>
-				<DataGridTextColumn Header="Status" IsReadOnly="True"
-									Width="125"/>
-				<DataGridTextColumn Header="Stock" IsReadOnly="True"
-									Width="125"/>
-				<DataGridTextColumn Header="Added By" IsReadOnly="True"
-									Width="125"/>
-				<DataGridTextColumn Header="Added Date" IsReadOnly="True"
-									Width="125"/>
+				<DataGrid.Columns>
+					<DataGridTextColumn IsReadOnly="True" Header="#"
+										Width="70"/>
+					<DataGridTextColumn Header="Bill No" IsReadOnly="True"
+										Width="150"/>
+					<DataGridTextColumn Header="Date &amp; Time" IsReadOnly="True"
+										Width="150"/>
+					<DataGridTextColumn Header="Amount" IsReadOnly="True"
+										Width="150"/>
+					<DataGridTextColumn Header="Received Amt." IsReadOnly="True"
+										Width="150"/>
+					<DataGridTextColumn Header="Balance Amt." IsReadOnly="True"
+										Width="150"/>
+					<DataGridTextColumn Header="Payment" IsReadOnly="True"
+										Width="*"/>
 
-			</DataGrid.Columns>
-		</DataGrid>
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<Grid Grid.Column="1" RowDefinitions="* *">
+				<Border Grid.Row="0" Classes="h1">
+					<Grid RowDefinitions="15* 90*" Margin="-5,0,-5,0">
+						<Border BorderBrush="LightGray" BorderThickness="0,0,0,1">
+							<Label Content="💹 Top Selling Items"/>
+						</Border>
+					</Grid>
+				</Border>
+				<Border Grid.Row="1" Classes="h1">
+					<Grid RowDefinitions="15* 90*" Margin="-5,0,-5,0">
+						<Border BorderBrush="LightGray" BorderThickness="0,0,0,1">
+							<Label Content="🏷️ Stocks"/>
+						</Border>
+					</Grid>
+				</Border>
+			</Grid>
+		</Grid>
+
+		
 	</Grid>
 </UserControl>

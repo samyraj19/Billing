@@ -6,7 +6,7 @@ namespace KBilling.Model {
       [ObservableProperty] int no;
       [ObservableProperty] long billId;
       [ObservableProperty] string? billNo;
-      [ObservableProperty] int? productId;
+      [ObservableProperty] int? productCode;
       [ObservableProperty] string? productName;
       [ObservableProperty] decimal? price;
       [ObservableProperty] int quantity;

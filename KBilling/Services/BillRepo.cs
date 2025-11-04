@@ -38,25 +38,37 @@ namespace KBilling.Services {
             detail.BillId = bill.BillId;
             detail.BillNo = bill.BillNumber;
             Insert (detail);
+            UpdateQuantity (detail);
          }
          return true;
       }
 
-      bool Insert (BillDetails? bill) {
+      void Insert (BillDetails? bill) {
          ArgumentNullException.ThrowIfNull (bill);
 
          var parameters = new[]
          {
              new SqlParameter("@BillId", SqlDbType.BigInt) { Value = bill.BillId },
              new SqlParameter("@BillNumber", SqlDbType.NVarChar) { Value = bill.BillNo },
-             new SqlParameter("@ProductCode", SqlDbType.Int) { Value = bill.ProductId },
+             new SqlParameter("@ProductCode", SqlDbType.Int) { Value = bill.ProductCode },
              new SqlParameter("@ProductName", SqlDbType.NVarChar, 200) { Value = bill.ProductName },
              new SqlParameter("@Price", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Price },
              new SqlParameter("@Quantity", SqlDbType.Int) { Value = bill.Quantity },
          };
 
          App.Repo.QueryExe.ExecuteSP ("sp_InsertBillDetails", parameters);
-         return true;
+      }
+
+      void UpdateQuantity (BillDetails? bill) {
+         ArgumentNullException.ThrowIfNull (bill);
+
+         var parameters = new[]
+         {
+             new SqlParameter("@ItemCode", SqlDbType.Int) { Value = bill.ProductCode },
+             new SqlParameter("@Quantity", SqlDbType.Int) { Value = bill.Quantity },
+         };
+
+         App.Repo.QueryExe.ExecuteSP (SP.Products.UpdateStock, parameters);
       }
    }
 }

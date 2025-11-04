@@ -14,8 +14,8 @@ namespace KBilling {
 
       public override void OnFrameworkInitializationCompleted () {
          Db.Connect ();
-         AppView.RegAll ();
          Repo = new GlobalRepo ();
+         AppView.RegAll ();
          if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
             desktop.MainWindow = new Login ();
          }
