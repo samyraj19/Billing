@@ -5,11 +5,17 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 Background="#f6f8f9"
 			 xmlns:vm="using:KBilling.ViewModel"
-			 x:DataType="vm:SalesVM"
+			 xmlns:model="using:KBilling.Model"
+			 xmlns:conv="using:KBilling.Converters"
+			 x:DataType="vm:DashboardVM"
              x:Class="KBilling.Dashboard">
 	<UserControl.DataContext>
-		<vm:SalesVM/>
+		<vm:DashboardVM/>
 	</UserControl.DataContext>
+	<UserControl.Resources>
+		<conv:StockStatucToBrushConverter x:Key="StatusToColor"/>
+		<conv:RupeesConverter x:Key="RupeesConverter"/>
+	</UserControl.Resources>
 	<UserControl.Styles>
 		<Style Selector="Button">
 			<Setter Property="Background" Value="#2b7fff"/>
@@ -34,7 +40,16 @@
 			<Setter Property="CornerRadius" Value="10"/>
 			<Setter Property="Padding" Value="5"/>
 		</Style>
-		
+		<Style Selector="TextBlock.h1">
+			<Setter Property="FontWeight" Value="Medium"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="ListBoxItem">
+			<Setter Property="BorderBrush" Value="#CCC"/>
+			<Setter Property="BorderThickness" Value="0 0 0 1"/>
+			<Setter Property="Padding" Value="5"/>
+		</Style>
+
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" RowDefinitions="10* 20* 70*">
 		<Grid ColumnDefinitions="30* 70*" Grid.Row="0">
@@ -44,9 +59,9 @@
 						x:Name="TogglePanel"
 						HorizontalAlignment="Right"
 						Orientation="Horizontal">
-				<ToggleButton Content="Daily" Classes="paytoggle"/>
-				<ToggleButton Content="Weekly" Classes="paytoggle"/>
-				<ToggleButton Content="Monthly" Classes="paytoggle"/>
+				<ToggleButton Content="Daily" Tag="{x:Static model:EReportType.Daily}" Classes="paytoggle"/>
+				<ToggleButton Content="Weekly" Tag="{x:Static model:EReportType.Monthly}" Classes="paytoggle"/>
+				<ToggleButton Content="Monthly" Tag="{x:Static model:EReportType.Weekly}" Classes="paytoggle"/>
 			</StackPanel>
 		</Grid>
 
@@ -54,25 +69,25 @@
 			<Border Grid.Column="0" Classes="h1">
 				<StackPanel>
 					<Label Content="📦 Total Items"/>
-					<Label Content="{Binding TotalItems}" FontSize="24" FontWeight="Bold"/>
+					<Label Content="{Binding Sales.TotalItems}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 			<Border Grid.Column="1" Classes="h1">
 				<StackPanel>
 					<Label Content="🧾 Total Bills"/>
-					<Label Content="{Binding TotalBills}" FontSize="24" FontWeight="Bold"/>
+					<Label Content="{Binding Sales.TotalBills}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 			<Border Grid.Column="2" Classes="h1">
 				<StackPanel>
 					<Label Content="💰 Total Sales Amt"/>
-					<Label Content="{Binding SalesAmount}" FontSize="24" FontWeight="Bold"/>
+					<Label Content="{Binding Sales.SalesAmount,Converter={StaticResource RupeesConverter}}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 			<Border Grid.Column="3" Classes="h1">
 				<StackPanel>
 					<Label Content="📈 Total Profits Amt"/>
-					<Label Content="{Binding TotalProfit}" FontSize="24" FontWeight="Bold"/>
+					<Label Content="{Binding Sales.TotalProfit,Converter={StaticResource RupeesConverter}}" FontSize="24" FontWeight="Bold"/>
 				</StackPanel>
 			</Border>
 		</Grid>
@@ -81,32 +96,68 @@
 			<DataGrid Grid.Column="0" AutoGenerateColumns="False" x:Name="DataGridProduct"
 					  BorderThickness="1.5" BorderBrush="LightGray" Margin="10,5,10,5"
 					  GridLinesVisibility="All"
+					  ItemsSource="{Binding Transaction.Transactions}"
 					  ColumnWidth="*">
 				<DataGrid.Columns>
 					<DataGridTextColumn IsReadOnly="True" Header="#"
-										Width="70"/>
+										Width="60"
+										Binding="{Binding No}"/>
 					<DataGridTextColumn Header="Bill No" IsReadOnly="True"
-										Width="150"/>
+										Width="150"
+										Binding="{Binding BillNumber}"/>
 					<DataGridTextColumn Header="Date &amp; Time" IsReadOnly="True"
-										Width="150"/>
+										Width="175"
+										Binding="{Binding Date}"/>
 					<DataGridTextColumn Header="Amount" IsReadOnly="True"
-										Width="150"/>
+										Width="150"
+										Binding="{Binding Amount}"/>
 					<DataGridTextColumn Header="Received Amt." IsReadOnly="True"
-										Width="150"/>
+										Width="150"
+										Binding="{Binding ReceivedAmount}"/>
 					<DataGridTextColumn Header="Balance Amt." IsReadOnly="True"
-										Width="150"/>
+										Width="150"
+										Binding="{Binding BalanceAmount}"/>
 					<DataGridTextColumn Header="Payment" IsReadOnly="True"
-										Width="*"/>
+										Width="*"
+										Binding="{Binding Payment}"/>
 
 				</DataGrid.Columns>
 			</DataGrid>
 
 			<Grid Grid.Column="1" RowDefinitions="* *">
 				<Border Grid.Row="0" Classes="h1">
-					<Grid RowDefinitions="15* 90*" Margin="-5,0,-5,0">
+					<Grid RowDefinitions="Auto *" Margin="-5,0,-5,0">
 						<Border BorderBrush="LightGray" BorderThickness="0,0,0,1">
 							<Label Content="💹 Top Selling Items"/>
 						</Border>
+
+						<!-- Column Headers + List -->
+						<Grid Grid.Row="1" RowDefinitions="15* 85*">
+							<!-- Column Headers -->
+							<Grid Grid.Row="0" ColumnDefinitions="* * * *" Background="LightGray">
+								<TextBlock Grid.Column="0" Text="Item Code" Classes="h1"/>
+								<TextBlock Grid.Column="1" Text="Item Name" Classes="h1"/>
+								<TextBlock Grid.Column="2" Text="Sell.Qty" Classes="h1"/>
+								<TextBlock Grid.Column="3" Text="Amount" Classes="h1"/>
+							</Grid>
+
+							<!-- ListBox -->
+							<ListBox Grid.Row="1"
+									 Background="White"
+									 ItemsSource="{Binding TopSelling.Items}"
+									 BorderThickness="0">
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<Grid ColumnDefinitions="* * * *">
+											<TextBlock Grid.Column="0" Text="{Binding ItemCode}" />
+											<TextBlock Grid.Column="1" Text="{Binding ItemName}" />
+											<TextBlock Grid.Column="2" Text="{Binding Quantity}"/>
+											<TextBlock Grid.Column="3" Text="{Binding Amount}"/>
+										</Grid>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+						</Grid>
 					</Grid>
 				</Border>
 				<Border Grid.Row="1" Classes="h1">
@@ -114,11 +165,37 @@
 						<Border BorderBrush="LightGray" BorderThickness="0,0,0,1">
 							<Label Content="🏷️ Stocks"/>
 						</Border>
+
+						<ListBox Grid.Row="1" ItemsSource="{Binding StockReport.StockReports}"
+								 Background="White"
+								 BorderThickness="0">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<Grid ColumnDefinitions="* * *">
+										<Grid Grid.Column="0" RowDefinitions="* *">
+											<Label Grid.Row="0"
+												   Content="{Binding ItemCode}"
+												   FontWeight="SemiBold"/>
+											<Label Grid.Row="1"
+												   Content="{Binding ItemName}"
+												   FontWeight="SemiLight"/>
+										</Grid>
+										<Label Grid.Column="1"
+											   FontWeight="SemiBold"
+											   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+											   Content="{Binding StockQuantity}"/>
+										<Ellipse Grid.Column="2"
+												 Width="20" Height="20"
+												 Fill="{Binding Status,Converter={StaticResource StatusToColor}}"/>
+									</Grid>
+
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 					</Grid>
 				</Border>
 			</Grid>
 		</Grid>
 
-		
 	</Grid>
 </UserControl>

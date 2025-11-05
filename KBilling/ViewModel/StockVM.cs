@@ -11,7 +11,7 @@ namespace KBilling.ViewModel {
       public void UpdateStock () => FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToDisplay ());
 
       StockLevel Get (decimal? qty) => qty switch {
-         <= 0 => StockLevel.OutOfStock,
+         <= 0 => StockLevel.InSufficient,
          <= 5 => StockLevel.Low,
          <= 20 => StockLevel.Medium,
          _ => StockLevel.High

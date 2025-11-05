@@ -24,6 +24,7 @@ public partial class MainView : UserControl {
       BtnPricing.IsVisible = isAdmin;
       BtnStock.IsVisible = isAdmin;
       BtnDashboard.IsVisible = isAdmin;
+      BtnPos.IsVisible = isAdmin;
       RegisterEvents ();
    }
 
@@ -34,6 +35,7 @@ public partial class MainView : UserControl {
       BtnDashboard.Click += (s, e) => ShowView ("DashBoard");
       BtnPricing.Click += (s, e) => ShowView ("PriceUpdateView");
       BtnStock.Click += (s, e) => ShowView ("StocksView");
+      BtnPos.Click += (s, e) => ShowView ("BillingView");
    }
 
    void UnregisterEvents () {
@@ -41,6 +43,7 @@ public partial class MainView : UserControl {
       BtnDashboard.Click -= (s, e) => ShowView ("DashBoard");
       BtnPricing.Click -= (s, e) => ShowView ("PriceUpdateView");
       BtnStock.Click -= (s, e) => ShowView ("StocksView");
+      BtnPos.Click -= (s, e) => ShowView ("BillingView");
    }
 
    void ShowView (string key) {

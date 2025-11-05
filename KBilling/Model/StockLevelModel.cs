@@ -1,6 +1,6 @@
 ﻿namespace KBilling.Model {
    public enum StockLevel {
-      Low, Medium, High, OutOfStock
+      Low, Medium, High, InSufficient
    }
 
    public static class StockLevelEx {
@@ -8,7 +8,7 @@
          StockLevel.Low => "Low",
          StockLevel.Medium => "Medium",
          StockLevel.High => "High",
-         StockLevel.OutOfStock => "Out of Stock",
+         StockLevel.InSufficient => "Out of Stock",
          _ => "Unknown"
       };
    }

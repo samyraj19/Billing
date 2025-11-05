@@ -14,8 +14,12 @@
          public const string InsertDetails = "sp_InsertBillDetails";
 
       }
+
       public static class Sales {
-         public const string GetBillsHeader = "sp_GetSalesReport";
+         public const string GetSalesSummary = "sp_GetSalesReport";
+         public const string GetTopSellingItems = "sp_GetTopSellingItems";
+         public const string GetLatestTransactions = "sp_GetLatestTransactions";
+         public const string GetStocksReport = "sp_GetStocksReport";
       }
    }
 }

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace KBilling.Model {
-   public partial class DashboardModel : BaseModel {
+   public partial class SalesSummary : BaseModel {
       [ObservableProperty] string? totalItems;
       [ObservableProperty] string? totalBills;
       [ObservableProperty] string? salesAmount;
@@ -12,16 +12,23 @@ namespace KBilling.Model {
       [ObservableProperty] int no;
       [ObservableProperty] string? billNumber;
       [ObservableProperty] string? date;
-      [ObservableProperty] decimal amount;
-      [ObservableProperty] decimal receivedAmount;
-      [ObservableProperty] decimal balanceAmount;
+      [ObservableProperty] string? amount;
+      [ObservableProperty] string? receivedAmount;
+      [ObservableProperty] string? balanceAmount;
       [ObservableProperty] string? payment;
    }
 
-   public partial class TopSellingItems : BaseModel{
+   public partial class TopSellingItems : BaseModel {
       [ObservableProperty] string? itemCode;
       [ObservableProperty] string? itemName;
-      [ObservableProperty] int quanityt;
-      [ObservableProperty] decimal amount;
+      [ObservableProperty] string? quantity;
+      [ObservableProperty] string? amount;
+   }
+
+   public partial class StockRepot : BaseModel {
+      [ObservableProperty] string? itemCode;
+      [ObservableProperty] string? itemName;
+      [ObservableProperty] string? stockQuantity;
+      [ObservableProperty] string? status;
    }
 }

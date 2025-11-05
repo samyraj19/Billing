@@ -22,6 +22,7 @@
 				<Grid Grid.Row="0" Background="Transparent">
 					<Label Content="🏪 Fancy Store"/>
 				</Grid>
+				<Separator Margin="0,25,0,0" BorderBrush="LightGray"/>
 				<StackPanel Grid.Row="1"
 						Orientation="Vertical"
 							HorizontalAlignment="Center">
@@ -29,6 +30,7 @@
 					<Button x:Name="BtnProduct" Content="Products"/>
 					<Button x:Name="BtnPricing" Content="Pricing"/>
 					<Button x:Name="BtnStock" Content="Stocks"/>
+					<Button x:Name="BtnPos" Content="POS"/>
 				</StackPanel>
 			</Grid>
 		</Border>

@@ -7,7 +7,6 @@ using Avalonia.Markup.Xaml;
 using KBilling.ViewModel;
 
 namespace KBilling;
-
 public partial class PriceUpdateView : UserControl {
    public PriceUpdateView () {
       InitializeComponent ();

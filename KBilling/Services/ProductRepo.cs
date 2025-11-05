@@ -29,7 +29,7 @@ namespace KBilling.Services {
          return products;
       }
 
-      public bool Insert (Model.Product p) {
+      public bool Insert (Product p) {
          ArgumentNullException.ThrowIfNull (p);
          var parameters = new[]
          {
@@ -47,7 +47,7 @@ namespace KBilling.Services {
          App.Repo.QueryExe.ExecuteSP ("sp_InsertProduct", parameters);
          return true;
       }
-      public bool Update (Model.Product p) {
+      public bool Update (Product p) {
          ArgumentNullException.ThrowIfNull (p);
          var parameters = new[]{
               new SqlParameter("@ProductCode", SqlDbType.Int) { Value = p.ProductNumber },
