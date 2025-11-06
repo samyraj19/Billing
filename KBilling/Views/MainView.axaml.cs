@@ -31,6 +31,7 @@ public partial class MainView : UserControl {
    void OnUnloaded (object? sender, RoutedEventArgs e) => UnregisterEvents ();
 
    void RegisterEvents () {
+      BtnCategory.Click += (s, e) => ShowView ("CategoryView");
       BtnProduct.Click += (s, e) => ShowView ("AddProduct");
       BtnDashboard.Click += (s, e) => ShowView ("DashBoard");
       BtnPricing.Click += (s, e) => ShowView ("PriceUpdateView");
@@ -39,6 +40,7 @@ public partial class MainView : UserControl {
    }
 
    void UnregisterEvents () {
+      BtnCategory.Click += (s, e) => ShowView ("CategoryView");
       BtnProduct.Click -= (s, e) => ShowView ("AddProduct");
       BtnDashboard.Click -= (s, e) => ShowView ("DashBoard");
       BtnPricing.Click -= (s, e) => ShowView ("PriceUpdateView");

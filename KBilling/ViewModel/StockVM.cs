@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using KBilling.Model;
 
@@ -7,6 +9,10 @@ namespace KBilling.ViewModel {
    public partial class StockVM : ProductVM {
 
       public StockVM () { }
+
+      public bool UpdateQty (IEnumerable<Product> products) { 
+         return Repo.Products.UpdateQty(products); 
+      }
 
       public void UpdateStock () => FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToDisplay ());
 

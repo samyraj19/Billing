@@ -13,5 +13,7 @@ namespace KBilling.Services {
       public QueryExecutor QueryExe => new ();
 
       public ISalesRepo Sales => new SalesRepo ();
+
+      public ICategoryRepo Category => new CategoryRepo ();
    }
 }

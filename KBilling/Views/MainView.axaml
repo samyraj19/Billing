@@ -27,6 +27,7 @@
 						Orientation="Vertical"
 							HorizontalAlignment="Center">
 					<Button x:Name="BtnDashboard" Content="DashBoard"/>
+					<Button x:Name="BtnCategory" Content="Category"/>
 					<Button x:Name="BtnProduct" Content="Products"/>
 					<Button x:Name="BtnPricing" Content="Pricing"/>
 					<Button x:Name="BtnStock" Content="Stocks"/>

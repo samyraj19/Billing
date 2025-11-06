@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="500" Height="700"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		TransparencyLevelHint="AcrylicBlur"
+		Background="Transparent"
+		CanResize="False"
+        x:Class="KBilling.ItemListDialog"
+		xmlns:vm="using:KBilling.ViewModel"
+		x:DataType="vm:CategoryVM"
+        Title="ItemListDialog">
+	<Window.DataContext>
+		<vm:CategoryVM/>
+	</Window.DataContext>
+	<Grid RowDefinitions="5* 95*">
+		<TextBox x:Name="SearchTextbox" Grid.Row="0"
+				 Width="490" Height="35"
+				 Margin="2"
+				 Watermark="Search by Product Name or Number"/>
+		<ListBox Grid.Row="1" ItemsSource="{Binding FilterCategories}"
+								 Background="White"
+								 BorderThickness="0">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid ColumnDefinitions="* *">
+						<Grid Grid.Column="0" RowDefinitions="* *">
+							<Label Grid.Row="0"
+								   Content="{Binding Name}"
+								   FontWeight="SemiBold"/>
+							<Label Grid.Row="1"
+								   Content="{Binding Code}"
+								   FontWeight="SemiLight"/>
+						</Grid>
+						<Label Grid.Column="1"
+							   FontWeight="SemiBold"
+							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							   Content="{Binding Prefix}"/>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Grid>
+	
+</Window>

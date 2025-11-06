@@ -6,6 +6,7 @@ using KBilling.ViewModel;
 namespace KBilling.Model {
    public partial class Product : BaseModel {
       [ObservableProperty] int? no;
+      [ObservableProperty] int productId;
       [ObservableProperty] string? productName;
       [ObservableProperty] int? productNumber;
       [ObservableProperty] decimal? purchaseRate;
@@ -32,6 +33,8 @@ namespace KBilling.Model {
       public void SnapShot () => mOriginal = (Product)this.MemberwiseClone ();
 
       public bool IsModified () => mOriginal != null && (PurchaseRate != mOriginal.PurchaseRate || SellingRate != mOriginal.SellingRate);
+
+      public bool IsModifiedQty () => mOriginal != null && (Quantity != mOriginal.Quantity);
    }
 
    public static class ProductExtensions {

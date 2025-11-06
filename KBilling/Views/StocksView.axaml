@@ -29,7 +29,7 @@
 									Binding="{Binding ProductName}"/>
 				<DataGridTextColumn Header="Number" IsReadOnly="True"
 									Binding="{Binding ProductNumber}"/>
-				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
+				<DataGridTextColumn Header="Quantity" 
 									Binding="{Binding Quantity}"/>
 				<DataGridTextColumn Header="Selling ate" IsReadOnly="True"
 									Binding="{Binding SellingRate}"/>

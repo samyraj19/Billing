@@ -19,13 +19,13 @@ namespace KBilling.ViewModel {
 
       public ProductVM () {
          AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
-         //FilterProducts.CollectionChanged += RenumberProducts;
       }
 
       #region Methods
 
       public void LoadData () {
          var datas = Repo.Products.GetAll ();
+         foreach (var p in datas) p.SnapShot ();
          AllProducts?.Clear ();
          AllProducts?.AddRange (datas);
          UpdateFilter (string.Empty);
@@ -107,12 +107,6 @@ namespace KBilling.ViewModel {
                          p.ProductName.Contains (filterValue, StringComparison.OrdinalIgnoreCase) ||
                          p.ProductNumber.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase));
       }
-
-      //void RenumberProducts (object? sender, NotifyCollectionChangedEventArgs e) {
-      //   int no = 1;
-      //   if (AllProducts is null) return;
-      //   foreach (Product item in AllProducts) item.No = no++;
-      //}
 
       public void Refersh () => UpdateFilter (string.Empty);
       #endregion

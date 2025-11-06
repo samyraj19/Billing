@@ -7,13 +7,14 @@ namespace KBilling.ViewManagement {
          reg.Register ("AddProduct", new AddProducts ());
          reg.Register ("PriceUpdateView", new PriceUpdateView ());
          reg.Register ("StocksView", new StocksView ());
-
+         reg.Register ("CategoryView", new CategoryView ());
          reg.Register ("BillingView", new BillingView ());
 
          var windowRegistry = WindowRegistry.Instance;
          windowRegistry.Register<MainWindow> ("MainWindow");
          windowRegistry.Register<DiscountDialog> ("DiscountDialog");
-         windowRegistry.Register<ProductLookupDialog> ("ProductLookupDialog"); 
+         windowRegistry.Register<ProductLookupDialog> ("ProductLookupDialog");
+         windowRegistry.Register<ItemListDialog> ("ItemListDialog");
       }
    }
 }

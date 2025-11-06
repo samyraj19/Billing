@@ -16,6 +16,7 @@ namespace KBilling.Services {
          var products = new List<Model.Product> ();
          foreach (DataRow row in dt.Rows) {
             var product = new Model.Product {
+               ProductId = (int)row["ProductId"],
                ProductNumber = (int)row["ProductCode"],
                ProductName = (string)row["ProductName"],
                PurchaseRate = (decimal)row["PurchasePrice"],
@@ -68,6 +69,45 @@ namespace KBilling.Services {
          };
          App.Repo.QueryExe.ExecuteSP ("sp_DeleteProduct", parameters);
          return true;
+      }
+
+      public bool UpdatePrices (IEnumerable<Product> products) {
+         ArgumentNullException.ThrowIfNull (products);
+         foreach (var p in products) {
+            if (p.IsModified ()) {
+               Update (p);
+            }
+         }
+         return true;
+
+         void Update (Product p) {
+            var parameters = new[]{
+              new SqlParameter("@ProductId", SqlDbType.Int) { Value = p.ProductId },
+              new SqlParameter("@PurchasePrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.PurchaseRate ?? 0m },
+              new SqlParameter("@SellingPrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.SellingRate ?? 0m },
+              new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
+            };
+            App.Repo.QueryExe.ExecuteSP ("sp_UpdateItemPrice", parameters);
+         }
+      }
+
+      public bool UpdateQty (IEnumerable<Product> products) {
+         ArgumentNullException.ThrowIfNull (products);
+         foreach (var p in products) {
+            if (p.IsModifiedQty ()) {
+               Update (p);
+            }
+         }
+         return true;
+
+         void Update (Product p) {
+            var parameters = new[]{
+              new SqlParameter("@ProductId", SqlDbType.Int) { Value = p.ProductId },
+              new SqlParameter("@Qty", SqlDbType.Int){ Value = p.Quantity ?? 0 },
+              new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
+            };
+            App.Repo.QueryExe.ExecuteSP ("sp_UpdateItemQuantity", parameters);
+         }
       }
    }
 }

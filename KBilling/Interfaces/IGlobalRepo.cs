@@ -6,6 +6,7 @@ namespace KBilling.Interfaces {
       IProductRepo Products { get; }
       IBillRepo Bills { get; }
       ISalesRepo Sales { get; }
+      ICategoryRepo Category { get; }
       QueryExecutor QueryExe { get; } // shared 
    }
 }

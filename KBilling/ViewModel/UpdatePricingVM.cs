@@ -6,5 +6,11 @@ using System.Linq;
 using KBilling.Model;
 
 namespace KBilling.ViewModel {
-   public class UpdatePricingVM : ProductVM { }
+   public class UpdatePricingVM : ProductVM {
+      public UpdatePricingVM () { }
+
+      public bool UpdatePricing (IEnumerable<Product> products) {
+         return Repo.Products.UpdatePrices (products);
+      }
+   }
 }
