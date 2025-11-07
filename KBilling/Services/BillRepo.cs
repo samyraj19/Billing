@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace KBilling.Services {
    public class BillRepo : IBillRepo {
-      public bool Insert (BillHeader? bill,IEnumerable<BillDetails> details) {
+      public bool Insert (BillHeader? bill, IEnumerable<BillDetails> details) {
          ArgumentNullException.ThrowIfNull (bill);
 
          var parameters = new[]
@@ -26,19 +26,19 @@ namespace KBilling.Services {
 
             // OUTPUT parameters
             new SqlParameter("@OutInvoiceID", SqlDbType.BigInt) { Direction = ParameterDirection.Output },
-            new SqlParameter("@OutInvoiceNumber", SqlDbType.NVarChar, 30) { Direction = ParameterDirection.Output }
+            new SqlParameter("@OutInvoiceNumber", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output }
          };
 
-         App.Repo.QueryExe.ExecuteSP ("sp_InsertBillHeader", parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Bills.InsertHeader, parameters);
 
          // Retrieve output values
          bill.BillId = Convert.ToInt64 (parameters[10].Value);
          bill.BillNumber = Convert.ToString (parameters[11].Value);
-         foreach(var detail in details) {
+         foreach (var detail in details) {
             detail.BillId = bill.BillId;
             detail.BillNo = bill.BillNumber;
             Insert (detail);
-            UpdateQuantity (detail);
+            DetectQuantity (detail);
          }
          return true;
       }
@@ -49,26 +49,26 @@ namespace KBilling.Services {
          var parameters = new[]
          {
              new SqlParameter("@BillId", SqlDbType.BigInt) { Value = bill.BillId },
-             new SqlParameter("@BillNumber", SqlDbType.NVarChar) { Value = bill.BillNo },
-             new SqlParameter("@ProductCode", SqlDbType.Int) { Value = bill.ProductCode },
+             new SqlParameter("@BillNumber", SqlDbType.NVarChar,100) { Value = bill.BillNo },
+             new SqlParameter("@ProductCode", SqlDbType.NVarChar,100) { Value = bill.ProductCode },
              new SqlParameter("@ProductName", SqlDbType.NVarChar, 200) { Value = bill.ProductName },
              new SqlParameter("@Price", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Price },
              new SqlParameter("@Quantity", SqlDbType.Int) { Value = bill.Quantity },
          };
 
-         App.Repo.QueryExe.ExecuteSP ("sp_InsertBillDetails", parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Bills.InsertDetails, parameters);
       }
 
-      void UpdateQuantity (BillDetails? bill) {
+      void DetectQuantity (BillDetails? bill) {
          ArgumentNullException.ThrowIfNull (bill);
 
          var parameters = new[]
          {
-             new SqlParameter("@ItemCode", SqlDbType.Int) { Value = bill.ProductCode },
-             new SqlParameter("@Quantity", SqlDbType.Int) { Value = bill.Quantity },
+             new SqlParameter("@Code",SqlDbType.NVarChar,100) { Value = bill.ProductCode },
+             new SqlParameter("@SoldQty", SqlDbType.Int) { Value = bill.Quantity },
          };
 
-         App.Repo.QueryExe.ExecuteSP (SP.Products.UpdateStock, parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Bills.DetectQuantity, parameters);
       }
    }
 }

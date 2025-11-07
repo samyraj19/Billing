@@ -10,6 +10,7 @@ using KBilling.ViewModel;
 using MsBox.Avalonia.Enums;
 using MsBox.Avalonia;
 using KBilling.Model;
+using KBilling.ViewManagement;
 
 namespace KBilling;
 public partial class AddProducts : UserControl {
@@ -28,6 +29,7 @@ public partial class AddProducts : UserControl {
       DataGridProduct.SelectionChanged += OnSelectionChanged;
       EnterFocusHelper.Attach (MainPanel);
 
+      txtName.KeyDown += OnNameKeyDown;
       textCode.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
       txtQty.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
       txtPurRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
@@ -44,6 +46,7 @@ public partial class AddProducts : UserControl {
       BtnCancel.Click -= OnCancelClicked;
       DataGridProduct.SelectionChanged -= OnSelectionChanged;
 
+      txtName.KeyDown -= OnNameKeyDown;
       textCode.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
       txtQty.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
       txtPurRate.RemoveHandler (InputElement.TextInputEvent, OnTextInputDecimal);
@@ -60,6 +63,19 @@ public partial class AddProducts : UserControl {
    void OnSelectionChanged (object? sender, SelectionChangedEventArgs e) => mSelItem = DataGridProduct.SelectedItem as Product;
 
    void OnTextInputInteger (object? sender, TextInputEventArgs e) => e.Handled = !int.TryParse (e.Text, out _);
+
+   void OnNameKeyDown (object? sender, Avalonia.Input.KeyEventArgs e) {
+      if (mManager.GetWindow ("ItemListDialog") is not ItemListDialog dialog) return;
+
+      // position below the search textbox
+      var pos = txtName.PointToScreen (new Point (0, txtName.Bounds.Height));
+      dialog.Position = pos;
+      if (dialog.DataContext is CategoryVM vm) mCategory = vm;
+
+      e.Handled = true;
+      dialog.ShowDialog (MainWindow.Instance);
+      dialog.ItemApplied += (cat) => ApplyItem (cat);
+   }
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
       if (e.Key == Key.Enter) {
@@ -82,6 +98,7 @@ public partial class AddProducts : UserControl {
          if (action.IsDelete ()) DeleteAsync (item);
          else if (action.IsEdit ()) {
             textCode.IsEnabled = false;
+            txtName.IsEnabled = false;
             VM ().Edit (item);
          }
       } else AppMsg.AskItem ();
@@ -89,11 +106,13 @@ public partial class AddProducts : UserControl {
    #endregion
 
    #region Methods
+
    void Submit () {
       if (VM ().CanSubmit ()) {
-         int code = mAction.IsEdit () ? mSelItem?.ProductNumber ?? 0 : -1;
+         string? code = mAction.IsEdit () ? mSelItem?.ProductNumber : string.Empty;
          VM ().AddOrUpdate (VM (), code);
          Clear ();
+         VM ().LoadData ();
       }
    }
 
@@ -102,15 +121,18 @@ public partial class AddProducts : UserControl {
       if (box == ButtonResult.Yes) VM ().DeleteItem (item);
    }
 
-   ProductVM VM () {
-      if (DataContext is ProductVM vm) return vm;
-      else throw new InvalidOperationException ("DataContext is not of type ProductVM");
+   void ApplyItem (Category cat) {
+      VM ().ProductName = cat.Name;
+      VM ().ProductNumber = cat.Code;
    }
+
+   ProductVM VM () => DataContext is ProductVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type ProductVM");
 
    void Clear () {
       VM ().Clear ();
       VM ().Refersh ();
       textCode.IsEnabled = true;
+      txtName.IsEnabled = true;
       mAction = EAction.None;
    }
 
@@ -119,5 +141,7 @@ public partial class AddProducts : UserControl {
    #region Fields
    Product? mSelItem = null;
    EAction mAction = EAction.None;
+   WindowManager mManager = new ();
+   Category mCategory = new ();
    #endregion
 }

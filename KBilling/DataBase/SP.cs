@@ -7,7 +7,6 @@
          public const string Delete = "sp_DeleteProduct";
          public const string UpdateStock = "sp_UpdateItemQuantity";
          public const string UpdatePrice = "sp_UpdateItemPrice";
-         public const string UpdateQty = "sp_UpdateItemQuantity";
       }
 
       public static class Categories {
@@ -22,7 +21,7 @@
          public const string GetBillDetails = "sp_GetBillDetails";
          public const string InsertHeader = "sp_InsertBillHeader";
          public const string InsertDetails = "sp_InsertBillDetails";
-
+         public const string DetectQuantity = "sp_DetectQuantity";
       }
 
       public static class Sales {

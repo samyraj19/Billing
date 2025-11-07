@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using KBilling.Helper;
 using KBilling.Model;
 using KBilling.ViewModel;
 
@@ -26,15 +27,17 @@ public partial class ProductLookupDialog : Window {
       VM ().LoadData ();
    }
 
-   private void OnDoubleTapped (object? sender, TappedEventArgs e) {
+   void OnDoubleTapped (object? sender, TappedEventArgs e) {
       if (DataGridProducts.SelectedItem is Product item) {
-         ProductSelected?.Invoke (item);
-         Close ();
+         if (item.Quantity == 0) MsgBox.ShowErrorAsync ("Item", "OUT OF STOCK.");
+         else {
+            ProductSelected?.Invoke (item); Close ();
+         }
       }
    }
 
    void OnTextChanging (object? sender, TextChangingEventArgs e) {
-      VM().UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
+      VM ().UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
    }
 
    void OnKeyDown (object? sender, KeyEventArgs e) {

@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace KBilling.Services {
    public class CategoryRepo : ICategoryRepo {
+
       public IEnumerable<Category> GetAll () {
          DataTable dt = App.Repo.QueryExe.QuerySP (SP.Categories.GetAll);
          if (dt.Rows.Count == 0) return Enumerable.Empty<Category> (); // safe, no nulls
@@ -36,6 +37,27 @@ namespace KBilling.Services {
               new SqlParameter("@Description", SqlDbType.NVarChar, 150) { Value = c.Description ?? string.Empty },
          };
          App.Repo.QueryExe.ExecuteSP (SP.Categories.Insert, parameters);
+         return true;
+      }
+
+      public bool Update (Category c) {
+         ArgumentNullException.ThrowIfNull (c);
+         var parameters = new[]{
+              new SqlParameter("@Id", SqlDbType.Int) { Value = c.CategoryId},
+              new SqlParameter("@Name", SqlDbType.NVarChar,100) { Value = c.Name ?? string.Empty },
+              new SqlParameter("@Prefix", SqlDbType.NVarChar, 10) { Value = c.Prefix ?? string.Empty },
+              new SqlParameter("@Code", SqlDbType.NVarChar,100) { Value = c.Code ?? string.Empty },
+              new SqlParameter("@Description", SqlDbType.NVarChar,150) { Value = c.Description ?? string.Empty },
+         };
+         App.Repo.QueryExe.ExecuteSP (SP.Categories.Update, parameters);
+         return true;
+      }
+
+      public bool Delete (int id) {
+         var parameters = new[]{
+              new SqlParameter("@Id", SqlDbType.Int) { Value = id },
+         };
+         App.Repo.QueryExe.ExecuteSP (SP.Categories.Delete, parameters);
          return true;
       }
    }

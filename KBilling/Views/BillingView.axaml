@@ -63,11 +63,14 @@
 			<Grid ColumnDefinitions="80* 20*">
 				<StackPanel Grid.Column="0" Orientation="Horizontal">
 					<TextBox x:Name="txtSearch" Grid.Column="0"
-						 Width="750" Height="35"
+						 Width="500" Height="35"
 						 Margin="5" Padding="5"
 						 HorizontalAlignment="Left"
 						 VerticalContentAlignment="Center"
 						 Watermark="Search by Product Name or Number"/>
+					
+					<Label x:Name="lblError" Margin="10,0" Foreground="Red" FontWeight="SemiLight"
+						   VerticalContentAlignment="Center"/>
 				</StackPanel>
 			</Grid>
 
@@ -100,6 +103,7 @@
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<TextBox Text="{Binding Quantity}"
+										 Tag="{Binding AvilableStock}"
 										 TextChanged="OnGridQtyTxtChaning"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>

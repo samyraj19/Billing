@@ -13,6 +13,7 @@ namespace KBilling.Helper {
                case Product p: p.No = index++; break;
                case BillDetails b: b.No = index++; break;
                case LastestTransaction t: t.No = index++; break;
+               case Category c: c.No = index++; break;
             }
          }
       }

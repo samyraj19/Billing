@@ -38,6 +38,7 @@
 				<Label Grid.Row="0" Grid.Column="4" Content="Quantity *"/>
 				
 				<TextBox Grid.Row="1" Grid.Column="0"
+						 x:Name="txtName"
 						 IsReadOnly="True"
 						 Text="{Binding ProductName,Mode=TwoWay}"/>
 				<TextBox Grid.Row="1" Grid.Column="1"

@@ -1,12 +1,16 @@
 using System;
 using System.IO;
+using System.Xml.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using KBilling.Helper;
+using KBilling.Model;
 using KBilling.ViewManagement;
+using KBilling.ViewModel;
+using MsBox.Avalonia.Enums;
 
 namespace KBilling;
 public partial class CategoryView : UserControl {
@@ -17,24 +21,50 @@ public partial class CategoryView : UserControl {
    }
 
    void OnLoaded (object? sender, RoutedEventArgs e) {
-      // LoadDataFromFile ();
-      TextName.KeyDown += OnSearchKeyDown;
+      SearchTxt.TextChanging += OnTextChanging;
+
+      SortByCmb.SelectionChanged += OnCmbChanged;
+      DGCategory.SelectionChanged += OnSelectionChanged;
+
+      BtnSubmit.Click += OnSubmit;
+      BtnCancel.Click += OnCancel;
+      VM ().GetAll ();
+      BindAlpha ();
    }
 
-   private void OnSearchKeyDown (object? sender, Avalonia.Input.KeyEventArgs e) {
-      if (mManager.GetWindow ("ItemListDialog") is not ItemListDialog dialog) return;
+   void OnCancel (object? sender, RoutedEventArgs e) { }
 
-      // position below the search textbox
-      var pos = TextName.PointToScreen (new Point (0, TextName.Bounds.Height));
-      dialog.Position = pos;
-
-      e.Handled = true;
-      dialog.ShowDialog (MainWindow.Instance);
-   }
+   void OnSubmit (object? sender, RoutedEventArgs e) =>VM ().Submit (mAction, VM());
 
    void OnUnload (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-     // throw new System.NotImplementedException ();
+      SearchTxt.TextChanging -= OnTextChanging;
+      SortByCmb.SelectionChanged -= OnCmbChanged;
+      DGCategory.SelectionChanged -= OnSelectionChanged;
    }
+
+   void OnCmbChanged (object? sender, SelectionChangedEventArgs e) {
+      if (sender is not ComboBox cmb || cmb.SelectedItem is not string item) return;
+      VM ().SoryBy (item);
+   }
+
+   void OnSelectionChanged (object? sender, SelectionChangedEventArgs e) {
+      if (DGCategory.SelectedItem is not Category category) return;
+      mCat = category;
+   }
+
+   void OnTextChanging (object? sender, TextChangingEventArgs e) => VM ().Filter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
+
+   async void OnActionClick (object? sender, RoutedEventArgs e) {
+      if ((sender as Button)?.Tag?.ToString () is not string action) return;
+      mAction = action.GetEAction ();
+      if (mAction.IsEdit () && mCat is Category category) VM ().Edit (category);
+      else if (mAction.IsDelete () && mCat is Category category1) {
+         var box = await AppMsg.AskDelItem ();
+         if (box == ButtonResult.Yes) VM ().Delete (category1.CategoryId);
+      } else await AppMsg.AskItem ();
+   }
+
+   void BindAlpha () => SortByCmb.ItemsSource = AlphaList.Get ();
 
    void LoadDataFromFile () {
       string path = @"C:\Users\Samyraj\Downloads\FancyStoreItemList.txt";
@@ -53,8 +83,10 @@ public partial class CategoryView : UserControl {
       }
    }
 
+   CategoryVM VM () => DataContext is CategoryVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type CategoryVM");
 
    #region Fields
-   WindowManager mManager = new();
+   EAction mAction = EAction.None;
+   Category? mCat;
    #endregion
 }

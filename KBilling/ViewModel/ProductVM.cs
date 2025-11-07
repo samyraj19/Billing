@@ -34,7 +34,7 @@ namespace KBilling.ViewModel {
       public bool CanSubmit () {
          var errors = new List<string> ();
          if (!Is.NotEmpty (ProductName)) errors.Add ("Product name is required.");
-         if (ProductNumber is null || ProductNumber < 0) errors.Add ("ProductNumber must be > 0.");
+         if (!Is.NotEmpty (ProductNumber)) errors.Add ("ProductNumber must be > 0.");
          if (AppSession.Role == EUserRoles.Admin) {
             if (PurchaseRate is null || PurchaseRate <= 0) errors.Add ("Purchase rate must be > 0.");
             if (SellingRate is null || SellingRate <= 0) errors.Add ("Selling rate must be > 0.");
@@ -61,7 +61,7 @@ namespace KBilling.ViewModel {
          Quantity = product.Quantity;
       }
 
-      public void AddOrUpdate (Product product, int code) {
+      public void AddOrUpdate (Product product, string? code) {
          var existing = AllProducts?.SingleOrDefault (p => p.ProductNumber == code);
          if (existing is not null) UpdateItem (product, existing);
          else AddItem (product);
@@ -103,10 +103,11 @@ namespace KBilling.ViewModel {
          if (AllProducts is null) return;
          string filterValue = text?.Trim () ?? string.Empty;
 
-         FilterProducts?.Filter (AllProducts, p => string.IsNullOrEmpty (filterValue) ||
-                         p.ProductName.Contains (filterValue, StringComparison.OrdinalIgnoreCase) ||
-                         p.ProductNumber.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase));
+         FilterProducts?.Filter (AllProducts, p => !string.IsNullOrEmpty (p.ProductName) && (string.IsNullOrEmpty (filterValue) ||
+                        p.ProductName.Contains (filterValue, StringComparison.OrdinalIgnoreCase) ||
+                        p.ProductNumber?.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase) == true));
       }
+
 
       public void Refersh () => UpdateFilter (string.Empty);
       #endregion

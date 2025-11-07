@@ -70,13 +70,20 @@ public partial class BillingView : UserControl {
    }
 
    async void OnPayClick (object? sender, RoutedEventArgs e) {
-      if (!VM ().CanPay ()) return;
-      var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", "Are you sure you want to proceed to payment?" + mPaymode.Get ());
-      if (confirm == ButtonResult.Yes) {
-         await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
-         VM ().ResetBill ();
-         ClearPaydetails ();
-      } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+      if (sender is Button btn) btn.IsEnabled = false;
+      try {
+         var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
+         if (confirm == ButtonResult.Yes) {
+            if (VM ().CanPay ()) {
+               ResertBill ();
+               await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
+            }
+         } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+      } catch {
+         await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+      } finally {
+         if (sender is Button btn1) btn1.IsEnabled = true;
+      }
    }
 
    void OnReceivedAmtChanged (object? sender, RoutedEventArgs e) {
@@ -107,10 +114,7 @@ public partial class BillingView : UserControl {
       dialog.ProductSelected += (product) => Add (product);
    }
 
-   void BtnClearAllClick (object? sender, RoutedEventArgs e) {
-      VM ().ResetBill ();
-      VM ().BillItems.Clear ();
-   }
+   void BtnClearAllClick (object? sender, RoutedEventArgs e) => ResertBill ();
 
    void DataGridSelectionChanged (object? sender, SelectionChangedEventArgs e) => mSelectedItem = DataGridProduct.SelectedItem as BillDetails;
 
@@ -123,16 +127,25 @@ public partial class BillingView : UserControl {
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
       if (sender is not TextBox textBox) return;
 
+      lblError.Content = string.Empty;
       string input = textBox.Text ?? string.Empty;
       if (input.Trim ().Length > 0 && !Is.Integer (input)) textBox.Text = input[..^1]; // remove last invalid char
 
-      if (Is.NotEmpty (textBox.Text)) VM().UpdateBill ();
+      if (Is.NotEmpty (textBox.Text)) {
+         int.TryParse (textBox.Text, out var qty);
+         int.TryParse (textBox?.Tag?.ToString (), out var usrqty);
+         if (qty > usrqty) {
+            MsgBox.ShowInfoAsync ("Info", "Quantity exceeds available stock.");
+            return;
+         }
+         VM ().UpdateBill ();
+      }
    }
 
    async void IconButton_Click (object? sender, RoutedEventArgs e) {
       var confirm = await MsgBox.ShowConfirmAsync ("Delete Item", "Are you sure?");
       if (confirm == ButtonResult.Yes) {
-         if (mSelectedItem is not null) VM ().BillItems.Remove (mSelectedItem);
+         if (mSelectedItem is BillDetails detail) VM ()?.BillItems?.Remove (detail);
          else await MsgBox.ShowWarningAsync ("Select Item", "Please select an item.");
       }
    }
@@ -140,12 +153,16 @@ public partial class BillingView : UserControl {
 
    #region Medthods
    void Add (Product product) {
-      VM ().AddItem (product);
-      txtSearch.Text = string.Empty;
-      txtSearch.Focus ();
+      lblError.Content = string.Empty;
+      if (VM ().AddItem (product)) {
+         txtSearch.Text = string.Empty;
+         txtSearch.Focus ();
+      } else lblError.Content = "This item already in the lists";
    }
 
-   void ClearPaydetails () {
+
+   void ResertBill () {
+      VM ().Reset ();
       VM ().BillHeader.PaymentMethod = EPaymentMode.None.Get ();
       PayPanel.Children.OfType<ToggleButton> ().ToList ().ForEach (btn => btn.IsChecked = false);
       chkReceived.IsChecked = true;

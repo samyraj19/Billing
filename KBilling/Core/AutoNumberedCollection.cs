@@ -8,7 +8,7 @@ namespace KBilling.Core {
    public class AutoNumberedCollection<T> : ObservableCollection<T> { //BillCollection
       protected override void OnCollectionChanged (NotifyCollectionChangedEventArgs e) {
          base.OnCollectionChanged (e);
-         if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Reset) {
+         if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Remove) {
             CollectionHelper.ReArrange (this.Cast<object> ());
          }
       }

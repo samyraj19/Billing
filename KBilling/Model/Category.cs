@@ -8,5 +8,13 @@ namespace KBilling.Model {
       [ObservableProperty] string? prefix;
       [ObservableProperty] string? code;
       [ObservableProperty] string? description;
+
+      public void Clear () {
+         CategoryId = 0;
+         Name = string.Empty;
+         Prefix = string.Empty;
+         Code = string.Empty;
+         Description = string.Empty;
+      }
    }
 }

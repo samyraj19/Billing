@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" Width="750" Height="250"
+             mc:Ignorable="d" Width="400" Height="600"
 			 ExtendClientAreaToDecorationsHint="True"
 			 ExtendClientAreaChromeHints="NoChrome"
 			 TransparencyLevelHint="AcrylicBlur"
@@ -14,25 +14,42 @@
 	<Window.DataContext>
 		<vm:ProductVM/>
 	</Window.DataContext>
-	<Grid RowDefinitions="20* 80*">
+	<Window.Styles>
+		<Style Selector="ListBoxItem">
+			<Setter Property="BorderBrush" Value="#CCC"/>
+			<Setter Property="BorderThickness" Value="0 0 0 1"/>
+			<Setter Property="Padding" Value="5"/>
+		</Style>
+	</Window.Styles>
+	<Grid RowDefinitions="7* 93*">
 		<TextBox x:Name="txtSearch" Grid.Row="0"
-				 Width="740" Height="35"
+				 Width="385" Height="35"
 				 Margin="2"
 				 Watermark="Search by Product Name or Number"/>
-		<DataGrid Grid.Row="1" ColumnWidth="*"
-				  x:Name="DataGridProducts"
-				  ItemsSource="{Binding FilterProducts}">
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Code" IsReadOnly="True"
-									Binding="{Binding ProductNumber}"/> 
-				<DataGridTextColumn Header="Name" IsReadOnly="True"
-									Binding="{Binding ProductName}"/>
-				<DataGridTextColumn Header="Stock" IsReadOnly="True"
-									Binding="{Binding Quantity}"/>
-				<DataGridTextColumn Header="Price" IsReadOnly="True"
-									Binding="{Binding SellingRate}"/>
-			</DataGrid.Columns>
-		</DataGrid>
+		<ListBox Grid.Row="1"
+				 x:Name="DataGridProducts"
+				 Background="White"
+				 BorderThickness="0"
+				 ItemsSource="{Binding FilterProducts}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid ColumnDefinitions="* * *">
+						<Grid Grid.Column="0" RowDefinitions="* *">
+							<Label Grid.Row="0"
+								   Content="{Binding ProductName}"
+								   FontWeight="SemiBold"/>
+							<Label Grid.Row="1"
+								   Content="{Binding ProductNumber}"
+								   FontWeight="SemiLight"/>
+						</Grid>
+						<Label Grid.Column="1"
+							   FontWeight="ExtraBold"
+							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							   Content="{Binding Quantity}"/>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 	</Grid>
 
 </Window>

@@ -12,12 +12,12 @@ namespace KBilling.Services {
    public class ProductRepo : IProductRepo {
       public IEnumerable<Product> GetAll () {
          DataTable dt = App.Repo.QueryExe.QuerySP (SP.Products.GetAll);
-         if (dt.Rows.Count == 0) return Enumerable.Empty<Model.Product> (); // safe, no nulls
-         var products = new List<Model.Product> ();
+         if (dt.Rows.Count == 0) return Enumerable.Empty<Product> (); // safe, no nulls
+         var products = new List<Product> ();
          foreach (DataRow row in dt.Rows) {
-            var product = new Model.Product {
+            var product = new Product {
                ProductId = (int)row["ProductId"],
-               ProductNumber = (int)row["ProductCode"],
+               ProductNumber = (string)row["ProductCode"],
                ProductName = (string)row["ProductName"],
                PurchaseRate = (decimal)row["PurchasePrice"],
                SellingRate = (decimal)row["SellingPrice"],
@@ -34,7 +34,7 @@ namespace KBilling.Services {
          ArgumentNullException.ThrowIfNull (p);
          var parameters = new[]
          {
-              new SqlParameter("@ProductCode", SqlDbType.Int) { Value = p.ProductNumber },
+              new SqlParameter("@ProductCode", SqlDbType.NVarChar,100) { Value = p.ProductNumber ?? string.Empty},
               new SqlParameter("@ProductName", SqlDbType.NVarChar, 150) { Value = p.ProductName ?? string.Empty },
               new SqlParameter("@PurchasePrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.PurchaseRate ?? 0m },
               new SqlParameter("@SellingPrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.SellingRate ?? 0m },
@@ -45,13 +45,13 @@ namespace KBilling.Services {
               new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
               new SqlParameter("@ModifyDate", SqlDbType.DateTime, 150) { Value = p.Createddate ?? string.Empty },
          };
-         App.Repo.QueryExe.ExecuteSP ("sp_InsertProduct", parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Products.Insert, parameters);
          return true;
       }
       public bool Update (Product p) {
          ArgumentNullException.ThrowIfNull (p);
          var parameters = new[]{
-              new SqlParameter("@ProductCode", SqlDbType.Int) { Value = p.ProductNumber },
+              new SqlParameter("@ProductCode", SqlDbType.NVarChar,100) { Value = p.ProductNumber },
               new SqlParameter("@ProductName", SqlDbType.NVarChar, 150) { Value = p.ProductName ?? string.Empty },
               new SqlParameter("@PurchasePrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.PurchaseRate ?? 0m },
               new SqlParameter("@SellingPrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.SellingRate ?? 0m },
@@ -59,15 +59,15 @@ namespace KBilling.Services {
               new SqlParameter("@IsActive", SqlDbType.Bit) { Value = p.IsActive ?? true},
               new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
          };
-         App.Repo.QueryExe.ExecuteSP ("sp_UpdateProduct", parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Products.Update, parameters);
          return true;
       }
 
-      public bool Delete (int? code) {
+      public bool Delete (string? code) {
          var parameters = new[]{
-              new SqlParameter("@ProductCode", SqlDbType.Int) { Value = code },
+              new SqlParameter("@ProductCode", SqlDbType.NVarChar,100) { Value = code  },
          };
-         App.Repo.QueryExe.ExecuteSP ("sp_DeleteProduct", parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Products.Delete, parameters);
          return true;
       }
 
@@ -87,7 +87,7 @@ namespace KBilling.Services {
               new SqlParameter("@SellingPrice", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.SellingRate ?? 0m },
               new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
             };
-            App.Repo.QueryExe.ExecuteSP ("sp_UpdateItemPrice", parameters);
+            App.Repo.QueryExe.ExecuteSP (SP.Products.UpdatePrice, parameters);
          }
       }
 
@@ -106,7 +106,7 @@ namespace KBilling.Services {
               new SqlParameter("@Qty", SqlDbType.Int){ Value = p.Quantity ?? 0 },
               new SqlParameter("@ModifyBy", SqlDbType.NVarChar, 150) { Value = p.Createdby ?? string.Empty },
             };
-            App.Repo.QueryExe.ExecuteSP ("sp_UpdateItemQuantity", parameters);
+            App.Repo.QueryExe.ExecuteSP (SP.Products.UpdateStock, parameters);
          }
       }
    }

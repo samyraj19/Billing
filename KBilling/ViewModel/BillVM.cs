@@ -11,6 +11,8 @@ using KBilling.Helper;
 using KBilling.Interfaces;
 using KBilling.Model;
 using KBilling.Services;
+using MsBox.Avalonia.Enums;
+using Tmds.DBus.Protocol;
 
 namespace KBilling.ViewModel {
    public partial class BillVM : BillDetails {
@@ -19,19 +21,23 @@ namespace KBilling.ViewModel {
          BillItems.CollectionChanged += (_, __) => UpdateBill ();
       }
 
-      public void AddItem (Product product) {
-         if (BillItems is null) return;
+      public bool AddItem (Product product) {
+         if (BillItems is null || BillHeader is null) return false; // Ensure BillHeader is not null  
+         if (BillItems.Any (b => b.ProductCode == product.ProductNumber)) return false;
          BillItems.Add (new BillDetails {
-            BillId = BillHeader.BillId,
+            BillId = BillHeader.BillId, // Safe to access as BillHeader is checked for null  
             ProductCode = product.ProductNumber,
             ProductName = product.ProductName,
             Price = product.SellingRate,
+            AvilableStock = product.Quantity
          });
+         return true;
       }
+
 
       public void UpdateBill (decimal? discount = null) {
          if (BillHeader == null || BillItems == null) return;
-         
+
          decimal discountValue = discount ?? BillHeader.Discount;
          BillHeader.Discount = discountValue;
          BillHeader.Itemcount = BillItems.Count;
@@ -41,7 +47,7 @@ namespace KBilling.ViewModel {
       }
 
       public bool CanPay () {
-         if (BillItems is null) return false;
+         if (BillItems is null || BillHeader is null) return false; // Ensure BillHeader is not null
 
          var errors = GetValidationErrors ();
          if (errors.Count > 0) {
@@ -50,7 +56,7 @@ namespace KBilling.ViewModel {
             return false;
          }
 
-         BillHeader.CreatedDate = DateTime.Now.ToSql ();
+         BillHeader.CreatedDate = DateTime.Now.ToSql (); // Safe to access as BillHeader is checked for null
          BillHeader.CreatedBy = AppSession.CurrentUser?.Username;
          return Repo.Bills.Insert (BillHeader, BillItems);
       }
@@ -71,7 +77,7 @@ namespace KBilling.ViewModel {
          return errors;
       }
 
-      public void ResetBill () {
+      public void Reset () {
          BillHeader = new ();
          BillItems?.Clear ();
       }

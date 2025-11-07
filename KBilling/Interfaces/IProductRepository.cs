@@ -6,7 +6,7 @@ namespace KBilling.Interfaces {
       IEnumerable<Product> GetAll ();
       bool Insert (Product product);
       bool Update (Product product);
-      bool Delete (int? productNumber);
+      bool Delete (string? productNumber);
       bool UpdatePrices (IEnumerable<Product> products);
       bool UpdateQty (IEnumerable<Product> products);
    }

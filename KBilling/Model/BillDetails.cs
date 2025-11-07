@@ -6,10 +6,11 @@ namespace KBilling.Model {
       [ObservableProperty] int no;
       [ObservableProperty] long billId;
       [ObservableProperty] string? billNo;
-      [ObservableProperty] int? productCode;
+      [ObservableProperty] string? productCode;
       [ObservableProperty] string? productName;
       [ObservableProperty] decimal? price;
       [ObservableProperty] int quantity;
+      [ObservableProperty] int? avilableStock;
 
       public decimal Amount => Price.Value * Quantity;
 

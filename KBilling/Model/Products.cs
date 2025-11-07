@@ -8,7 +8,7 @@ namespace KBilling.Model {
       [ObservableProperty] int? no;
       [ObservableProperty] int productId;
       [ObservableProperty] string? productName;
-      [ObservableProperty] int? productNumber;
+      [ObservableProperty] string? productNumber;
       [ObservableProperty] decimal? purchaseRate;
       [ObservableProperty] decimal? sellingRate;
       [ObservableProperty] int? quantity;
