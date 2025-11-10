@@ -20,6 +20,9 @@ public partial class MainView : UserControl {
       if (isAdmin) {
          mViewManager.ShowView ("DashBoard");
          ToDisplayHeader ("DashBoard");
+      } else {
+         mViewManager.ShowView ("CategoryView");
+         ToDisplayHeader ("CategoryView");
       }
       BtnPricing.IsVisible = isAdmin;
       BtnStock.IsVisible = isAdmin;

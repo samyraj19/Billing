@@ -18,6 +18,7 @@ public partial class Dashboard : UserControl {
       Unloaded += OnUnloaded;
    }
 
+   #region Events
    void OnLoad (object? sender, RoutedEventArgs e) {
       RegisterToggleEvents ();
       DefaultSelection ();
@@ -39,6 +40,10 @@ public partial class Dashboard : UserControl {
       TogglePanel.Children.OfType<ToggleButton> ().Where (t => t != btn).ToList ().ForEach (t => t.IsChecked = false);
    }
 
+   #endregion
+
+
+   #region Methods
    void RegisterToggleEvents () {
       foreach (var toggle in TogglePanel.Children.OfType<ToggleButton> ())
          toggle.Click += OnToggleClicked;
@@ -55,6 +60,8 @@ public partial class Dashboard : UserControl {
    }
 
    DashboardVM VM () => DataContext is DashboardVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type SalesVM");
+
+   #endregion
 
    #region Fields
    EReportType mType = EReportType.Today;
