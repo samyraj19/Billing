@@ -59,9 +59,10 @@
 						x:Name="TogglePanel"
 						HorizontalAlignment="Right"
 						Orientation="Horizontal">
-				<ToggleButton Content="Daily" Tag="{x:Static model:EReportType.Daily}" Classes="paytoggle"/>
-				<ToggleButton Content="Weekly" Tag="{x:Static model:EReportType.Monthly}" Classes="paytoggle"/>
-				<ToggleButton Content="Monthly" Tag="{x:Static model:EReportType.Weekly}" Classes="paytoggle"/>
+				<ToggleButton Content="Today" Tag="{x:Static model:EReportType.Today}" Classes="paytoggle"/>
+				<ToggleButton Content="Yesterday" Tag="{x:Static model:EReportType.Yesterday}" Classes="paytoggle"/>
+				<ToggleButton Content="Weekly" Tag="{x:Static model:EReportType.Weekly}" Classes="paytoggle"/>
+				<ToggleButton Content="Monthly" Tag="{x:Static model:EReportType.Monthly}" Classes="paytoggle"/>
 			</StackPanel>
 		</Grid>
 

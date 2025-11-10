@@ -19,7 +19,7 @@ public partial class Dashboard : UserControl {
    }
 
    void OnLoad (object? sender, RoutedEventArgs e) {
-      RegEvents ();
+      RegisterToggleEvents ();
       DefaultSelection ();
       VM ()?.Sales?.LoadReport (mType);
       VM ()?.Transaction?.LoadTransaction ();
@@ -27,31 +27,36 @@ public partial class Dashboard : UserControl {
       VM ()?.StockReport?.LoadStockRpt ();
    }
 
-   void OnUnloaded (object? sender, RoutedEventArgs e) {
-      TogglePanel.Children.OfType<ToggleButton> ().ToList ().ForEach (toggle => toggle.Click -= OnToggleClicked);
-   }
+   void OnUnloaded (object? sender, RoutedEventArgs e) => UnregisterToggleEvents ();
 
    void OnToggleClicked (object? sender, RoutedEventArgs e) {
-      if (sender is not ToggleButton btn) return;
+      if (sender is not ToggleButton btn || btn.Tag is not EReportType type) return;
+
+      mType = type;
+      VM ()?.Sales?.LoadReport (mType);
+      VM ()?.TopSelling?.LoadTopSellingItems (mType);
+
       TogglePanel.Children.OfType<ToggleButton> ().Where (t => t != btn).ToList ().ForEach (t => t.IsChecked = false);
-      if (btn.Tag is EReportType type) {
-         mType = type;
-         VM ()?.Sales?.LoadReport (mType);
-         VM ()?.TopSelling?.LoadTopSellingItems (mType);
-      }
    }
 
-   void RegEvents () {
-      TogglePanel.Children.OfType<ToggleButton> ().ToList ().ForEach (toggle => toggle.Click += OnToggleClicked);
+   void RegisterToggleEvents () {
+      foreach (var toggle in TogglePanel.Children.OfType<ToggleButton> ())
+         toggle.Click += OnToggleClicked;
+   }
+
+   void UnregisterToggleEvents () {
+      foreach (var toggle in TogglePanel.Children.OfType<ToggleButton> ())
+         toggle.Click -= OnToggleClicked;
    }
 
    void DefaultSelection () {
-      if (TogglePanel.Children[0] is ToggleButton btn) btn.IsChecked = true;
+      if (TogglePanel.Children.Count > 0 && TogglePanel.Children[0] is ToggleButton btn)
+         btn.IsChecked = true;
    }
 
    DashboardVM VM () => DataContext is DashboardVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type SalesVM");
 
    #region Fields
-   EReportType mType = EReportType.Daily;
+   EReportType mType = EReportType.Today;
    #endregion
 }

@@ -22,7 +22,7 @@ namespace KBilling.ViewModel {
       }
 
       public bool AddItem (Product product) {
-         if (BillItems is null || BillHeader is null) return false; // Ensure BillHeader is not null  
+         if (BillItems is null || BillHeader is null || product is null) return false; // Ensure BillHeader is not null  
          if (BillItems.Any (b => b.ProductCode == product.ProductNumber)) return false;
          BillItems.Add (new BillDetails {
             BillId = BillHeader.BillId, // Safe to access as BillHeader is checked for null  

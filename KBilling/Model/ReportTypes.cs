@@ -1,6 +1,7 @@
 ﻿namespace KBilling.Model {
    public enum EReportType {
-      Daily,
+      Today,
+      Yesterday,
       Weekly,
       Monthly
    }

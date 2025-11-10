@@ -13,6 +13,7 @@ using MsBox.Avalonia.Enums;
 using Avalonia.Input;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
+using KBilling.Controls;
 
 namespace KBilling;
 public partial class BillingView : UserControl {
@@ -24,12 +25,13 @@ public partial class BillingView : UserControl {
 
    #region Events
    void OnLoaded (object? sender, RoutedEventArgs e) {
+      KeyDown += OnKeyDown;
+
       BtnDiscount.Click += OnDiscountClick;
       BtnClearAll.Click += BtnClearAllClick;
       BtnPayBill.Click += OnPayClick;
-      DataGridProduct.SelectionChanged += DataGridSelectionChanged;
-      txtSearch.KeyDown += OnSearchTextKeyDown;
 
+      txtSearch.TextChanging += OnSearchTextChanging;
       TextboxPhone.AddHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp, RoutingStrategies.Tunnel);
       TextboxPhone.AddHandler (InputElement.TextInputEvent, OnTextBoxTextInput, RoutingStrategies.Tunnel);
 
@@ -44,12 +46,17 @@ public partial class BillingView : UserControl {
    void OnUnloaded (object? sender, RoutedEventArgs e) {
       // detach handlers to avoid leaks and double subscriptions
       if (BtnDiscount is not null) BtnDiscount.Click -= OnDiscountClick;
-      if (DataGridProduct is not null) DataGridProduct.SelectionChanged -= DataGridSelectionChanged;
       if (BtnClearAll is not null) BtnClearAll.Click -= BtnClearAllClick;
-      if (txtSearch is not null) txtSearch.KeyDown -= OnSearchTextKeyDown;
 
+      if (txtSearch is not null) txtSearch.TextChanging -= OnSearchTextChanging;
       if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.TextInputEvent, OnTextBoxTextInput);
       if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp);
+
+      chkReceived.IsCheckedChanged -= OnReceivedAmtChanged;
+   }
+
+   void OnKeyDown (object? sender, KeyEventArgs e) {
+      if (e.Key == Key.Escape && mProductDialog is not null) mProductDialog.Close ();
    }
 
    void SetUpToggleEvent () {
@@ -57,7 +64,7 @@ public partial class BillingView : UserControl {
       foreach (var btn in toggles) btn.IsCheckedChanged += OnToggleChecked;
    }
 
-   private void OnToggleChecked (object? sender, RoutedEventArgs e) {
+   void OnToggleChecked (object? sender, RoutedEventArgs e) {
       if (sender is not ToggleButton clicked) return;
 
       // Uncheck all other toggles
@@ -72,13 +79,13 @@ public partial class BillingView : UserControl {
    async void OnPayClick (object? sender, RoutedEventArgs e) {
       if (sender is Button btn) btn.IsEnabled = false;
       try {
-         var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
-         if (confirm == ButtonResult.Yes) {
-            if (VM ().CanPay ()) {
+         if (VM ().CanPay ()) {
+            var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
+            if (confirm == ButtonResult.Yes) {
                ResertBill ();
                await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
-            }
-         } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+            } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+         }
       } catch {
          await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
       } finally {
@@ -102,65 +109,78 @@ public partial class BillingView : UserControl {
 
    void OnTextBoxTextInput (object? sender, TextInputEventArgs e) => e.Handled = string.IsNullOrEmpty (e.Text) || !e.Text.All (char.IsDigit);
 
-   void OnSearchTextKeyDown (object? sender, KeyEventArgs e) {
-      if (mManager.GetWindow ("ProductLookupDialog") is not ProductLookupDialog dialog) return;
+   void OnSearchTextChanging (object? sender, TextChangingEventArgs e) {
+      if (mIgnoretxtchange || sender is not TextBox text) return;
+      // Try get or reuse dialog
+      mProductDialog ??= mManager.GetWindow ("ProductLookupDialog") as ProductLookupDialog;
+      if (mProductDialog is null) return;
 
+      mProductDialog.UpdateRefresh (text?.Text?.Trim ());
+      mProductDialog.ClosedEvent += (product) => Add (product);
       // position below the search textbox
-      var pos = txtSearch.PointToScreen (new Point (0, txtSearch.Bounds.Height));
-      dialog.Position = pos;
+      var pos = text.PointToScreen (new Point (0, text.Bounds.Height));
+      mProductDialog.Position = pos;
 
       e.Handled = true;
-      dialog.ShowDialog (MainWindow.Instance);
-      dialog.ProductSelected += (product) => Add (product);
+      if (!mProductDialog.mIsShow) mProductDialog.Show (MainWindow.Instance);
+      txtSearch.Focus ();
    }
 
    void BtnClearAllClick (object? sender, RoutedEventArgs e) => ResertBill ();
 
-   void DataGridSelectionChanged (object? sender, SelectionChangedEventArgs e) => mSelectedItem = DataGridProduct.SelectedItem as BillDetails;
-
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
-      var dialog = mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") as DiscountDialog;
-      if (dialog is null) return;
+      if (VM ()?.BillItems?.Count is <= 0) return;
+      if (mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") is not DiscountDialog dialog) return;
       dialog.DiscountApplied += (discount) => VM ().UpdateBill (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
-      if (sender is not TextBox textBox) return;
+      if (sender is not TextBox textBox || textBox.DataContext is not BillDetails item) return;
 
       lblError.Content = string.Empty;
       string input = textBox.Text ?? string.Empty;
-      if (input.Trim ().Length > 0 && !Is.Integer (input)) textBox.Text = input[..^1]; // remove last invalid char
-
-      if (Is.NotEmpty (textBox.Text)) {
-         int.TryParse (textBox.Text, out var qty);
-         int.TryParse (textBox?.Tag?.ToString (), out var usrqty);
-         if (qty > usrqty) {
-            MsgBox.ShowInfoAsync ("Info", "Quantity exceeds available stock.");
-            return;
-         }
-         VM ().UpdateBill ();
+      // Ensure only integer input
+      if (input.Length > 0 && !Is.Integer (input)) {
+         textBox.Text = input[..^1];
+         textBox.CaretIndex = textBox.Text.Length; // Keep cursor at end
+         return;
       }
+
+      if (int.TryParse (textBox.Text, out var qty) &&
+          int.TryParse (textBox.Tag?.ToString (), out var availableQty)) {
+         if (qty > availableQty) {
+            MsgBox.ShowErrorAsync ("Info", "Quantity exceeds available stock.");
+            item.Quantity = 0;
+         }
+      }
+
+      VM ()?.UpdateBill ();
    }
 
    async void IconButton_Click (object? sender, RoutedEventArgs e) {
+      if (sender is not IconButton btn) return;
+      if (btn.DataContext is not BillDetails detail) return;
       var confirm = await MsgBox.ShowConfirmAsync ("Delete Item", "Are you sure?");
-      if (confirm == ButtonResult.Yes) {
-         if (mSelectedItem is BillDetails detail) VM ()?.BillItems?.Remove (detail);
-         else await MsgBox.ShowWarningAsync ("Select Item", "Please select an item.");
-      }
+      if (confirm == ButtonResult.Yes) VM ()?.BillItems?.Remove (detail);
+
    }
    #endregion
 
    #region Medthods
+
+   /// <summary>Adds the selected product to the bill.</summary>
    void Add (Product product) {
+      mProductDialog = null;
       lblError.Content = string.Empty;
       if (VM ().AddItem (product)) {
-         txtSearch.Text = string.Empty;
          txtSearch.Focus ();
+         mIgnoretxtchange = true;
+         txtSearch.Text = string.Empty;
+         mIgnoretxtchange = false;
       } else lblError.Content = "This item already in the lists";
    }
 
-
+   /// <summary>Resets the bill to its initial state.</summary>
    void ResertBill () {
       VM ().Reset ();
       VM ().BillHeader.PaymentMethod = EPaymentMode.None.Get ();
@@ -174,8 +194,9 @@ public partial class BillingView : UserControl {
 
    #region Fields
    readonly WindowManager mManager = new ();
-   BillDetails? mSelectedItem;
    EPaymentMode mPaymode;
+   ProductLookupDialog? mProductDialog;
+   bool mIgnoretxtchange;
    #endregion
 
 }

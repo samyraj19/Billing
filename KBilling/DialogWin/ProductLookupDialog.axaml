@@ -20,12 +20,21 @@
 			<Setter Property="BorderThickness" Value="0 0 0 1"/>
 			<Setter Property="Padding" Value="5"/>
 		</Style>
+		<Style Selector="Label.h1">
+			<Setter Property="FontWeight" Value="SemiLight"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
 	</Window.Styles>
-	<Grid RowDefinitions="7* 93*">
-		<TextBox x:Name="txtSearch" Grid.Row="0"
-				 Width="385" Height="35"
-				 Margin="2"
-				 Watermark="Search by Product Name or Number"/>
+	<Grid RowDefinitions="5*,95*" Background="White">
+		<!-- Header Row -->
+		<Grid Grid.Row="0" ColumnDefinitions="*,*,*" Background="#EEE">
+			<Label Content="Product" HorizontalContentAlignment="Left" Margin="5,0" Classes="h1"/>
+			<Label Grid.Column="2" Content="Price" Classes="h1"/>
+			<Label Grid.Column="1" Content="Current stock" Classes="h1"/>
+		</Grid>
+
+		<!-- List Items -->
 		<ListBox Grid.Row="1"
 				 x:Name="DataGridProducts"
 				 Background="White"
@@ -33,19 +42,30 @@
 				 ItemsSource="{Binding FilterProducts}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Grid ColumnDefinitions="* * *">
+					<Grid ColumnDefinitions="*,*,*">
+						<!-- Product Info -->
 						<Grid Grid.Column="0" RowDefinitions="* *">
-							<Label Grid.Row="0"
-								   Content="{Binding ProductName}"
-								   FontWeight="SemiBold"/>
-							<Label Grid.Row="1"
-								   Content="{Binding ProductNumber}"
-								   FontWeight="SemiLight"/>
+							<TextBlock Grid.Row="0"
+									   Text="{Binding ProductName}"
+									   FontWeight="SemiBold"/>
+							<TextBlock Grid.Row="1"
+									   Text="{Binding ProductNumber}"
+									   FontWeight="Light"/>
 						</Grid>
-						<Label Grid.Column="1"
-							   FontWeight="ExtraBold"
-							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-							   Content="{Binding Quantity}"/>
+
+						<!-- Price (optional) -->
+						<TextBlock Grid.Column="2"
+								   FontWeight="SemiBold"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   Text="{Binding PurchaseRate}"/>
+
+						<!-- Quantity -->
+						<TextBlock Grid.Column="1"
+								   FontWeight="SemiBold"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   Text="{Binding Quantity}"/>
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>

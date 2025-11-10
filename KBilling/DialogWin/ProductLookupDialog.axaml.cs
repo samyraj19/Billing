@@ -7,6 +7,7 @@ using Avalonia.Markup.Xaml;
 using KBilling.Helper;
 using KBilling.Model;
 using KBilling.ViewModel;
+using static KBilling.DataBase.SP;
 
 namespace KBilling;
 public partial class ProductLookupDialog : Window {
@@ -17,11 +18,13 @@ public partial class ProductLookupDialog : Window {
    }
 
    void OnUnloaded (object? sender, RoutedEventArgs e) {
+      mIsShow = false;
       KeyDown -= OnKeyDown;
+      ClosedEvent?.Invoke (mProduct);
    }
 
    void OnLoad (object? sender, RoutedEventArgs e) {
-      txtSearch.TextChanging += OnTextChanging;
+      mIsShow = true;
       KeyDown += OnKeyDown;
       DataGridProducts.DoubleTapped += OnDoubleTapped;
       VM ().LoadData ();
@@ -31,25 +34,23 @@ public partial class ProductLookupDialog : Window {
       if (DataGridProducts.SelectedItem is Product item) {
          if (item.Quantity == 0) MsgBox.ShowErrorAsync ("Item", "OUT OF STOCK.");
          else {
-            ProductSelected?.Invoke (item); Close ();
+            mProduct = item;
+            Close ();
          }
       }
-   }
-
-   void OnTextChanging (object? sender, TextChangingEventArgs e) {
-      VM ().UpdateFilter ((sender as TextBox)?.Text?.Trim () ?? string.Empty);
    }
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
       if (e.Key == Key.Escape) Close ();
    }
 
-   ProductVM VM () {
-      if (DataContext is ProductVM vm) return vm;
-      else throw new InvalidOperationException ("DataContext is not of type ProductVM");
-   }
+   public void UpdateRefresh (string? value) => VM ().UpdateFilter (value ?? string.Empty);
+
+   ProductVM VM () => DataContext is ProductVM vm ? vm : throw new InvalidOperationException ("DataContext is not ProductVM");
 
    #region Fields
-   public event Action<Product>? ProductSelected;
+   public event Action<Product>? ClosedEvent;
+   Product mProduct;
+   public bool mIsShow = false;
    #endregion
 }

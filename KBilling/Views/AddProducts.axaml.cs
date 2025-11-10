@@ -11,6 +11,7 @@ using MsBox.Avalonia.Enums;
 using MsBox.Avalonia;
 using KBilling.Model;
 using KBilling.ViewManagement;
+using KBilling.Controls;
 
 namespace KBilling;
 public partial class AddProducts : UserControl {
@@ -26,7 +27,6 @@ public partial class AddProducts : UserControl {
       SearchTxt.TextChanging += OnSearchTextChanging;
       BtnSubmit.Click += OnSubmitClicked;
       BtnCancel.Click += OnCancelClicked;
-      DataGridProduct.SelectionChanged += OnSelectionChanged;
       EnterFocusHelper.Attach (MainPanel);
 
       txtName.KeyDown += OnNameKeyDown;
@@ -44,7 +44,6 @@ public partial class AddProducts : UserControl {
       SearchTxt.TextChanging -= OnSearchTextChanging;
       BtnSubmit.Click -= OnSubmitClicked;
       BtnCancel.Click -= OnCancelClicked;
-      DataGridProduct.SelectionChanged -= OnSelectionChanged;
 
       txtName.KeyDown -= OnNameKeyDown;
       textCode.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
@@ -59,8 +58,6 @@ public partial class AddProducts : UserControl {
    void OnSubmitClicked (object? sender, RoutedEventArgs e) => Submit ();
 
    void OnCancelClicked (object? sender, RoutedEventArgs e) => Clear ();
-
-   void OnSelectionChanged (object? sender, SelectionChangedEventArgs e) => mSelItem = DataGridProduct.SelectedItem as Product;
 
    void OnTextInputInteger (object? sender, TextInputEventArgs e) => e.Handled = !int.TryParse (e.Text, out _);
 
@@ -92,16 +89,16 @@ public partial class AddProducts : UserControl {
    }
 
    void OnIconButtonClick (object? sender, RoutedEventArgs e) {
-      if ((sender as Button)?.Tag?.ToString () is not string action) return;
+      if (sender is not IconButton btn) return;
+      if (btn.DataContext is not Product product) return;
+      if (btn.Tag?.ToString () is not string action) return;
       mAction = action.GetEAction ();
-      if (mSelItem is Product item) {
-         if (action.IsDelete ()) DeleteAsync (item);
+         if (action.IsDelete ()) DeleteAsync (product);
          else if (action.IsEdit ()) {
             textCode.IsEnabled = false;
             txtName.IsEnabled = false;
-            VM ().Edit (item);
+            VM ().Edit (product);
          }
-      } else AppMsg.AskItem ();
    }
    #endregion
 
@@ -109,7 +106,7 @@ public partial class AddProducts : UserControl {
 
    void Submit () {
       if (VM ().CanSubmit ()) {
-         string? code = mAction.IsEdit () ? mSelItem?.ProductNumber : string.Empty;
+         string? code = mAction.IsEdit () ? VM()?.ProductNumber : string.Empty;
          VM ().AddOrUpdate (VM (), code);
          Clear ();
          VM ().LoadData ();
@@ -124,6 +121,8 @@ public partial class AddProducts : UserControl {
    void ApplyItem (Category cat) {
       VM ().ProductName = cat.Name;
       VM ().ProductNumber = cat.Code;
+      textCode.IsEnabled = false;
+      txtName.IsEnabled = false;
    }
 
    ProductVM VM () => DataContext is ProductVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type ProductVM");
@@ -139,7 +138,6 @@ public partial class AddProducts : UserControl {
    #endregion
 
    #region Fields
-   Product? mSelItem = null;
    EAction mAction = EAction.None;
    WindowManager mManager = new ();
    Category mCategory = new ();
