@@ -24,14 +24,18 @@
 				</Grid>
 				<Separator Margin="0,25,0,0" BorderBrush="LightGray"/>
 				<StackPanel Grid.Row="1"
-						Orientation="Vertical"
+							x:Name="NavPanel"
+						    Orientation="Vertical"
 							HorizontalAlignment="Center">
-					<Button x:Name="BtnDashboard" Content="DashBoard"/>
-					<Button x:Name="BtnCategory" Content="Category"/>
-					<Button x:Name="BtnProduct" Content="Products"/>
-					<Button x:Name="BtnPricing" Content="Pricing"/>
-					<Button x:Name="BtnStock" Content="Stocks"/>
-					<Button x:Name="BtnPos" Content="POS"/>
+					<Button x:Name="BtnDashboard" Content="DashBoard" Tag="DashBoard" />
+					<Separator Margin="0,10,0,10" Background="LightGray"/>
+					<Button x:Name="BtnCategory" Content="Category" Tag="CategoryView"/>
+					<Button x:Name="BtnProduct" Content="Products" Tag="AddProduct"/>
+					<Separator Margin="0,10,0,10" Background="LightGray"/>
+					<Button x:Name="BtnPricing" Content="Pricing" Tag="PriceUpdateView"/>
+					<Button x:Name="BtnStock" Content="Stocks" Tag="StocksView"/>
+					<Separator Margin="0,10,0,10" Background="LightGray"/>
+					<Button x:Name="BtnPos" Content="POS" Tag="BillingView"/>
 				</StackPanel>
 			</Grid>
 		</Border>

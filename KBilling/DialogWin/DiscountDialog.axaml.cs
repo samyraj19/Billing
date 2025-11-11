@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using KBilling.Helper;
 using KBilling.ViewManagement;
 using KBilling.ViewModel;
 
@@ -18,34 +19,35 @@ public partial class DiscountDialog : Window {
    }
 
    void OnLoaded (object? sender, RoutedEventArgs e) {
-      BtnAdd.Click += (s, e) => AddDiscount ();
+      BtnAdd.Click += OnAddClick;
       BtnCancel.Click += (s, e) => Close ();
       KeyDown += OnKeyDown;
-      TextboxDiscount.AddHandler (InputElement.TextInputEvent, OnDisTextInput, RoutingStrategies.Tunnel);
+      TextboxDiscount.AddHandler (InputElement.TextInputEvent, NumHelper.OnIntOnly, RoutingStrategies.Tunnel);
    }
-
-   void OnDisTextInput (object? sender, TextInputEventArgs e) => e.Handled = string.IsNullOrEmpty (e.Text) || !e.Text.All (char.IsDigit);
 
    void Unload (object? sender, RoutedEventArgs e) {
-      BtnAdd.Click -= (s, e) => Close ();
+      BtnAdd.Click -= OnAddClick;
       BtnCancel.Click -= (s, e) => Close ();
+      KeyDown -= OnKeyDown;
    }
+
+   void OnAddClick (object? sender, RoutedEventArgs e) => ApplyDiscount ();
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
       if (e.Key == Key.Enter) {
-         AddDiscount ();
+         ApplyDiscount ();
          e.Handled = true;
       } else if (e.Key == Key.Escape) Close ();
    }
 
-   void AddDiscount () {
-      Discount = decimal.TryParse (TextboxDiscount.Text, out var discount) ? discount : 0m;
-      DiscountApplied?.Invoke (discount);
-      Close ();
+   void ApplyDiscount () {
+      if (decimal.TryParse (TextboxDiscount.Text, out var value)) {
+         DiscountApplied?.Invoke (value);
+         Close ();
+      }
    }
 
    #region Fields
-   public decimal Discount { get; private set; } = 0m;
    public event Action<decimal>? DiscountApplied;
    #endregion
 }

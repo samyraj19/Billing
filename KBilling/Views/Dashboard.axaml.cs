@@ -20,15 +20,12 @@ public partial class Dashboard : UserControl {
 
    #region Events
    void OnLoad (object? sender, RoutedEventArgs e) {
-      RegisterToggleEvents ();
+      RegToggleEvents ();
       DefaultSelection ();
-      VM ()?.Sales?.LoadReport (mType);
-      VM ()?.Transaction?.LoadTransaction ();
-      VM ()?.TopSelling?.LoadTopSellingItems (mType);
-      VM ()?.StockReport?.LoadStockRpt ();
+      LoadData ();
    }
 
-   void OnUnloaded (object? sender, RoutedEventArgs e) => UnregisterToggleEvents ();
+   void OnUnloaded (object? sender, RoutedEventArgs e) => UnRegToggleEvents ();
 
    void OnToggleClicked (object? sender, RoutedEventArgs e) {
       if (sender is not ToggleButton btn || btn.Tag is not EReportType type) return;
@@ -37,19 +34,19 @@ public partial class Dashboard : UserControl {
       VM ()?.Sales?.LoadReport (mType);
       VM ()?.TopSelling?.LoadTopSellingItems (mType);
 
-      TogglePanel.Children.OfType<ToggleButton> ().Where (t => t != btn).ToList ().ForEach (t => t.IsChecked = false);
+      foreach (var t in TogglePanel.Children.OfType<ToggleButton> ())
+         if (t != btn) t.IsChecked = false;
    }
 
    #endregion
 
-
    #region Methods
-   void RegisterToggleEvents () {
+   void RegToggleEvents () {
       foreach (var toggle in TogglePanel.Children.OfType<ToggleButton> ())
          toggle.Click += OnToggleClicked;
    }
 
-   void UnregisterToggleEvents () {
+   void UnRegToggleEvents () {
       foreach (var toggle in TogglePanel.Children.OfType<ToggleButton> ())
          toggle.Click -= OnToggleClicked;
    }
@@ -57,6 +54,13 @@ public partial class Dashboard : UserControl {
    void DefaultSelection () {
       if (TogglePanel.Children.Count > 0 && TogglePanel.Children[0] is ToggleButton btn)
          btn.IsChecked = true;
+   }
+
+   void LoadData () {
+      VM ()?.Sales?.LoadReport (mType);
+      VM ()?.Transaction?.LoadTransaction ();
+      VM ()?.TopSelling?.LoadTopSellingItems (mType);
+      VM ()?.StockReport?.LoadStockRpt ();
    }
 
    DashboardVM VM () => DataContext is DashboardVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type SalesVM");

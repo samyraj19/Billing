@@ -13,13 +13,13 @@ using KBilling.Helper;
 using KBilling.Extension;
 using KBilling.Interfaces;
 using KBilling.Core;
+using CommunityToolkit.Mvvm.Input;
+using Avalonia.Input;
 
 namespace KBilling.ViewModel {
-   public class ProductVM : Product {
+   public partial class ProductVM : Product {
 
-      public ProductVM () {
-         AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
-      }
+      public ProductVM () => AppSession.RoleChanged += (s, e) => OnPropertyChanged (nameof (Role));
 
       #region Methods
 
@@ -33,19 +33,17 @@ namespace KBilling.ViewModel {
 
       public bool CanSubmit () {
          var errors = new List<string> ();
-         if (!Is.NotEmpty (ProductName)) errors.Add ("Product name is required.");
-         if (!Is.NotEmpty (ProductNumber)) errors.Add ("ProductNumber must be > 0.");
+         if (Is.IsEmpty (ProductName)) errors.Add ("Product name is required.");
+         if (Is.IsEmpty (ProductNumber)) errors.Add ("ProductNumber must be > 0.");
          if (AppSession.Role == EUserRoles.Admin) {
-            if (PurchaseRate is null || PurchaseRate <= 0) errors.Add ("Purchase rate must be > 0.");
-            if (SellingRate is null || SellingRate <= 0) errors.Add ("Selling rate must be > 0.");
+            if (PurchaseRate is null or <= 0) errors.Add ("Purchase rate must be > 0.");
+            if (SellingRate is null or <= 0) errors.Add ("Selling rate must be > 0.");
             if (!IsSellingRateValid ()) errors.Add ("Selling rate must be at least 40% higher than purchase rate.");
          }
-         if (Quantity is null || Quantity < 0) errors.Add ("Quantity cannot be negative.");
+         if (Quantity is null or < 0) errors.Add ("Quantity cannot be negative.");
 
-         if (errors.Count > 0) {
-            MsgBox.ShowErrorAsync ("Add product Error", "• " + string.Join ("\n• ", errors));
-            return false;
-         }
+         if (errors.Count == 0) return true;
+         MsgBox.ShowErrorAsync ("Add product Error", $"• {string.Join ("\n• ", errors)}");
          return true;
       }
 
@@ -69,7 +67,7 @@ namespace KBilling.ViewModel {
       }
 
       void AddItem (Product product) {
-         if (AllProducts is not null && AllProducts.Any (p => p.ProductNumber == product.ProductNumber)) {
+         if (AllProducts?.Any (p => p.ProductNumber == product.ProductNumber) == true) {
             MessageBoxManager.GetMessageBoxStandard ("Add product Error", "Product number already there. Please choose a different number", ButtonEnum.Ok, Icon.Error)
                              .ShowAsync ();
             return;
@@ -110,6 +108,7 @@ namespace KBilling.ViewModel {
 
 
       public void Refersh () => UpdateFilter (string.Empty);
+
       #endregion
 
       #region Fields

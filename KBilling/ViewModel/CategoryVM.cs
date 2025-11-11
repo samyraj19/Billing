@@ -56,9 +56,9 @@ namespace KBilling.ViewModel {
       List<string> GetValidationErrors () {
          var errors = new List<string> ();
 
-         if (!Is.NotEmpty (Name)) errors.Add ("Category Name is required.");
-         if (!Is.NotEmpty (Prefix)) errors.Add ("Category Prefix is required.");
-         if (!Is.NotEmpty (Code)) errors.Add ("Category Code is required.");
+         if (Is.IsEmpty (Name)) errors.Add ("Category Name is required.");
+         if (Is.IsEmpty (Prefix)) errors.Add ("Category Prefix is required.");
+         if (Is.IsEmpty (Code)) errors.Add ("Category Code is required.");
 
          return errors;
       }
@@ -73,7 +73,7 @@ namespace KBilling.ViewModel {
 
       public void SoryBy (string text) {
          if (AllCategories is null || FilterCategories is null) return;
-         bool showAll = !Is.NotEmpty (text) || text.Equals ("All", StringComparison.OrdinalIgnoreCase);
+         bool showAll = !Is.IsNotEmpty (text) || text.Equals ("All", StringComparison.OrdinalIgnoreCase);
          FilterCategories.Filter (AllCategories, showAll ? _ => true : c => c.Name?.StartsWith (text, StringComparison.OrdinalIgnoreCase) == true);
       }
 

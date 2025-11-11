@@ -30,10 +30,9 @@ public partial class AddProducts : UserControl {
       EnterFocusHelper.Attach (MainPanel);
 
       txtName.KeyDown += OnNameKeyDown;
-      textCode.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
-      txtQty.AddHandler (InputElement.TextInputEvent, OnTextInputInteger, RoutingStrategies.Tunnel);
-      txtPurRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
-      txtSellRate.AddHandler (InputElement.TextInputEvent, OnTextInputDecimal, RoutingStrategies.Tunnel);
+      txtQty.AddHandler (InputElement.TextInputEvent, NumHelper.OnIntOnly, RoutingStrategies.Tunnel);
+      txtPurRate.AddHandler (InputElement.TextInputEvent, NumHelper.OnDecimalOnly, RoutingStrategies.Tunnel);
+      txtSellRate.AddHandler (InputElement.TextInputEvent, NumHelper.OnDecimalOnly, RoutingStrategies.Tunnel);
 
       VM ().LoadData ();
    }
@@ -46,10 +45,9 @@ public partial class AddProducts : UserControl {
       BtnCancel.Click -= OnCancelClicked;
 
       txtName.KeyDown -= OnNameKeyDown;
-      textCode.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
-      txtQty.RemoveHandler (InputElement.TextInputEvent, OnTextInputInteger);
-      txtPurRate.RemoveHandler (InputElement.TextInputEvent, OnTextInputDecimal);
-      txtSellRate.RemoveHandler (InputElement.TextInputEvent, OnTextInputDecimal);
+      txtQty.RemoveHandler (InputElement.TextInputEvent, NumHelper.OnIntOnly);
+      txtPurRate.RemoveHandler (InputElement.TextInputEvent, NumHelper.OnDecimalOnly);
+      txtSellRate.RemoveHandler (InputElement.TextInputEvent, NumHelper.OnDecimalOnly);
    }
 
    #region Event Handlers
@@ -58,8 +56,6 @@ public partial class AddProducts : UserControl {
    void OnSubmitClicked (object? sender, RoutedEventArgs e) => Submit ();
 
    void OnCancelClicked (object? sender, RoutedEventArgs e) => Clear ();
-
-   void OnTextInputInteger (object? sender, TextInputEventArgs e) => e.Handled = !int.TryParse (e.Text, out _);
 
    void OnNameKeyDown (object? sender, Avalonia.Input.KeyEventArgs e) {
       if (mManager.GetWindow ("ItemListDialog") is not ItemListDialog dialog) return;
@@ -79,13 +75,6 @@ public partial class AddProducts : UserControl {
          Submit ();
          e.Handled = true;
       }
-   }
-
-   void OnTextInputDecimal (object? sender, TextInputEventArgs e) {
-      if (e.Source is not TextBox tb || string.IsNullOrEmpty (e.Text)) return;
-
-      if (!e.Text.All (c => char.IsDigit (c) || c == '.') || (e.Text.Contains ('.') && tb.Text.Contains ('.')))
-         e.Handled = true;
    }
 
    void OnIconButtonClick (object? sender, RoutedEventArgs e) {

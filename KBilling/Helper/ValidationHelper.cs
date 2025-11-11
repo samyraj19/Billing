@@ -26,7 +26,9 @@ namespace KBilling.Helper {
       }
 
       /// <summary>Checks if the input string is not null or whitespace.</summary>
-      public static bool NotEmpty (string? input) => !string.IsNullOrWhiteSpace (input);
+      public static bool IsNotEmpty (string? input) => !string.IsNullOrWhiteSpace (input);
+
+      public static bool IsEmpty (string? input) => string.IsNullOrEmpty (input);
 
       /// <summary>Checks if the input string contains only letters (a-z, A-Z).</summary>
       public static bool Alphabetic (string? input) => !string.IsNullOrEmpty (input) && input.All (char.IsLetter);

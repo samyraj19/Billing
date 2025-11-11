@@ -14,9 +14,8 @@ namespace KBilling {
       void OnLoad (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
          // Default view
          var view = new ViewManager (ContentPanel);
-
-         if (AppSession.Role != EUserRoles.Staff) view.ShowView ("MainView");
-         else view.ShowView ("BillingView");
+         var isAdmin = AppSession.Role == EUserRoles.Admin;
+         view.ShowView (isAdmin ? "MainView" : "BillingView");
       }
 
       public static MainWindow Instance { get; private set; } = null!;

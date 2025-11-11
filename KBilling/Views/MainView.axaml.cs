@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -17,46 +18,37 @@ public partial class MainView : UserControl {
 
    void OnLoad (object? sender, RoutedEventArgs e) {
       bool isAdmin = AppSession.Role == EUserRoles.Admin;
-      if (isAdmin) {
-         mViewManager.ShowView ("DashBoard");
-         ToDisplayHeader ("DashBoard");
-      } else {
-         mViewManager.ShowView ("CategoryView");
-         ToDisplayHeader ("CategoryView");
-      }
+      mViewManager.ShowView (isAdmin ? "DashBoard" : "CategoryView");
       BtnPricing.IsVisible = isAdmin;
       BtnStock.IsVisible = isAdmin;
       BtnDashboard.IsVisible = isAdmin;
       BtnPos.IsVisible = isAdmin;
-      RegisterEvents ();
+      RegEvents ();
    }
 
-   void OnUnloaded (object? sender, RoutedEventArgs e) => UnregisterEvents ();
+   void OnUnloaded (object? sender, RoutedEventArgs e) => UnRegEvents ();
 
-   void RegisterEvents () {
-      BtnCategory.Click += (s, e) => ShowView ("CategoryView");
-      BtnProduct.Click += (s, e) => ShowView ("AddProduct");
-      BtnDashboard.Click += (s, e) => ShowView ("DashBoard");
-      BtnPricing.Click += (s, e) => ShowView ("PriceUpdateView");
-      BtnStock.Click += (s, e) => ShowView ("StocksView");
-      BtnPos.Click += (s, e) => ShowView ("BillingView");
+   void NavButtonClick (object? sender, RoutedEventArgs e) {
+      if (sender is Button btn && btn.Tag is string key)
+         ShowView (key);
    }
 
-   void UnregisterEvents () {
-      BtnCategory.Click += (s, e) => ShowView ("CategoryView");
-      BtnProduct.Click -= (s, e) => ShowView ("AddProduct");
-      BtnDashboard.Click -= (s, e) => ShowView ("DashBoard");
-      BtnPricing.Click -= (s, e) => ShowView ("PriceUpdateView");
-      BtnStock.Click -= (s, e) => ShowView ("StocksView");
-      BtnPos.Click -= (s, e) => ShowView ("BillingView");
+   void RegEvents () {
+      foreach (Button btn in NavPanel.Children.OfType<Button> ())
+         btn.Click += NavButtonClick;
+   }
+
+   void UnRegEvents () {
+      foreach (Button btn in NavPanel.Children.OfType<Button> ())
+         btn.Click -= NavButtonClick;
    }
 
    void ShowView (string key) {
       mViewManager.ShowView (key);
-      ToDisplayHeader (key);
+      ToDisplay (key);
    }
 
-   void ToDisplayHeader (string key) => lblHeader.Content = AppViewHeader.Get (key);
+   void ToDisplay (string key) => lblHeader.Content = AppViewHeader.Get (key);
 
    #region Fields
    ViewManager mViewManager => new (ContentPanel);

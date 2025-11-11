@@ -33,10 +33,10 @@ public partial class BillingView : UserControl {
 
       txtSearch.TextChanging += OnSearchTextChanging;
       TextboxPhone.AddHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp, RoutingStrategies.Tunnel);
-      TextboxPhone.AddHandler (InputElement.TextInputEvent, OnTextBoxTextInput, RoutingStrategies.Tunnel);
+      TextboxPhone.AddHandler (InputElement.TextInputEvent, NumHelper.OnIntOnly, RoutingStrategies.Tunnel);
 
       //check box
-      chkReceived.IsCheckedChanged += OnReceivedAmtChanged;
+      chkReceived.IsCheckedChanged += OnReceivedChanged;
 
       SetUpToggleEvent ();
       // focus on search box
@@ -49,19 +49,20 @@ public partial class BillingView : UserControl {
       if (BtnClearAll is not null) BtnClearAll.Click -= BtnClearAllClick;
 
       if (txtSearch is not null) txtSearch.TextChanging -= OnSearchTextChanging;
-      if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.TextInputEvent, OnTextBoxTextInput);
+      if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.TextInputEvent, NumHelper.OnIntOnly);
       if (TextboxPhone is not null) TextboxPhone.RemoveHandler (InputElement.KeyUpEvent, OnTxtPhoneKeyUp);
 
-      chkReceived.IsCheckedChanged -= OnReceivedAmtChanged;
+      chkReceived.IsCheckedChanged -= OnReceivedChanged;
    }
 
    void OnKeyDown (object? sender, KeyEventArgs e) {
-      if (e.Key == Key.Escape && mProductDialog is not null) mProductDialog.Close ();
+      if (e.Key == Key.Escape)
+         mProductDialog?.Close ();
    }
 
    void SetUpToggleEvent () {
-      var toggles = PayPanel.Children.OfType<ToggleButton> ().ToList ();
-      foreach (var btn in toggles) btn.IsCheckedChanged += OnToggleChecked;
+      foreach (var btn in PayPanel.Children.OfType<ToggleButton> ())
+         btn.IsCheckedChanged += OnToggleChecked;
    }
 
    void OnToggleChecked (object? sender, RoutedEventArgs e) {
@@ -77,7 +78,9 @@ public partial class BillingView : UserControl {
    }
 
    async void OnPayClick (object? sender, RoutedEventArgs e) {
-      if (sender is Button btn) btn.IsEnabled = false;
+      if (sender is not Button btn) return;
+      btn.IsEnabled = false;
+
       try {
          if (VM ().CanPay ()) {
             var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
@@ -93,36 +96,35 @@ public partial class BillingView : UserControl {
       }
    }
 
-   void OnReceivedAmtChanged (object? sender, RoutedEventArgs e) {
+   void OnReceivedChanged (object? sender, RoutedEventArgs e) {
       // Always get the latest value safely
       Dispatcher.UIThread.Post (() => {
          bool isChecked = chkReceived.IsChecked == true;
          txtRecvAmt.IsEnabled = !isChecked;
-
          if (isChecked) VM ().UpdateBill ();
       });
    }
 
    void OnTxtPhoneKeyUp (object? sender, KeyEventArgs e) {
-      if (TextboxPhone?.Text is { Length: > 10 } text) TextboxPhone.Text = text[..10]; // take first 10 digits only
+      if (TextboxPhone?.Text is { Length: > 10 } text)
+         TextboxPhone.Text = text[..10];// take first 10 digits only
    }
-
-   void OnTextBoxTextInput (object? sender, TextInputEventArgs e) => e.Handled = string.IsNullOrEmpty (e.Text) || !e.Text.All (char.IsDigit);
 
    void OnSearchTextChanging (object? sender, TextChangingEventArgs e) {
       if (mIgnoretxtchange || sender is not TextBox text) return;
-      // Try get or reuse dialog
+
       mProductDialog ??= mManager.GetWindow ("ProductLookupDialog") as ProductLookupDialog;
       if (mProductDialog is null) return;
 
       mProductDialog.UpdateRefresh (text?.Text?.Trim ());
       mProductDialog.ClosedEvent += (product) => Add (product);
-      // position below the search textbox
-      var pos = text.PointToScreen (new Point (0, text.Bounds.Height));
-      mProductDialog.Position = pos;
 
+      // Position dialog below search box
+      mProductDialog.Position = text.PointToScreen (new Point (0, text.Bounds.Height));
       e.Handled = true;
+
       if (!mProductDialog.mIsShow) mProductDialog.Show (MainWindow.Instance);
+
       txtSearch.Focus ();
    }
 
@@ -130,8 +132,8 @@ public partial class BillingView : UserControl {
 
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       if (VM ()?.BillItems?.Count is <= 0) return;
-      if (mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") is not DiscountDialog dialog) return;
-      dialog.DiscountApplied += (discount) => VM ().UpdateBill (discount);
+      if (mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") is DiscountDialog dialog)
+         dialog.DiscountApplied += (discount) => VM ().UpdateBill (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
