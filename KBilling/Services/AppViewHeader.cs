@@ -6,9 +6,9 @@ namespace KBilling.Services {
          { "DashBoard", "📊 Dashboard" },
          { "AddProduct", "➕ Add New Item" },
          { "PriceUpdateView", "💲 Update Price" },
-         { "StocksView", "📦 Stocks" },
-         { "BillingView", "💳 Billing" },
-         { "CategoryView","📁 Category" }
+         { "StocksView", "📦 Update Stocks" },
+         { "BillingView", "💳 Bill Entry" },
+         { "CategoryView","➕ Add New Category" }
       };
 
       public static string Get (string viewName) => headers.TryGetValue (viewName, out var header) ? header : viewName; // fallback if not found

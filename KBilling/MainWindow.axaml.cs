@@ -15,7 +15,8 @@ namespace KBilling {
          // Default view
          var view = new ViewManager (ContentPanel);
          var isAdmin = AppSession.Role == EUserRoles.Admin;
-         view.ShowView (isAdmin ? "MainView" : "BillingView");
+         var isStaff = AppSession.Role == EUserRoles.Staff;
+         view.ShowView (isAdmin ? "MainView" : isStaff ? "BillingView" : "MainView");
       }
 
       public static MainWindow Instance { get; private set; } = null!;

@@ -20,6 +20,77 @@
 		</Setter>
 	</Style>
 
+	<!-- Custom icon button style-->
+	<Style Selector="local|IconButton.Base">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="Part_Border_CusBtn"
+						Background="{TemplateBinding Background}"
+						CornerRadius="4"
+						Padding="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"/>
+						<ContentPresenter/>
+					</StackPanel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+	<Style Selector="local|IconButton:pointerover /template/ Border#Part_Border_CusBtn">
+		<Setter Property="BorderBrush" Value="#8661c5"/>
+		<Setter Property="BorderThickness" Value="1"/>
+	</Style>
+	<Style Selector="local|IconButton:pressed /template/ Border#Part_Border_CusBtn">
+		<Setter Property="BorderBrush" Value="#8661c5"/>
+		<Setter Property="BorderThickness" Value="1"/>
+	</Style>
+	<Style Selector="local|IconButton[IsSelected=true] /template/ Border#Part_Border_CusBtn">
+		<Setter Property="BorderBrush" Value="#8661c5"/>
+		<Setter Property="BorderThickness" Value="1"/>
+	</Style>
+
+	<!-- Custom icon button text style-->
+	<Style Selector="local|IconButtonText.WitheText">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="Part_Border_CusBtn"
+						Background="{TemplateBinding Background}"
+						CornerRadius="4"
+						Padding="5">
+					<Grid ColumnDefinitions="30* 70*">
+						<Image Grid.Column="0"
+							   Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"
+							   HorizontalAlignment="Left"/>
+						<ContentPresenter Grid.Column="1"
+										  x:Name="PART_CONTENT" Content="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+										  VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+					</Grid>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+	<Style Selector="local|IconButtonText:pointerover /template/ Border#Part_Border_CusBtn">
+		<Setter Property="Background" Value="#2b7fff"/>
+	</Style>
+	<Style Selector="local|IconButtonText:pointerover /template/ ContentPresenter#PART_CONTENT">
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+	<Style Selector="local|IconButtonText:pressed /template/ Border#Part_Border_CusBtn">
+		<Setter Property="Background" Value="#2b7fff"/>
+	</Style>
+	<Style Selector="local|IconButtonText:pressed /template/ ContentPresenter#PART_CONTENT">
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+	<Style Selector="local|IconButtonText[IsSelected=true] /template/ Border#Part_Border_CusBtn">
+		<Setter Property="Background" Value="#2b7fff"/>
+	</Style>
+	<Style Selector="local|IconButtonText[IsSelected=true] /template/ ContentPresenter#PART_CONTENT">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
+
 	<Style Selector="HeaderedContentControl">
 		<Setter Property="Template">
 			<ControlTemplate>

@@ -16,9 +16,19 @@
     <None Remove="Data\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\bill.png" />
+    <None Remove="Assets\category.png" />
     <None Remove="Assets\cross.png" />
+    <None Remove="Assets\dashboard.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
+    <None Remove="Assets\price.png" />
+    <None Remove="Assets\price1.png" />
+    <None Remove="Assets\product.png" />
+    <None Remove="Assets\stocks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="Assets\price.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,9 +49,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="Assets\bill.png" />
+    <AvaloniaResource Include="Assets\category.png" />
     <AvaloniaResource Include="Assets\cross.png" />
     <AvaloniaResource Include="Assets\delete.png" />
     <AvaloniaResource Include="Assets\edit.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\dashboard.png" />
+    <AvaloniaResource Include="Assets\price1.png" />
+    <AvaloniaResource Include="Assets\product.png" />
+    <AvaloniaResource Include="Assets\stocks.png" />
   </ItemGroup>
 
   <ItemGroup>

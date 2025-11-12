@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:custom="using:KBilling.Controls"
              x:Class="KBilling.MainView">
 	<UserControl.Styles>
 		<Style Selector="Button">
@@ -15,28 +16,65 @@
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
+		<Style Selector="custom|IconButtonText">
+			<Setter Property="Margin" Value="0,5,0,5"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Width" Value="110"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
 	</UserControl.Styles>
-	<Grid x:Name="MainPanel" ColumnDefinitions="Auto *">
-		<Border Grid.Row="0" BorderThickness="0,0,2,0" BorderBrush="LightGray">
-			<Grid RowDefinitions="5* 95*" Background="White">
-				<Grid Grid.Row="0" Background="Transparent">
-					<Label Content="🏪 Fancy Store"/>
-				</Grid>
-				<Separator Margin="0,25,0,0" BorderBrush="LightGray"/>
+	<Grid x:Name="MainPanel" ColumnDefinitions="9* 91*">
+		<Border Grid.Row="0" 
+				BorderThickness="1" 
+				BorderBrush="LightGray">
+			<Grid RowDefinitions="5* 90* 5*" Background="White">
+				<Border Grid.Row="0" Background="Transparent"
+						BorderBrush="LightGray" BorderThickness="0,0,0,1">
+					<Label Content="🏪 Fancy Store"
+						   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+				</Border>
+			
 				<StackPanel Grid.Row="1"
 							x:Name="NavPanel"
 						    Orientation="Vertical"
 							HorizontalAlignment="Center">
-					<Button x:Name="BtnDashboard" Content="DashBoard" Tag="DashBoard" />
-					<Separator Margin="0,10,0,10" Background="LightGray"/>
-					<Button x:Name="BtnCategory" Content="Category" Tag="CategoryView"/>
-					<Button x:Name="BtnProduct" Content="Products" Tag="AddProduct"/>
-					<Separator Margin="0,10,0,10" Background="LightGray"/>
-					<Button x:Name="BtnPricing" Content="Pricing" Tag="PriceUpdateView"/>
-					<Button x:Name="BtnStock" Content="Stocks" Tag="StocksView"/>
-					<Separator Margin="0,10,0,10" Background="LightGray"/>
-					<Button x:Name="BtnPos" Content="POS" Tag="BillingView"/>
+					<custom:IconButtonText x:Name="BtnDashboard" 
+										   Icon="avares://KBilling/Assets/dashboard.png"
+										   Text="Dasboard" Tag="DashBoard"/>
+					<!--<Button x:Name="BtnDashboard" Content="DashBoard" Tag="DashBoard" />-->
+				
+					<custom:IconButtonText x:Name="BtnCategory"
+							Text="Category" Tag="CategoryView"
+							Icon="avares://KBilling/Assets/category.png"/>
+					<custom:IconButtonText x:Name="BtnProduct"
+							Text="Products" Tag="AddProduct"
+							Icon="avares://KBilling/Assets/product.png"/>
+					<custom:IconButtonText x:Name="BtnPricing"
+							Text="Pricing" Tag="PriceUpdateView"
+							Icon="avares://KBilling/Assets/price1.png"/>
+					<custom:IconButtonText x:Name="BtnStock"
+							Text="Stocks" Tag="StocksView"
+							Icon="avares://KBilling/Assets/stocks.png"/>
+					<custom:IconButtonText x:Name="BtnPos"
+							Text="POS" Tag="BillingView"
+							Icon="avares://KBilling/Assets/bill.png"/>
 				</StackPanel>
+
+				<Border Grid.Row="2" Background="#f9f9f9" 
+						BorderBrush="LightGray" BorderThickness="0,1,0,0">
+					<Grid ColumnDefinitions="40* 60*">
+						<Ellipse Fill="Gray" Width="20" Height="20"
+								 Margin="5"
+								 VerticalAlignment="Center" HorizontalAlignment="Left"/>
+						<Label Grid.Column="1" x:Name="lblUser"
+							   VerticalContentAlignment="Center"
+							   HorizontalContentAlignment="Left"
+							   FontWeight="SemiLight"/>
+					</Grid>
+
+				</Border>
 			</Grid>
 		</Border>
 		<Grid Grid.Column="1" RowDefinitions="5* 95*">

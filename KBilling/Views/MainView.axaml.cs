@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using KBilling.Controls;
 using KBilling.Model;
 using KBilling.Services;
 using KBilling.ViewManagement;
@@ -24,6 +25,9 @@ public partial class MainView : UserControl {
       BtnDashboard.IsVisible = isAdmin;
       BtnPos.IsVisible = isAdmin;
       RegEvents ();
+      lblUser.Content = AppSession.CurrentUser?.Username ?? "Guest";
+      BtnDashboard.IsSelected = isAdmin;
+      BtnCategory.IsSelected = !isAdmin;
    }
 
    void OnUnloaded (object? sender, RoutedEventArgs e) => UnRegEvents ();
@@ -31,6 +35,9 @@ public partial class MainView : UserControl {
    void NavButtonClick (object? sender, RoutedEventArgs e) {
       if (sender is Button btn && btn.Tag is string key)
          ShowView (key);
+
+      foreach (IconButtonText b in NavPanel.Children.OfType<IconButtonText> ())
+         b.IsSelected = b == sender;
    }
 
    void RegEvents () {

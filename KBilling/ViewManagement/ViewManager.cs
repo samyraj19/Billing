@@ -1,19 +1,22 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using Avalonia.Controls;
 
 namespace KBilling.ViewManagement {
    public class ViewManager {
 
       public ViewManager (ContentControl content) {
-         mContentControl = content ?? throw new ArgumentNullException (nameof (content));
+         ArgumentNullException.ThrowIfNull (content);
+         mControl = content;
       }
 
       public void ShowView (string key) {
-         mContentControl.Content = ViewRegistry.Instance.Get (key);
+         ArgumentNullException.ThrowIfNull (mControl);
+         mControl.Content = ViewRegistry.Instance.Get (key);
       }
 
       #region Fields
-      readonly ContentControl? mContentControl;
+      readonly ContentControl? mControl;
       #endregion
    }
 }
