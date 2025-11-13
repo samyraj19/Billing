@@ -20,6 +20,7 @@
 		<Style Selector="Button.medium">
 			<Setter Property="Width" Value="120"/>
 			<Setter Property="Height" Value="35"/>
+			<Setter Property="CornerRadius" Value="5"/>
 			<Setter Property="Margin" Value="5,0"/>
 			<Setter Property="Background" Value="#2b7fff"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -56,6 +57,16 @@
 			<Setter Property="Margin" Value="0,2"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<Style Selector="Button.big">
+			<Setter Property="Width" Value="200"/>
+			<Setter Property="Height" Value="35"/>
+			<Setter Property="CornerRadius" Value="5"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
 	</UserControl.Styles>
 
 	<Grid ColumnDefinitions="80* Auto">
@@ -68,7 +79,7 @@
 						 HorizontalAlignment="Left"
 						 VerticalContentAlignment="Center"
 						 Watermark="Search by Product Name or Number"/>
-					
+
 					<Label x:Name="lblError" Margin="10,0" Foreground="Red" FontWeight="SemiLight"
 						   VerticalContentAlignment="Center"/>
 				</StackPanel>
@@ -110,14 +121,14 @@
 					</DataGridTemplateColumn>
 					<DataGridTextColumn Header="Amount (₹)" IsReadOnly="True"
 										Binding="{Binding Amount}"/>
-				
+
 				</DataGrid.Columns>
 			</DataGrid>
 			<Grid Grid.Row="2" ColumnDefinitions="85* 15*">
 				<Label Grid.Column="0" Content="Total items: "
 					   Margin="5,0"
 					   Classes="small"/>
-				<Label Grid.Column="0" 
+				<Label Grid.Column="0"
 					   Margin="77,0"
 					   Content="{Binding BillHeader.Itemcount}"
 					   Classes="small"/>
@@ -183,16 +194,16 @@
 
 				<HeaderedContentControl Grid.Row="2" Margin="0,10,5,5"
 										Header="Payment Details">
-						<StackPanel Orientation="Horizontal"
-									x:Name="PayPanel"
-									Margin="0,15,0,0"
-									HorizontalAlignment="Center" 
-									VerticalAlignment="Center">
-							<ToggleButton Content="Cash"
-										  x:Name="ToggleCash"
-										  Classes="paytoggle"/>
-							<ToggleButton Content="Online" Classes="paytoggle"/>
-						</StackPanel>
+					<StackPanel Orientation="Horizontal"
+								x:Name="PayPanel"
+								Margin="0,15,0,0"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center">
+						<ToggleButton Content="Cash"
+									  x:Name="ToggleCash"
+									  Classes="paytoggle"/>
+						<ToggleButton Content="Online" Classes="paytoggle"/>
+					</StackPanel>
 				</HeaderedContentControl>
 
 				<HeaderedContentControl Grid.Row="0" Margin="0,10,5,5"
@@ -203,7 +214,7 @@
 								   Content="Name"/>
 						<Label Grid.Row="1" Grid.Column="0" Classes="h1"
 							   Content="Ph.No"/>
-						
+
 						<TextBox Grid.Row="0" Grid.Column="1"
 								 x:Name="TextboxName"
 								 Text="{Binding BillHeader.CustomerName,Mode=TwoWay}"
@@ -220,30 +231,33 @@
 
 				<HeaderedContentControl Grid.Row="3" Margin="0,10,5,5"
 										Header="Received Amount">
-					<Grid RowDefinitions="* *"
-						  Margin="0,5,0,0">
-						<CheckBox x:Name="chkReceived" Grid.Row="0"  
-								  IsChecked="true"
-								  Content="Same As total amount"/>
-						<TextBox Grid.Row="1" x:Name="txtRecvAmt"
+					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+						<CheckBox x:Name="chkReceived"
+								  IsChecked="true"/>
+						<TextBox x:Name="txtRecvAmt"
+								 Width="250" Height="25"
 								 IsEnabled="{Binding !IsChecked, ElementName=chkReceived}"
-								 Text="{Binding BillHeader.ReceivedAmount,Mode=TwoWay}"/>
-						
-					</Grid>
+								 Text="{Binding BillHeader.ReceivedAmount,Mode=TwoWay,
+								 Converter={StaticResource RupeesConverter},UpdateSourceTrigger=PropertyChanged}"/>
+					</StackPanel>
 
 				</HeaderedContentControl>
+				<StackPanel Grid.Row="4"
+							VerticalAlignment="Bottom"
+							HorizontalAlignment="Center"
+							Orientation="Vertical">
+					<Button x:Name="BtnSave"
+							Content="Save Bill"
+							Background="#16A34A"
+							Classes="big"/>
+
+					<Button Grid.Row="5"
+							x:Name="BtnPayBill"
+							Content="Pay Bill"
+							Background="#0078D7"
+							Classes="big"/>
+				</StackPanel>
 				
-				<Button Grid.Row="4"
-						x:Name="BtnPayBill"
-					    Content="Pay Bill"
-						HorizontalAlignment="Center"
-						Width="250" Height="40"
-						Margin="5,5,5,15"
-						Background="#2b7fff"
-						Foreground="White"
-						VerticalAlignment="Bottom"
-						VerticalContentAlignment="Center"
-						HorizontalContentAlignment="Center"/>
 			</Grid>
 		</Border>
 	</Grid>

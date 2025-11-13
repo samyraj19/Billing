@@ -56,18 +56,23 @@
 						 Grid.Row="1" Grid.Column="4"
 						 Text="{Binding Quantity,Mode=TwoWay}"/>
 
-				<Button Grid.Row="4" x:Name="BtnSubmit"
-						Grid.ColumnSpan="3" Content="Submit"
+				<Button Grid.Row="4" 
+						x:Name="BtnSubmit"
+						Grid.ColumnSpan="3" 
+						Content="Submit"
 						Margin="5,20,5,5"
-						Width="200" Height="40"
-						VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+						Width="200" Height="35"
+						VerticalContentAlignment="Center" 
+						HorizontalContentAlignment="Center"
 						HorizontalAlignment="Center"/>
 
 				<Button Grid.Row="4" x:Name="BtnCancel"
-						Grid.ColumnSpan="3" Content="Cancel"
+						Grid.ColumnSpan="3" 
+						Content="Cancel"
 						Margin="500,20,5,5"
-						Width="200" Height="40"
-						VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+						Width="200" Height="35"
+						VerticalContentAlignment="Center" 
+						HorizontalContentAlignment="Center"
 						HorizontalAlignment="Center"/>
 
 			</Grid>

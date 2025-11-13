@@ -1,6 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+	<Style Selector="Button">
+		<Setter Property="CornerRadius" Value="5"/>
+		<Setter Property="Background" Value="#0078D7"/>
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
 	<Style Selector="DataGrid">
 		<Setter Property="Background" Value="White"/>
 		<Setter Property="BorderBrush" Value="Gray"/>

@@ -49,7 +49,7 @@
 			<Button x:Name="BtnUpdatePrices"
 					Content="Update"
 					Width="200"
-					Height="45"
+					Height="35"
 					HorizontalAlignment="Center"
 					Margin="5"
 					CornerRadius="5"

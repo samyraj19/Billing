@@ -19,7 +19,7 @@ public partial class MainView : UserControl {
 
    void OnLoad (object? sender, RoutedEventArgs e) {
       bool isAdmin = AppSession.Role == EUserRoles.Admin;
-      mViewManager.ShowView (isAdmin ? "DashBoard" : "CategoryView");
+      ShowView (isAdmin ? "DashBoard" : "CategoryView");
       BtnPricing.IsVisible = isAdmin;
       BtnStock.IsVisible = isAdmin;
       BtnDashboard.IsVisible = isAdmin;
@@ -53,9 +53,17 @@ public partial class MainView : UserControl {
    void ShowView (string key) {
       mViewManager.ShowView (key);
       ToDisplay (key);
+      ToggleHeader (key != "DashBoard");
    }
 
    void ToDisplay (string key) => lblHeader.Content = AppViewHeader.Get (key);
+
+   void ToggleHeader (bool visible) {
+      GirdContentPanel.RowDefinitions[0].Height = visible
+       ? new GridLength (5, GridUnitType.Star)
+       : new GridLength (0);
+   }
+
 
    #region Fields
    ViewManager mViewManager => new (ContentPanel);

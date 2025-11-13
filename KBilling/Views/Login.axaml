@@ -37,10 +37,12 @@
 						 Margin="0,10,0,0"
 						 Text="{Binding Password,Mode=TwoWay}"
 						 Watermark="Password"/>
-				<Button Grid.Row="2" x:Name="BtnLogin"
+				<Button Grid.Row="2" 
+						x:Name="BtnLogin"
 						Content="Login"
-						HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-						Width="200" Height="30"
+						HorizontalContentAlignment="Center" 
+						VerticalContentAlignment="Center"
+						Width="200" Height="35"
 						Margin="0,10,0,0"/>
 			</Grid>
 		</Border>

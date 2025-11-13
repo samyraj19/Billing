@@ -27,8 +27,12 @@
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" ColumnDefinitions="9* 91*">
 		<Border Grid.Row="0" 
-				BorderThickness="1" 
-				BorderBrush="LightGray">
+				Padding="2"
+				Margin="2"
+				BorderBrush="LightGray"
+				BorderThickness="1"
+				CornerRadius="5"
+				ClipToBounds="True">
 			<Grid RowDefinitions="5* 90* 5*" Background="White">
 				<Border Grid.Row="0" Background="Transparent"
 						BorderBrush="LightGray" BorderThickness="0,0,0,1">
@@ -77,16 +81,20 @@
 				</Border>
 			</Grid>
 		</Border>
-		<Grid Grid.Column="1" RowDefinitions="5* 95*">
-			<Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Background="#FFFFFF">
-				<Grid Grid.Row="0">
-					<Label x:Name="lblHeader" Margin="5,0,0,0"
-						   VerticalContentAlignment="Center"
-						   FontSize="16" FontWeight="Regular"/>
-				</Grid>
-			</Border>
-
-			<ContentControl Grid.Row="1" x:Name="ContentPanel" Background="#f9f9f9"/>
-		</Grid>
+		<Border Grid.Column="1"
+				BorderBrush="#f9f9f9" BorderThickness="1"
+				CornerRadius="5">
+			<Grid  RowDefinitions="5* 95*" x:Name="GirdContentPanel" Margin="3">
+				<Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Background="#f9f9f9">
+					<Grid Grid.Row="0">
+						<Label x:Name="lblHeader" Margin="5,0,0,0"
+							   VerticalContentAlignment="Center"
+							   FontSize="16" FontWeight="Regular"/>
+					</Grid>
+				</Border>
+                <!-- Conent panel-->
+				<ContentControl Grid.Row="1" x:Name="ContentPanel" Background="#f9f9f9"/>
+			</Grid>
+		</Border>
 	</Grid>
 </UserControl>
