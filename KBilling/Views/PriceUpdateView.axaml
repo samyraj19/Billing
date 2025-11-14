@@ -10,7 +10,7 @@
 	<UserControl.DataContext>
 		<vm:UpdatePricingVM/>
 	</UserControl.DataContext>
-	<Grid RowDefinitions="5* 85* 10*">
+	<Grid RowDefinitions="5* 88* 7*">
 		<StackPanel Orientation="Horizontal" Margin="5">
 			<TextBox Grid.Row="0"
 					 x:Name="SearchTxt"
@@ -41,6 +41,7 @@
 				<DataGridTextColumn Header="Created By" IsReadOnly="True"
 									Binding="{Binding Createdby}"/>
 				<DataGridTextColumn Header="Created Date" IsReadOnly="True"
+									Width="175"
 									Binding="{Binding Createddate}"/>
 			</DataGrid.Columns>
 		</DataGrid>
@@ -49,7 +50,7 @@
 			<Button x:Name="BtnUpdatePrices"
 					Content="Update"
 					Width="200"
-					Height="35"
+					Height="40"
 					HorizontalAlignment="Center"
 					Margin="5"
 					CornerRadius="5"

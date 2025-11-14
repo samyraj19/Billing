@@ -86,15 +86,13 @@
 			</Grid>
 
 			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
-					  CornerRadius="5" Margin="5" Background="White"
-					  GridLinesVisibility="All" AutoGenerateColumns="False"
-					  ColumnWidth="*" BorderBrush="LightGray" BorderThickness="1"
+					  ColumnWidth="*" 
 					  ItemsSource="{Binding BillItems}">
 				<DataGrid.Columns>
 					<DataGridTemplateColumn Width="25">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
-								<ctrl:IconButton Width="25" Height="25"
+								<ctrl:IconButton Width="15" Height="15"
 												 Tag="Delete"
 												 Click="IconButton_Click"
 												 Icon="avares://KBilling/Assets/cross.png"/>
@@ -231,7 +229,9 @@
 
 				<HeaderedContentControl Grid.Row="3" Margin="0,10,5,5"
 										Header="Received Amount">
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+					<StackPanel Orientation="Horizontal" 
+								Margin="5,10,5,5"
+								VerticalAlignment="Center">
 						<CheckBox x:Name="chkReceived"
 								  IsChecked="true"/>
 						<TextBox x:Name="txtRecvAmt"

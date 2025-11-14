@@ -1,12 +1,14 @@
 ﻿
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media.Imaging;
+using KBilling.Helper;
 
 namespace KBilling.Controls {
    /// <summary> A button control that displays an icon.</summary>
    public class IconButton : Button {
-      public IconButton () { }
+      public IconButton () { Classes.Add ("Base"); }
 
       public Bitmap? Icon {
          get => GetValue (ActiveImageSourceProperty);
@@ -18,11 +20,31 @@ namespace KBilling.Controls {
          set => SetValue (IsSelectedProperty, value);
       }
 
+      public bool UseHoverIcon {
+         get => GetValue (IsHoverProperty);
+         set => SetValue (IsHoverProperty, value);
+      }
+
       public static readonly StyledProperty<Bitmap?> ActiveImageSourceProperty =
           AvaloniaProperty.Register<IconButton, Bitmap?> (nameof (Icon));
 
       public static readonly StyledProperty<bool> IsSelectedProperty =
           AvaloniaProperty.Register<IconButton, bool> (nameof (IsSelected));
+
+      public static readonly StyledProperty<bool> IsHoverProperty =
+          AvaloniaProperty.Register<IconButton, bool> (nameof (UseHoverIcon));
+
+      protected override void OnPointerEntered (PointerEventArgs e) {
+         base.OnPointerEntered (e);
+         if(!UseHoverIcon) return;
+         if (Icon != null) Icon = ImageHelper.Load( "avares://KBilling/Assets/close-hover.png");
+      }
+
+      protected override void OnPointerExited (PointerEventArgs e) {
+         base.OnPointerExited (e);
+         if (!UseHoverIcon) return;
+         if (Icon != null) Icon = ImageHelper.Load ("avares://KBilling/Assets/close-black.png");
+      }
    }
 
    /// <summary>A button control that displays an icon and text.</summary>

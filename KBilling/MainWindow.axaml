@@ -2,10 +2,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"   Width="1280" Height="720"
         x:Class="KBilling.MainWindow"
 		WindowState="Maximized"
+		ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+		xmlns:custom="using:KBilling.Controls"
 		CanResize="False"
         Title="K_Billing">
-	<ContentControl x:Name="ContentPanel"/>
+	<Grid RowDefinitions="3* 97*">
+		<Border Background="#f3f3f3"
+				Grid.Row="0"
+				BorderBrush="LightGray"
+				BorderThickness="0,0,0,1">
+			<custom:IconButton Icon="avares://KBilling/Assets/close-black.png"
+							   x:Name="btnClose"
+							   UseHoverIcon="True"
+							   Margin="2"
+							   HorizontalAlignment="Right"
+							   Width="30" Height="30"/>
+		</Border>
+		<ContentControl Grid.Row="1" x:Name="ContentPanel"/>
+	</Grid>
+	
 </Window>

@@ -18,6 +18,8 @@
   <ItemGroup>
     <None Remove="Assets\bill.png" />
     <None Remove="Assets\category.png" />
+    <None Remove="Assets\close-black.png" />
+    <None Remove="Assets\close-hover.png" />
     <None Remove="Assets\cross.png" />
     <None Remove="Assets\dashboard.png" />
     <None Remove="Assets\delete.png" />
@@ -51,6 +53,8 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\bill.png" />
     <AvaloniaResource Include="Assets\category.png" />
+    <AvaloniaResource Include="Assets\close-black.png" />
+    <AvaloniaResource Include="Assets\close-hover.png" />
     <AvaloniaResource Include="Assets\cross.png" />
     <AvaloniaResource Include="Assets\delete.png" />
     <AvaloniaResource Include="Assets\edit.png" />
