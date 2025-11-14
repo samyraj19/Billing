@@ -91,27 +91,27 @@
 					  ItemsSource="{Binding FilterProducts}">
 				<DataGrid.Columns>
 					<DataGridTextColumn IsReadOnly="True" Header="#"
-										Width="75"
+										Width="60"
 										Binding="{Binding No}"/>
 					<DataGridTextColumn Header="Name" IsReadOnly="True"
-										Width="175"
+										Width="*"
 										Binding="{Binding ProductName}"/>
 					<DataGridTextColumn Header="Number" IsReadOnly="True"
-										Width="125"
+										Width="*"
 										Binding="{Binding ProductNumber}"/>
 					<DataGridTextColumn Header="Quantity" IsReadOnly="True"
-										Width="100"
+										Width="*"
 										Binding="{Binding Quantity}"/>
 					<DataGridTextColumn Header="Status" IsReadOnly="True"
-										Width="150"
+										Width="*"
 										Binding="{Binding Status}"/>
 					<DataGridTextColumn Header="Created By" IsReadOnly="True"
-										Width="150"
+										Width="*"
 										Binding="{Binding Createdby}"/>
 					<DataGridTextColumn Header="Created Date" IsReadOnly="True"
 										Width="175"
 										Binding="{Binding Createddate}"/>
-					<DataGridTemplateColumn Header="Action" Width="*">
+					<DataGridTemplateColumn Header="Action" Width="100">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

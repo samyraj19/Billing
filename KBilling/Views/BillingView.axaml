@@ -17,6 +17,9 @@
 		<vm:BillVM/>
 	</UserControl.DataContext>
 	<UserControl.Styles>
+		<Style Selector="TextBox.borderless">
+			<Setter Property="BorderThickness" Value="0"/>
+		</Style>
 		<Style Selector="Button.medium">
 			<Setter Property="Width" Value="120"/>
 			<Setter Property="Height" Value="35"/>
@@ -87,6 +90,7 @@
 
 			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
 					  ColumnWidth="*" 
+					  Margin="5"
 					  ItemsSource="{Binding BillItems}">
 				<DataGrid.Columns>
 					<DataGridTemplateColumn Width="25">
@@ -113,7 +117,8 @@
 							<DataTemplate>
 								<TextBox Text="{Binding Quantity}"
 										 Tag="{Binding AvilableStock}"
-										 TextChanged="OnGridQtyTxtChaning"/>
+										 TextChanged="OnGridQtyTxtChaning"
+										 Classes="borderless"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>

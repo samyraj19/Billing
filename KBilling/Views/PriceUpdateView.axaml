@@ -20,7 +20,8 @@
 		</StackPanel>
 		
 		<DataGrid   x:Name="DataGridProduct" Grid.Row="1"
-					Margin="5" ColumnWidth="*"
+					Margin="5" 
+					ColumnWidth="*"
 					ItemsSource="{Binding FilterProducts}">
 			<DataGrid.Columns>
 				<DataGridTextColumn IsReadOnly="True" Header="#"
@@ -30,12 +31,10 @@
 									Binding="{Binding ProductName}"/>
 				<DataGridTextColumn Header="Number" IsReadOnly="True"
 									Binding="{Binding ProductNumber}"/>
-
 				<DataGridTextColumn Header="Purchase Rate"
 									Binding="{Binding PurchaseRate}"/>
 				<DataGridTextColumn Header="Selling Rate"
 									Binding="{Binding SellingRate}"/>
-				
 				<DataGridTextColumn Header="Quantity" IsReadOnly="True"
 									Binding="{Binding Quantity}"/>
 				<DataGridTextColumn Header="Created By" IsReadOnly="True"

@@ -27,7 +27,6 @@
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" ColumnDefinitions="9* 91*">
 		<Border Grid.Row="0" 
-				Padding="2"
 				Margin="2"
 				BorderBrush="LightGray"
 				BorderThickness="1"
