@@ -24,6 +24,7 @@
     <None Remove="Assets\dashboard.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
+    <None Remove="Assets\invoice.png" />
     <None Remove="Assets\price.png" />
     <None Remove="Assets\price1.png" />
     <None Remove="Assets\product.png" />
@@ -62,6 +63,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\dashboard.png" />
+    <AvaloniaResource Include="Assets\invoice.png" />
     <AvaloniaResource Include="Assets\price1.png" />
     <AvaloniaResource Include="Assets\product.png" />
     <AvaloniaResource Include="Assets\stocks.png" />

@@ -1,7 +1,8 @@
-﻿using KBilling.Model;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using KBilling.Model;
 
 namespace KBilling.ViewModel {
-   public class DashboardVM {
+   public partial class DashboardVM : BaseModel {
       public DashboardVM () {
          Init ();
       }
@@ -13,9 +14,18 @@ namespace KBilling.ViewModel {
          StockReport = new ();
       }
 
-      public SalesVM? Sales { get; set; }
-      public TransactionVM? Transaction { get; set; }
-      public TopSellingItemsVM? TopSelling { get; set; }
-      public StockReportVM? StockReport { get; set; }
+      public void LoadData () {
+         Sales?.LoadReport (RType);
+         Transaction?.LoadTransaction ();
+         TopSelling?.LoadTopSellingItems (RType);
+         StockReport?.LoadStockRpt ();
+      }
+
+      public EReportType RType { get; set; } = EReportType.Today;
+
+      [ObservableProperty] SalesVM? sales;
+      [ObservableProperty] TransactionVM? transaction;
+      [ObservableProperty] TopSellingItemsVM? topSelling;
+      [ObservableProperty] StockReportVM? stockReport;
    }
 }

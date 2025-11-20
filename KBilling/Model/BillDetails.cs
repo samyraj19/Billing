@@ -11,6 +11,7 @@ namespace KBilling.Model {
       [ObservableProperty] decimal? price;
       [ObservableProperty] int quantity;
       [ObservableProperty] int? avilableStock;
+      [ObservableProperty] decimal? dbAmount;
 
       public decimal Amount => Price.Value * Quantity;
 
@@ -29,6 +30,7 @@ namespace KBilling.Model {
       [ObservableProperty] decimal discount;
       [ObservableProperty] decimal total;
       [ObservableProperty] decimal receivedAmount;
+      [ObservableProperty] decimal balanceAmount;
       [ObservableProperty] string? paymentMethod = EPaymentMode.None.Get();
       [ObservableProperty] string? remarks;
       [ObservableProperty] string? createdBy;

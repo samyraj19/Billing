@@ -63,6 +63,10 @@
 					<custom:IconButtonText x:Name="BtnPos"
 							Text="POS" Tag="BillingView"
 							Icon="avares://KBilling/Assets/bill.png"/>
+					<custom:IconButtonText Text="Invoices" 
+							x:Name="btnInvoice"
+							Tag="InvoiceView"
+							Icon="avares://KBilling/Assets/invoice.png"/>
 				</StackPanel>
 
 				<Border Grid.Row="2" Background="#f9f9f9" 

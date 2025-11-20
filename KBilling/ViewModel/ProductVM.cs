@@ -15,6 +15,8 @@ using KBilling.Interfaces;
 using KBilling.Core;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using static Azure.Core.HttpHeader;
 
 namespace KBilling.ViewModel {
    public partial class ProductVM : Product {
@@ -32,6 +34,15 @@ namespace KBilling.ViewModel {
       }
 
       public bool CanSubmit () {
+         var errors = GetValidationErrors ();
+         if (errors.Count > 0) {
+            MsgBox.ShowErrorAsync ("Error", "• " + string.Join ("\n• ", errors));
+            return false;
+         }
+         return true;
+      }
+
+      List<string> GetValidationErrors () {
          var errors = new List<string> ();
          if (Is.IsEmpty (ProductName)) errors.Add ("Product name is required.");
          if (Is.IsEmpty (ProductNumber)) errors.Add ("ProductNumber must be > 0.");
@@ -41,10 +52,7 @@ namespace KBilling.ViewModel {
             if (!IsSellingRateValid ()) errors.Add ("Selling rate must be at least 40% higher than purchase rate.");
          }
          if (Quantity is null or < 0) errors.Add ("Quantity cannot be negative.");
-
-         if (errors.Count == 0) return true;
-         MsgBox.ShowErrorAsync ("Add product Error", $"• {string.Join ("\n• ", errors)}");
-         return true;
+         return errors;
       }
 
       bool IsSellingRateValid () => SellingRate >= PurchaseRate + (PurchaseRate * 0.4m);
@@ -109,6 +117,36 @@ namespace KBilling.ViewModel {
 
       public void Refersh () => UpdateFilter (string.Empty);
 
+      [RelayCommand]
+      public void Submit () {
+         if (!CanSubmit ()) return;
+         string? code = Action.IsEdit () ? ProductNumber : string.Empty;
+         AddOrUpdate (this, code);
+         Clear ();
+         Refersh ();
+
+         OnUiRequest?.Invoke (true);
+      }
+
+      public async void DeleteAsync (Product item) {
+         var box = await AppMsg.AskDelItem ();
+         if (box == ButtonResult.Yes) DeleteItem (item);
+      }
+
+      public void ApplyItem (Category cat) {
+         ProductName = cat.Name;
+         ProductNumber = cat.Code;
+         OnUiRequest?.Invoke (false);
+      }
+
+      [RelayCommand]
+      public void Reset () {
+         Clear ();
+         Refersh ();
+         Action = EAction.None;
+         OnUiRequest?.Invoke (true);
+      }
+
       #endregion
 
       #region Fields
@@ -116,6 +154,15 @@ namespace KBilling.ViewModel {
       public AutoNumberedCollection<Product>? FilterProducts { get; } = new ();
       public EUserRoles? Role => AppSession.Role;
 
+      public EAction Action { get; set; } = EAction.None;
+
+      public event Action<bool>? OnUiRequest;
+      #endregion
+
+      #region ----- Observable property & Events -----
+      [ObservableProperty] string? searchText;
+
+      partial void OnSearchTextChanged (string? value) => UpdateFilter (value);
       #endregion
    }
 }

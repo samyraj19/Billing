@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:conv="using:KBilling.Converters"
+			 xmlns:vm="using:KBilling.ViewModel"
+			 x:DataType="vm:InvoiceVM"
+             x:Class="KBilling.InvoiceView">
+	<UserControl.DataContext>
+		<vm:InvoiceVM/>
+	</UserControl.DataContext>
+	<UserControl.Resources>
+		<conv:RupeesConverter x:Key="Ruppes"/>
+	</UserControl.Resources>
+	<UserControl.Styles>
+		<Style Selector="ListBox">
+			<Setter Property="Margin" Value="0,2,0,0"/>
+		</Style>
+		<Style Selector="ListBoxItem">
+			<Setter Property="BorderBrush" Value="#CCC"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Padding" Value="5"/>
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="CornerRadius" Value="0"/>
+		</Style>
+		<Style Selector="CalendarDatePicker">
+			<Setter Property="Width" Value="130"/>
+			<Setter Property="Margin" Value="0,5"/>
+		</Style>
+
+		<Style Selector="CalendarDatePicker /template/ Button#PART_Button">
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="Background" Value="#E0E0E0"/>
+			<Setter Property="Opacity" Value="1"/>
+			<Setter Property="HorizontalAlignment" Value="Right"/>
+			<Setter Property="Width" Value="30"/>
+		</Style>
+
+	</UserControl.Styles>
+	<Grid ColumnDefinitions="25* 75*" Margin="2">
+		<Border Grid.Column="0"
+				BorderBrush="LightGray"
+				BorderThickness="0,0,1,0">
+			<Grid RowDefinitions="10* 90*">
+				<StackPanel Grid.Row="0" Orientation="Vertical">
+					<Grid ColumnDefinitions="* *">
+						<CalendarDatePicker  Grid.Column="0"
+											 SelectedDate="{Binding StartDate}"
+											 Watermark="Start Date"/>
+						<CalendarDatePicker  Grid.Column="1"
+											 SelectedDate="{Binding EndDate}"
+											 Watermark="End Date"/>
+					</Grid>
+					<TextBox Text="{Binding SearchText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+				</StackPanel>
+
+				<ListBox x:Name="BillsListBox"
+						 Grid.Row="1"
+						 Background="White"
+						 BorderThickness="0"
+						 SelectedItem="{Binding SelectedBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+						 ItemsSource="{Binding FilterInvoices}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Grid ColumnDefinitions="50* 30* 20*">
+								<Grid Grid.Column="0" RowDefinitions="* *">
+									<Label Grid.Row="0"
+										   Content="{Binding BillNumber}"
+										   FontWeight="SemiBold"/>
+									<Label Grid.Row="1"
+										   Content="{Binding CustomerName}"
+										   FontWeight="SemiLight"/>
+								</Grid>
+								<Label Grid.Column="1"
+									   FontWeight="SemiBold"
+									   HorizontalContentAlignment="Center"
+									   VerticalContentAlignment="Center"
+									   Content="{Binding Total,Converter={StaticResource Ruppes}}"/>
+								<Label Grid.Column="2"
+									   FontWeight="SemiBold"
+									   HorizontalContentAlignment="Center"
+									   VerticalContentAlignment="Center"
+									   Content="{Binding PaymentMethod}"/>
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Grid>
+		</Border>
+
+
+		<Grid Grid.Column="1"
+			  Background="White">
+
+		</Grid>
+	</Grid>
+</UserControl>

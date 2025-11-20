@@ -11,8 +11,8 @@
 		<Setter Property="BorderBrush" Value="Gray"/>
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="GridLinesVisibility" Value="All"/>
-		<Setter Property="ColumnWidth" Value="*"/>
 		<Setter Property="AutoGenerateColumns" Value="False"/>
+		<Setter Property="ColumnWidth" Value="*"/>
 		<Setter Property="CornerRadius" Value="5"/>
 	</Style>
 
@@ -74,4 +74,10 @@
 	<Style Selector="ToggleButton.paytoggle:checked /template/ Border">
 		<Setter Property="Background" Value="#2b7fff"/>
 	</Style>
+	
+	<Style Selector="CalendarDatePicker /template/ Button#PART_Button">
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="Background" Value="#E0E0E0"/>
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
 </Styles>

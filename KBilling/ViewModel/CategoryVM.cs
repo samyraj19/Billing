@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using KBilling.Core;
 using KBilling.Extension;
 using KBilling.Helper;
 using KBilling.Model;
+using MsBox.Avalonia.Enums;
 
 namespace KBilling.ViewModel {
-   public class CategoryVM : Category {
+   public partial class CategoryVM : Category {
       public CategoryVM () { }
 
       bool Insert (Category category) => Repo.Category.Insert (category);
@@ -22,15 +25,15 @@ namespace KBilling.ViewModel {
          return true;
       }
 
-      public void Submit (EAction action, Category category) {
+      public void Submit () {
          var errors = GetValidationErrors ();
          if (errors.Count > 0) {
             MsgBox.ShowErrorAsync ("Error", "• " + string.Join ("\n• ", errors));
             return;
          }
 
-         bool isEdit = action.IsEdit ();
-         if (isEdit) Update (category); else Insert (category);
+         bool isEdit = CatAction.IsEdit ();
+         if (isEdit) Update (this); else Insert (this);
 
          MsgBox.ShowSuccessAsync ("Success", isEdit ? "Category updated successfully." : "Category added successfully.");
 
@@ -69,6 +72,8 @@ namespace KBilling.ViewModel {
          FilterCategories.Filter (AllCategories, c => string.IsNullOrEmpty (filterValue) ||
                          (c.Name?.Contains (filterValue, StringComparison.OrdinalIgnoreCase) ?? false) ||
                          c.Code?.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase) == true);
+
+         TotalItems = $" Total Item: {AllCategories.Count}";
       }
 
       public void SoryBy (string text) {
@@ -77,9 +82,41 @@ namespace KBilling.ViewModel {
          FilterCategories.Filter (AllCategories, showAll ? _ => true : c => c.Name?.StartsWith (text, StringComparison.OrdinalIgnoreCase) == true);
       }
 
+      [RelayCommand]
+      public void Onsubmit () {
+         Submit ();
+         Clear ();
+         CatAction = EAction.None;
+         SearchText = string.Empty;
+      }
+
+      [RelayCommand]
+      public void Oncancel () {
+         Clear ();
+         CatAction = EAction.None;
+         SearchText = string.Empty;
+      }
+
+      public async void OnDelete (int id) {
+         var box = await AppMsg.AskDelItem ();
+         if (box == ButtonResult.Yes) Delete (id);
+         SearchText = string.Empty;
+      }
+
       #region Fields
       AutoNumberedCollection<Category>? AllCategories { get; } = new AutoNumberedCollection<Category> ();
       public AutoNumberedCollection<Category>? FilterCategories { get; set; } = new AutoNumberedCollection<Category> ();
+
+      public EAction CatAction { get; set; } = EAction.None;
+
+      #endregion
+
+      #region ----- Observable properties & Events -----
+      [ObservableProperty] string searchText = string.Empty;
+      [ObservableProperty] string? totalItems;
+
+      partial void OnSearchTextChanged (string value) => Filter (value);
+
       #endregion
    }
 }

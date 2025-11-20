@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -22,17 +23,24 @@ public partial class Dashboard : UserControl {
    void OnLoad (object? sender, RoutedEventArgs e) {
       RegToggleEvents ();
       DefaultSelection ();
-      LoadData ();
+      VM?.LoadData ();
+      if (VM is not null) VM.PropertyChanged += OnPropertyChanged;
    }
 
    void OnUnloaded (object? sender, RoutedEventArgs e) => UnRegToggleEvents ();
 
+   protected override void OnDataContextChanged (EventArgs e) {
+      base.OnDataContextChanged (e);
+      VM = TryGetVM ();
+   }
+
+   void OnPropertyChanged (object? sender, PropertyChangedEventArgs e) => VM = TryGetVM ();
+
    void OnToggleClicked (object? sender, RoutedEventArgs e) {
       if (sender is not ToggleButton btn || btn.Tag is not EReportType type) return;
 
-      mType = type;
-      VM ()?.Sales?.LoadReport (mType);
-      VM ()?.TopSelling?.LoadTopSellingItems (mType);
+      if (VM is not null) VM.RType = type;
+      VM?.LoadData ();
 
       foreach (var t in TogglePanel.Children.OfType<ToggleButton> ())
          if (t != btn) t.IsChecked = false;
@@ -56,18 +64,11 @@ public partial class Dashboard : UserControl {
          btn.IsChecked = true;
    }
 
-   void LoadData () {
-      VM ()?.Sales?.LoadReport (mType);
-      VM ()?.Transaction?.LoadTransaction ();
-      VM ()?.TopSelling?.LoadTopSellingItems (mType);
-      VM ()?.StockReport?.LoadStockRpt ();
-   }
-
-   DashboardVM VM () => DataContext is DashboardVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type SalesVM");
+   DashboardVM? TryGetVM () => DataContext is DashboardVM vm ? vm : throw new InvalidOperationException ("DataContext is not of type DashboardVM");
 
    #endregion
 
    #region Fields
-   EReportType mType = EReportType.Today;
+   DashboardVM? VM { get; set; }
    #endregion
 }

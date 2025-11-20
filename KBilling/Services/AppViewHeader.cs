@@ -8,7 +8,8 @@ namespace KBilling.Services {
          { "PriceUpdateView", "💲 Update Price" },
          { "StocksView", "📦 Update Stocks" },
          { "BillingView", "💳 Bill Entry" },
-         { "CategoryView","➕ Add New Category" }
+         { "CategoryView","➕ Add New Category" },
+         { "InvoiceView", "🧾 Invoices" }
       };
 
       public static string Get (string viewName) => headers.TryGetValue (viewName, out var header) ? header : viewName; // fallback if not found

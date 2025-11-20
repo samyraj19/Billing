@@ -18,7 +18,7 @@
 
       public static class  Bills {
          public const string GetBillsHeader = "sp_GetAllBills";
-         public const string GetBillDetails = "sp_GetBillDetails";
+         public const string GetBillDetailsByid = "sp_GetBillDetailsById";
          public const string InsertHeader = "sp_InsertBillHeader";
          public const string InsertDetails = "sp_InsertBillDetails";
          public const string DetectQuantity = "sp_DetectQuantity";

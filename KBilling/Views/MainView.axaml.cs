@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -24,6 +24,7 @@ public partial class MainView : UserControl {
       BtnStock.IsVisible = isAdmin;
       BtnDashboard.IsVisible = isAdmin;
       BtnPos.IsVisible = isAdmin;
+      btnInvoice.IsVisible = isAdmin;
       RegEvents ();
       lblUser.Content = AppSession.CurrentUser?.Username ?? "Guest";
       BtnDashboard.IsSelected = isAdmin;

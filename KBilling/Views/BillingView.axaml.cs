@@ -39,6 +39,7 @@ public partial class BillingView : UserControl {
       chkReceived.IsCheckedChanged += OnReceivedChanged;
 
       SetUpToggleEvent ();
+
       // focus on search box
       txtSearch.Focus ();
    }
@@ -66,7 +67,7 @@ public partial class BillingView : UserControl {
    }
 
    void OnToggleChecked (object? sender, RoutedEventArgs e) {
-      if (sender is not ToggleButton clicked) return;
+      if (sender is not ToggleButton clicked || VM() is not BillVM vm) return;
 
       // Uncheck all other toggles
       foreach (var other in PayPanel.Children.OfType<ToggleButton> ())
@@ -74,21 +75,22 @@ public partial class BillingView : UserControl {
 
       // Update payment mode
       mPaymode = ToggleCash.IsChecked == true ? EPaymentMode.Cash : EPaymentMode.Online;
-      VM ().BillHeader.PaymentMethod = mPaymode.Get ();
+      if (vm.BillHeader is null) return;
+      vm.BillHeader.PaymentMethod = mPaymode.Get ();
    }
 
    async void OnPayClick (object? sender, RoutedEventArgs e) {
-      if (sender is not Button btn) return;
+      if (sender is not Button btn || VM() is not BillVM vm) return;
       btn.IsEnabled = false;
 
       try {
-         if (VM ().CanPay ()) {
+         if (!vm.CanPay ()) return;
             var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
             if (confirm == ButtonResult.Yes) {
-               ResertBill ();
+               ResertBill (vm);
                await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
             } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
-         }
+      
       } catch {
          await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
       } finally {
@@ -120,6 +122,7 @@ public partial class BillingView : UserControl {
       mProductDialog.ClosedEvent += (product) => Add (product);
 
       // Position dialog below search box
+      if (text is null) return;
       mProductDialog.Position = text.PointToScreen (new Point (0, text.Bounds.Height));
       e.Handled = true;
 
@@ -128,7 +131,7 @@ public partial class BillingView : UserControl {
       txtSearch.Focus ();
    }
 
-   void BtnClearAllClick (object? sender, RoutedEventArgs e) => ResertBill ();
+   void BtnClearAllClick (object? sender, RoutedEventArgs e) => ResertBill (VM());
 
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       if (VM ()?.BillItems?.Count is <= 0) return;
@@ -173,19 +176,19 @@ public partial class BillingView : UserControl {
    /// <summary>Adds the selected product to the bill.</summary>
    void Add (Product product) {
       mProductDialog = null;
-      lblError.Content = string.Empty;
       if (VM ().AddItem (product)) {
          txtSearch.Focus ();
          mIgnoretxtchange = true;
          txtSearch.Text = string.Empty;
          mIgnoretxtchange = false;
-      } else lblError.Content = "This item already in the lists";
+      }
    }
 
    /// <summary>Resets the bill to its initial state.</summary>
-   void ResertBill () {
-      VM ().Reset ();
-      VM ().BillHeader.PaymentMethod = EPaymentMode.None.Get ();
+   void ResertBill (BillVM vm) {
+      if (vm is null || vm.BillHeader is null) return;
+      vm.Reset ();
+      vm.BillHeader.PaymentMethod = EPaymentMode.None.Get ();
       PayPanel.Children.OfType<ToggleButton> ().ToList ().ForEach (btn => btn.IsChecked = false);
       chkReceived.IsChecked = true;
    }

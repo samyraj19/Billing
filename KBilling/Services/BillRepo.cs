@@ -5,6 +5,9 @@ using Microsoft.Data.SqlClient;
 using KBilling.Model;
 using KBilling.DataBase;
 using System.Collections.Generic;
+using System.Linq;
+using KBilling.Helper;
+using static KBilling.DataBase.SP;
 
 namespace KBilling.Services {
    public class BillRepo : IBillRepo {
@@ -69,6 +72,47 @@ namespace KBilling.Services {
          };
 
          App.Repo.QueryExe.ExecuteSP (SP.Bills.DetectQuantity, parameters);
+      }
+
+
+      public IEnumerable<BillHeader> GetAllBills (string sdata, string edate) {
+         var parameters = SqlParamHelper.PList (("@FromDate", sdata), ("@ToDate", edate));
+
+         DataTable dt = App.Repo.QueryExe.QuerySP (SP.Bills.GetBillsHeader, parameters);
+         if (dt.Rows.Count == 0) return Enumerable.Empty<BillHeader> (); // safe, no nulls
+         var bills = new List<BillHeader> ();
+         foreach (DataRow row in dt.Rows) {
+            var bill = new BillHeader {
+               BillNumber = Convert.ToString (row["InvoiceNumber"]),
+               BillId = Convert.ToInt64 (row["InvoiceID"]),
+               CustomerName = row["CustomerName"] as string ?? "Unknown",
+               Total = Convert.ToDecimal (row["Total"]),
+               ReceivedAmount = Convert.ToDecimal (row["ReceivedAmount"]),
+               BalanceAmount = Convert.ToDecimal (row["BalanceAmount"]),
+               PaymentMethod = row["PaymentMode"] as string ?? "N/A",
+            };
+            bills.Add (bill);
+         }
+         return bills;
+      }
+
+      public IEnumerable<BillDetails> GetAllBillDetailsById (long id) {
+         var parameters = SqlParamHelper.PList (("@BillId", id));
+
+         DataTable dt = App.Repo.QueryExe.QuerySP (SP.Bills.GetBillDetailsByid, parameters);
+         if (dt.Rows.Count == 0) return Enumerable.Empty<BillDetails> (); // safe, no nulls
+         var details = new List<BillDetails> ();
+         foreach (DataRow row in dt.Rows) {
+            var detail = new BillDetails {
+               ProductCode = row["ProductCode"] as string ?? "N/A",
+               ProductName = row["ProductName"] as string ?? "N/A",
+               Price = Convert.ToDecimal (row["Price"]),
+               Quantity = Convert.ToInt32 (row["Quantity"]),
+               DbAmount = Convert.ToDecimal (row["Amount"]),
+            };
+            details.Add (detail);
+         }
+         return details;
       }
    }
 }
