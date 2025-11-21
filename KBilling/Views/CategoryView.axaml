@@ -88,7 +88,8 @@
 				<ComboBox x:Name="SortByCmb"
 						  SelectedIndex="0"
 						  Width="75"
-						  Margin="5,5"/>
+						  Margin="5,5"
+						  SelectedItem="{Binding CmbSelectedItem,Mode=TwoWay}"/>
 				<Label VerticalContentAlignment="Center"
 					   FontWeight="SemiBold"
 					   Margin="15,5"

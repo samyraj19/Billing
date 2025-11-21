@@ -26,7 +26,9 @@ public partial class MainView : UserControl {
       BtnPos.IsVisible = isAdmin;
       btnInvoice.IsVisible = isAdmin;
       RegEvents ();
-      lblUser.Content = AppSession.CurrentUser?.Username ?? "Guest";
+      string? user = AppSession.CurrentUser?.Username ?? "Guest";
+      lblUser.Content = user;
+      UserShortText.Text = user[..1].ToUpper ();
       BtnDashboard.IsSelected = isAdmin;
       BtnCategory.IsSelected = !isAdmin;
    }

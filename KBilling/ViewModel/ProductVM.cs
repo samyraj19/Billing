@@ -124,7 +124,7 @@ namespace KBilling.ViewModel {
          AddOrUpdate (this, code);
          Clear ();
          Refersh ();
-
+         LoadData ();
          OnUiRequest?.Invoke (true);
       }
 

@@ -19,66 +19,89 @@
 		<Style Selector="custom|IconButtonText">
 			<Setter Property="Margin" Value="0,5,0,5"/>
 			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="#2E2E2E"/>
 			<Setter Property="FontSize" Value="14"/>
-			<Setter Property="Width" Value="110"/>
+			<Setter Property="Width" Value="120"/>
 			<Setter Property="Height" Value="30"/>
-			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="Padding" Value="12,8"/>
 		</Style>
 	</UserControl.Styles>
 	<Grid x:Name="MainPanel" ColumnDefinitions="9* 91*">
-		<Border Grid.Row="0" 
+		<Border Grid.Row="0"
 				Margin="2"
-				BorderBrush="LightGray"
+				BorderBrush="#E0E0E0"
 				BorderThickness="1"
 				CornerRadius="5"
 				ClipToBounds="True">
-			<Grid RowDefinitions="5* 90* 5*" Background="White">
-				<Border Grid.Row="0" Background="Transparent"
-						BorderBrush="LightGray" BorderThickness="0,0,0,1">
-					<Label Content="🏪 Fancy Store"
-						   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+			<Grid RowDefinitions="5* 90* 5*" Background="Transparent">
+				<Border Grid.Row="0"
+						Background="#1E88E5"
+						BorderBrush="#1565C0"
+						BorderThickness="0,0,0,1">
+					<DockPanel VerticalAlignment="Center">
+						<TextBlock Text="🏪" FontSize="18" Margin="0,0,8,0" />
+						<TextBlock Text="Fancy Store"
+								   Foreground="White"
+								   FontWeight="SemiBold"
+								   VerticalAlignment="Center"/>
+					</DockPanel>
 				</Border>
-			
-				<StackPanel Grid.Row="1"
-							x:Name="NavPanel"
+
+				<Border Grid.Row="1"
+						Background="#F5F7FA">
+					<StackPanel x:Name="NavPanel"
 						    Orientation="Vertical"
 							HorizontalAlignment="Center">
-					<custom:IconButtonText x:Name="BtnDashboard" 
-										   Icon="avares://KBilling/Assets/dashboard.png"
-										   Text="Dasboard" Tag="DashBoard"/>
-					<!--<Button x:Name="BtnDashboard" Content="DashBoard" Tag="DashBoard" />-->
-				
-					<custom:IconButtonText x:Name="BtnCategory"
-							Text="Category" Tag="CategoryView"
-							Icon="avares://KBilling/Assets/category.png"/>
-					<custom:IconButtonText x:Name="BtnProduct"
-							Text="Products" Tag="AddProduct"
-							Icon="avares://KBilling/Assets/product.png"/>
-					<custom:IconButtonText x:Name="BtnPricing"
-							Text="Pricing" Tag="PriceUpdateView"
-							Icon="avares://KBilling/Assets/price1.png"/>
-					<custom:IconButtonText x:Name="BtnStock"
-							Text="Stocks" Tag="StocksView"
-							Icon="avares://KBilling/Assets/stocks.png"/>
-					<custom:IconButtonText x:Name="BtnPos"
-							Text="POS" Tag="BillingView"
-							Icon="avares://KBilling/Assets/bill.png"/>
-					<custom:IconButtonText Text="Invoices" 
-							x:Name="btnInvoice"
-							Tag="InvoiceView"
-							Icon="avares://KBilling/Assets/invoice.png"/>
-				</StackPanel>
+						<custom:IconButtonText x:Name="BtnDashboard"
+											   Icon="avares://KBilling/Assets/dashboard.png"
+											   Text="Dashboard" Tag="DashBoard"/>
 
-				<Border Grid.Row="2" Background="#f9f9f9" 
-						BorderBrush="LightGray" BorderThickness="0,1,0,0">
-					<Grid ColumnDefinitions="40* 60*">
-						<Ellipse Fill="Gray" Width="20" Height="20"
-								 Margin="5"
-								 VerticalAlignment="Center" HorizontalAlignment="Left"/>
-						<Label Grid.Column="1" x:Name="lblUser"
+						<custom:IconButtonText x:Name="BtnCategory"
+								Text="Category" Tag="CategoryView"
+								Icon="avares://KBilling/Assets/category.png"/>
+						<custom:IconButtonText x:Name="BtnProduct"
+								Text="Products" Tag="AddProduct"
+								Icon="avares://KBilling/Assets/product.png"/>
+						<custom:IconButtonText x:Name="BtnPricing"
+								Text="Pricing" Tag="PriceUpdateView"
+								Icon="avares://KBilling/Assets/price1.png"/>
+						<custom:IconButtonText x:Name="BtnStock"
+								Text="Stocks" Tag="StocksView"
+								Icon="avares://KBilling/Assets/stocks.png"/>
+						<custom:IconButtonText x:Name="BtnPos"
+								Text="POS" Tag="BillingView"
+								Icon="avares://KBilling/Assets/bill.png"/>
+						<custom:IconButtonText Text="Invoices"
+								x:Name="btnInvoice"
+								Tag="InvoiceView"
+								Icon="avares://KBilling/Assets/invoice.png"/>
+					</StackPanel>
+				</Border>
+
+				<Border Grid.Row="2" Background="#90CAF9"
+						BorderBrush="#C5D7EE"
+						BorderThickness="0,1,0,0">
+					<Grid ColumnDefinitions="25* 75*">
+						<Border Width="28" Height="28" 
+								CornerRadius="14" 
+								Background="#1565C0"
+								VerticalAlignment="Center" 
+								HorizontalAlignment="Left" Margin="6,0,0,0">
+							<TextBlock Text="A" Foreground="White" 
+									   x:Name="UserShortText"
+									   VerticalAlignment="Center" 
+									   HorizontalAlignment="Center" 
+									   FontWeight="SemiBold"/>
+						</Border>
+						<Label Grid.Column="1" 
+							   x:Name="lblUser"
 							   VerticalContentAlignment="Center"
-							   HorizontalContentAlignment="Left"
-							   FontWeight="SemiLight"/>
+								HorizontalContentAlignment="Left"
+								Foreground="#0D47A1"        
+								FontWeight="SemiBold"
+								Padding="8,0,0,0"
+								Content="Admin"/>
 					</Grid>
 
 				</Border>
@@ -92,10 +115,10 @@
 					<Grid Grid.Row="0">
 						<Label x:Name="lblHeader" Margin="5,0,0,0"
 							   VerticalContentAlignment="Center"
-							   FontSize="16" FontWeight="Regular"/>
+							   FontSize="12" FontWeight="Regular"/>
 					</Grid>
 				</Border>
-                <!-- Conent panel-->
+				<!-- Conent panel-->
 				<ContentControl Grid.Row="1" x:Name="ContentPanel" Background="#f9f9f9"/>
 			</Grid>
 		</Border>

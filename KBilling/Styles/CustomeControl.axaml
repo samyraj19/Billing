@@ -39,22 +39,22 @@
 		</Setter>
 	</Style>
 	<Style Selector="local|IconButtonText:pointerover /template/ Border#Part_Border_CusBtn">
-		<Setter Property="Background" Value="#2b7fff"/>
+		<Setter Property="Background" Value="#D7EEFF"/>
 	</Style>
 	<Style Selector="local|IconButtonText:pointerover /template/ ContentPresenter#PART_CONTENT">
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="Black"/>
 	</Style>
 	<Style Selector="local|IconButtonText:pressed /template/ Border#Part_Border_CusBtn">
-		<Setter Property="Background" Value="#2b7fff"/>
+		<Setter Property="Background" Value="#1E88E5"/>
 	</Style>
 	<Style Selector="local|IconButtonText:pressed /template/ ContentPresenter#PART_CONTENT">
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="#FFFFFF"/>
 	</Style>
 	<Style Selector="local|IconButtonText[IsSelected=true] /template/ Border#Part_Border_CusBtn">
-		<Setter Property="Background" Value="#2b7fff"/>
+		<Setter Property="Background" Value="#1E88E5"/>
 	</Style>
 	<Style Selector="local|IconButtonText[IsSelected=true] /template/ ContentPresenter#PART_CONTENT">
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="#FFFFFF"/>
 		<Setter Property="FontWeight" Value="Bold"/>
 	</Style>
 

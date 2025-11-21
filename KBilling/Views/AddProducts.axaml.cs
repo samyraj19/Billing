@@ -23,7 +23,6 @@ public partial class AddProducts : UserControl {
 
    void OnLoaded (object? sender, RoutedEventArgs e) {
       // Attach events
-      KeyDown += OnKeyDown;
       EnterFocusHelper.Attach (MainPanel);
 
       txtName.KeyDown += OnNameKeyDown;
@@ -38,8 +37,6 @@ public partial class AddProducts : UserControl {
 
    void OnUnloaded (object? sender, RoutedEventArgs e) {
       // Detach events
-      KeyDown -= OnKeyDown;
-
       txtName.KeyDown -= OnNameKeyDown;
       txtQty.RemoveHandler (InputElement.TextInputEvent, NumHelper.OnIntOnly);
       txtPurRate.RemoveHandler (InputElement.TextInputEvent, NumHelper.OnDecimalOnly);
@@ -64,13 +61,6 @@ public partial class AddProducts : UserControl {
       e.Handled = true;
       dialog.ShowDialog (MainWindow.Instance);
       dialog.ItemApplied += (category) => vm?.ApplyItem (category);
-   }
-
-   void OnKeyDown (object? sender, KeyEventArgs e) {
-      if (e.Key == Key.Enter) {
-         vm?.Submit ();
-         e.Handled = true;
-      }
    }
 
    void OnIconButtonClick (object? sender, RoutedEventArgs e) {

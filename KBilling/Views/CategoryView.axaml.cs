@@ -24,14 +24,14 @@ public partial class CategoryView : UserControl {
 
    void OnLoaded (object? sender, RoutedEventArgs e) {
       if (VM is not null) VM.PropertyChanged += OnPropertyChanged;
-      SortByCmb.SelectionChanged += OnCmbChanged;
+      EnterFocusHelper.Attach (MainPanel);
 
       VM?.GetAll ();
       BindAlpha ();
    }
 
    void OnUnload (object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-      SortByCmb.SelectionChanged -= OnCmbChanged;
+      if (VM is not null) VM.PropertyChanged -= OnPropertyChanged;
    }
 
    void OnPropertyChanged (object? sender, PropertyChangedEventArgs e) => VM = TryGetVM ();
@@ -39,11 +39,6 @@ public partial class CategoryView : UserControl {
    protected override void OnDataContextChanged (EventArgs e) {
       base.OnDataContextChanged (e);
       VM = TryGetVM ();
-   }
-
-   void OnCmbChanged (object? sender, SelectionChangedEventArgs e) {
-      if (sender is not ComboBox cmb || cmb.SelectedItem is not string item) return;
-      VM?.SoryBy (item);
    }
 
    async void OnActionClick (object? sender, RoutedEventArgs e) {

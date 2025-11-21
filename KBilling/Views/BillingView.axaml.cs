@@ -67,7 +67,7 @@ public partial class BillingView : UserControl {
    }
 
    void OnToggleChecked (object? sender, RoutedEventArgs e) {
-      if (sender is not ToggleButton clicked || VM() is not BillVM vm) return;
+      if (sender is not ToggleButton clicked || VM () is not BillVM vm) return;
 
       // Uncheck all other toggles
       foreach (var other in PayPanel.Children.OfType<ToggleButton> ())
@@ -80,21 +80,24 @@ public partial class BillingView : UserControl {
    }
 
    async void OnPayClick (object? sender, RoutedEventArgs e) {
-      if (sender is not Button btn || VM() is not BillVM vm) return;
-      btn.IsEnabled = false;
+      if (mIsPaying) return;
+      mIsPaying = true;
+      if (sender is Button btn) btn.IsEnabled = false;
 
       try {
+         if (VM () is not BillVM vm) return;
          if (!vm.CanPay ()) return;
-            var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
-            if (confirm == ButtonResult.Yes) {
-               ResertBill (vm);
-               await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
-            } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
-      
+         var confirm = await MsgBox.ShowConfirmAsync ("Proceed to Payment", $"Are you sure you want to proceed to payment:  {mPaymode.Get ()}");
+         if (confirm == ButtonResult.Yes) {
+            ResertBill (vm);
+            await MsgBox.ShowInfoAsync ("Success", "Payment processed successfully.");
+         } else await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
+
       } catch {
          await MsgBox.ShowInfoAsync ("Cancelled", "Payment was cancelled.");
       } finally {
          if (sender is Button btn1) btn1.IsEnabled = true;
+         mIsPaying = false;
       }
    }
 
@@ -131,12 +134,12 @@ public partial class BillingView : UserControl {
       txtSearch.Focus ();
    }
 
-   void BtnClearAllClick (object? sender, RoutedEventArgs e) => ResertBill (VM());
+   void BtnClearAllClick (object? sender, RoutedEventArgs e) => ResertBill (VM ());
 
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       if (VM ()?.BillItems?.Count is <= 0) return;
       if (mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") is DiscountDialog dialog)
-         dialog.DiscountApplied += (discount) => VM ().UpdateBill (discount);
+         dialog.DiscountApplied += (discount) => ApplyDiscount (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
@@ -193,6 +196,11 @@ public partial class BillingView : UserControl {
       chkReceived.IsChecked = true;
    }
 
+   void ApplyDiscount (decimal discount) {
+      VM ().Discount = discount;
+      VM ().UpdateBill ();
+   }
+
    BillVM VM () => DataContext as BillVM ?? throw new InvalidOperationException ("DataContext is not of type BillVM");
 
    #endregion
@@ -202,6 +210,7 @@ public partial class BillingView : UserControl {
    EPaymentMode mPaymode;
    ProductLookupDialog? mProductDialog;
    bool mIgnoretxtchange;
+   bool mIsPaying;
    #endregion
 
 }

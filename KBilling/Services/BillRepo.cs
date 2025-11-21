@@ -11,72 +11,96 @@ using static KBilling.DataBase.SP;
 
 namespace KBilling.Services {
    public class BillRepo : IBillRepo {
-      public bool Insert (BillHeader? bill, IEnumerable<BillDetails> details) {
+      public bool Insert (BillHeader? bill, IEnumerable<BillDetails>? details) {
          ArgumentNullException.ThrowIfNull (bill);
 
-         var parameters = new[]
-         {
-            new SqlParameter("@CustomerName", SqlDbType.NVarChar, 200) { Value = (object?)bill.CustomerName ?? DBNull.Value },
-            new SqlParameter("@CustomerPhone", SqlDbType.NVarChar, 20) { Value = (object?)bill.CustomerPhone ?? DBNull.Value },
-            new SqlParameter("@SubTotal", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.SubTotal },
-            new SqlParameter("@Discount", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Discount },
-            new SqlParameter("@Total", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Total },
-            new SqlParameter("@ReceivedAmount", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.ReceivedAmount },
-            new SqlParameter("@PaymentMode", SqlDbType.NVarChar, 30) { Value = bill.PaymentMethod ?? string.Empty },
-            new SqlParameter("@Remarks", SqlDbType.NVarChar, 200) { Value = (object?)bill.Remarks ?? DBNull.Value },
-            new SqlParameter("@CreatedBy", SqlDbType.NVarChar, 100) { Value = bill.CreatedBy ?? string.Empty },
-            new SqlParameter("@CreatedDate", SqlDbType.DateTime, 100) { Value = bill.CreatedDate ?? string.Empty },
+         //var parameters = new[]
+         //{
+         //   new SqlParameter("@CustomerName", SqlDbType.NVarChar, 200) { Value = (object?)bill.CustomerName ?? DBNull.Value },
+         //   new SqlParameter("@CustomerPhone", SqlDbType.NVarChar, 20) { Value = (object?)bill.CustomerPhone ?? DBNull.Value },
+         //   new SqlParameter("@SubTotal", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.SubTotal },
+         //   new SqlParameter("@Discount", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Discount },
+         //   new SqlParameter("@Total", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Total },
+         //   new SqlParameter("@ReceivedAmount", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.ReceivedAmount },
+         //   new SqlParameter("@PaymentMode", SqlDbType.NVarChar, 30) { Value = bill.PaymentMethod ?? string.Empty },
+         //   new SqlParameter("@Remarks", SqlDbType.NVarChar, 200) { Value = (object?)bill.Remarks ?? DBNull.Value },
+         //   new SqlParameter("@CreatedBy", SqlDbType.NVarChar, 100) { Value = bill.CreatedBy ?? string.Empty },
+         //   new SqlParameter("@CreatedDate", SqlDbType.DateTime, 100) { Value = bill.CreatedDate ?? string.Empty },
 
+         //   // OUTPUT parameters
+         //   new SqlParameter("@OutInvoiceID", SqlDbType.BigInt) { Direction = ParameterDirection.Output },
+         //   new SqlParameter("@OutInvoiceNumber", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output }
+         //};
+
+         var sqlparams = SqlP.PList (P.Str ("@CustomerName", (object)bill.CustomerName ?? DBNull.Value, SqlDbType.NVarChar, 200),
+            P.Str ("@CustomerPhone", (object)bill.CustomerPhone ?? DBNull.Value, SqlDbType.NVarChar, 20),
+            P.Dec ("@SubTotal", bill.SubTotal, SqlDbType.Decimal, 18, 2),
+            P.Dec ("@Discount", bill.Discount, SqlDbType.Decimal, 18, 2),
+            P.Dec ("@Total", bill.Total, SqlDbType.Decimal, 18, 2),
+            P.Dec ("@ReceivedAmount", bill.ReceivedAmount, SqlDbType.Decimal, 18, 2),
+            P.Str ("@PaymentMode", bill.PaymentMethod, SqlDbType.NVarChar, 30),
+            P.Str ("@Remarks", bill.Remarks, SqlDbType.NVarChar, 200),
+            P.Str ("@CreatedBy", bill.CreatedBy, SqlDbType.NVarChar, 100),
+            P.Val ("@CreatedDate", bill.CreatedDate, SqlDbType.DateTime),
             // OUTPUT parameters
-            new SqlParameter("@OutInvoiceID", SqlDbType.BigInt) { Direction = ParameterDirection.Output },
-            new SqlParameter("@OutInvoiceNumber", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output }
-         };
+            P.Out ("@OutInvoiceID", ParameterDirection.Output, SqlDbType.BigInt, 0),
+            P.Out ("@OutInvoiceNumber", ParameterDirection.Output, SqlDbType.NVarChar, 100)
+         );
 
-         App.Repo.QueryExe.ExecuteSP (SP.Bills.InsertHeader, parameters);
+         App.Repo.QueryExe.ExecuteSP (SP.Bills.InsertHeader, sqlparams);
 
          // Retrieve output values
-         bill.BillId = Convert.ToInt64 (parameters[10].Value);
-         bill.BillNumber = Convert.ToString (parameters[11].Value);
+         bill.BillId = Convert.ToInt64 (sqlparams[10].Value);
+         bill.BillNumber = Convert.ToString (sqlparams[11].Value);
+
+         if (details is null) return false;
+
          foreach (var detail in details) {
             detail.BillId = bill.BillId;
             detail.BillNo = bill.BillNumber;
             Insert (detail);
             DetectQuantity (detail);
          }
+
          return true;
       }
 
       void Insert (BillDetails? bill) {
          ArgumentNullException.ThrowIfNull (bill);
 
-         var parameters = new[]
-         {
-             new SqlParameter("@BillId", SqlDbType.BigInt) { Value = bill.BillId },
-             new SqlParameter("@BillNumber", SqlDbType.NVarChar,100) { Value = bill.BillNo },
-             new SqlParameter("@ProductCode", SqlDbType.NVarChar,100) { Value = bill.ProductCode },
-             new SqlParameter("@ProductName", SqlDbType.NVarChar, 200) { Value = bill.ProductName },
-             new SqlParameter("@Price", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Price },
-             new SqlParameter("@Quantity", SqlDbType.Int) { Value = bill.Quantity },
-         };
+         //var parameters = new[]
+         //{
+         //    new SqlParameter("@BillId", SqlDbType.BigInt) { Value = bill.BillId },
+         //    new SqlParameter("@BillNumber", SqlDbType.NVarChar,100) { Value = bill.BillNo },
+         //    new SqlParameter("@ProductCode", SqlDbType.NVarChar,100) { Value = bill.ProductCode },
+         //    new SqlParameter("@ProductName", SqlDbType.NVarChar, 200) { Value = bill.ProductName },
+         //    new SqlParameter("@Price", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = bill.Price },
+         //    new SqlParameter("@Quantity", SqlDbType.Int) { Value = bill.Quantity },
+         //};
 
-         App.Repo.QueryExe.ExecuteSP (SP.Bills.InsertDetails, parameters);
+         var sqlparams = SqlP.PList (P.Val ("@BillId", bill.BillId, SqlDbType.BigInt),
+            P.Str ("@BillNumber", bill.BillNo, SqlDbType.NVarChar, 100),
+            P.Str ("@ProductCode", bill.ProductCode, SqlDbType.NVarChar, 100),
+            P.Str ("@ProductName", bill.ProductName, SqlDbType.NVarChar, 200),
+            P.Dec ("@Price", bill.Price, SqlDbType.Decimal, 18, 2),
+            P.Val ("@Quantity", bill.Quantity, SqlDbType.Int)
+         );
+
+         App.Repo.QueryExe.ExecuteSP (SP.Bills.InsertDetails, sqlparams);
       }
 
       void DetectQuantity (BillDetails? bill) {
          ArgumentNullException.ThrowIfNull (bill);
-
-         var parameters = new[]
-         {
-             new SqlParameter("@Code",SqlDbType.NVarChar,100) { Value = bill.ProductCode },
-             new SqlParameter("@SoldQty", SqlDbType.Int) { Value = bill.Quantity },
-         };
+         var parameters = SqlP.PList (P.Str ("@Code", bill.ProductCode, SqlDbType.NVarChar, 100),
+            P.Val ("@SoldQty", bill.Quantity, SqlDbType.Int));
 
          App.Repo.QueryExe.ExecuteSP (SP.Bills.DetectQuantity, parameters);
       }
 
 
-      public IEnumerable<BillHeader> GetAllBills (string sdata, string edate) {
-         var parameters = SqlParamHelper.PList (("@FromDate", sdata), ("@ToDate", edate));
+      public IEnumerable<BillHeader> GetAllBills (string? sdata, string? edate) {
+         var parameters = SqlP.PList (P.Val ("@FromDate", sdata, SqlDbType.DateTime),
+            P.Val ("@ToDate", edate, SqlDbType.DateTime));
 
          DataTable dt = App.Repo.QueryExe.QuerySP (SP.Bills.GetBillsHeader, parameters);
          if (dt.Rows.Count == 0) return Enumerable.Empty<BillHeader> (); // safe, no nulls
@@ -97,7 +121,8 @@ namespace KBilling.Services {
       }
 
       public IEnumerable<BillDetails> GetAllBillDetailsById (long id) {
-         var parameters = SqlParamHelper.PList (("@BillId", id));
+         if(id <= 0) return Enumerable.Empty<BillDetails> ();
+         var parameters = SqlP.PList (P.Val ("@BillId", id, SqlDbType.BigInt));
 
          DataTable dt = App.Repo.QueryExe.QuerySP (SP.Bills.GetBillDetailsByid, parameters);
          if (dt.Rows.Count == 0) return Enumerable.Empty<BillDetails> (); // safe, no nulls

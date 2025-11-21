@@ -114,9 +114,11 @@ namespace KBilling.ViewModel {
       #region ----- Observable properties & Events -----
       [ObservableProperty] string searchText = string.Empty;
       [ObservableProperty] string? totalItems;
+      [ObservableProperty] string? cmbSelectedItem;
 
       partial void OnSearchTextChanged (string value) => Filter (value);
 
+      partial void OnCmbSelectedItemChanged (string? value) => SoryBy (value ?? string.Empty);
       #endregion
    }
 }

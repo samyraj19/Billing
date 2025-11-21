@@ -13,7 +13,8 @@ public partial class InvoiceView : UserControl {
 
    protected override void OnLoaded (RoutedEventArgs e) {
       base.OnLoaded (e);
-
-      if (DataContext is InvoiceVM vm) vm.GetAll ();
+      VM?.GetAll ();
    }
+
+   InvoiceVM? VM => DataContext as InvoiceVM;
 }

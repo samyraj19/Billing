@@ -35,10 +35,10 @@ namespace KBilling.ViewModel {
       }
 
 
-      public void UpdateBill (decimal? discount = null) {
+      public void UpdateBill () {
          if (BillHeader == null || BillItems == null) return;
 
-         decimal discountValue = discount ?? BillHeader.Discount;
+         decimal discountValue = Discount ?? BillHeader.Discount;
          BillHeader.Discount = discountValue;
          BillHeader.Itemcount = BillItems.Count;
          BillHeader.SubTotal = BillItems.Sum (item => item.Amount);
@@ -85,6 +85,8 @@ namespace KBilling.ViewModel {
       #region Fields
       [ObservableProperty] BillHeaderVM? billHeader = new ();
       [ObservableProperty] AutoNumberedCollection<BillDetails>? billItems;
+
+      [ObservableProperty] decimal? discount;
       #endregion
 
    }

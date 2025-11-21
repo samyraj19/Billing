@@ -11,6 +11,9 @@
 	<UserControl.DataContext>
 		<vm:ProductVM/>
 	</UserControl.DataContext>
+	<UserControl.KeyBindings>
+		<KeyBinding Gesture="Enter" Command="{Binding SubmitCommand}"/>
+	</UserControl.KeyBindings>
 	<UserControl.Styles>
 		<Style Selector="TextBox">
 			<Setter Property="Width" Value="200"/>
