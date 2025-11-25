@@ -21,6 +21,7 @@
     <None Remove="Assets\close-black.png" />
     <None Remove="Assets\close-hover.png" />
     <None Remove="Assets\cross.png" />
+    <None Remove="Assets\dashboard-white.png" />
     <None Remove="Assets\dashboard.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
@@ -62,6 +63,7 @@
     <AvaloniaResource Include="Assets\close-black.png" />
     <AvaloniaResource Include="Assets\close-hover.png" />
     <AvaloniaResource Include="Assets\cross.png" />
+    <AvaloniaResource Include="Assets\dashboard-white.png" />
     <AvaloniaResource Include="Assets\delete.png" />
     <AvaloniaResource Include="Assets\edit.png" />
   </ItemGroup>
@@ -79,5 +81,9 @@
     <Compile Update="DialogWin\ProductLookupDialog.axaml.cs">
       <DependentUpon>ProductLookupDialog.axaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\" />
   </ItemGroup>
 </Project>

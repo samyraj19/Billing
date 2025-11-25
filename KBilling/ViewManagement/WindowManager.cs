@@ -13,6 +13,8 @@ namespace KBilling.ViewManagement {
          return window;
       }
 
+      public void ShowDialog (Window win) => win.ShowDialog (MainWindow.Instance);
+
       public Window GetWindow (string key) => WindowRegistry.Instance.Get (key);
    }
 }

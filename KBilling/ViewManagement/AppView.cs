@@ -1,21 +1,20 @@
-namespace KBilling.ViewManagement {
-   public static class AppView {
-      public static void RegAll () {
-         var reg = ViewRegistry.Instance;
-         reg.Register ("MainView", new MainView ());
-         reg.Register ("DashBoard", new Dashboard ());
-         reg.Register ("AddProduct", new AddProducts ());
-         reg.Register ("PriceUpdateView", new PriceUpdateView ());
-         reg.Register ("StocksView", new StocksView ());
-         reg.Register ("CategoryView", new CategoryView ());
-         reg.Register ("BillingView", new BillingView ());
-         reg.Register("InvoiceView",new InvoiceView ());
+namespace KBilling.ViewManagement;
+public static class AppView {
+   public static void RegAll () {
+      var reg = ViewRegistry.Instance;
+      reg.Register ("MainView", new MainView ());
+      reg.Register ("DashBoard", new Dashboard ());
+      reg.Register ("AddProduct", new AddProducts ());
+      reg.Register ("PriceUpdateView", new PriceUpdateView ());
+      reg.Register ("StocksView", new StocksView ());
+      reg.Register ("CategoryView", new CategoryView ());
+      reg.Register ("BillingView", new BillingView ());
+      reg.Register ("InvoiceView", new InvoiceView ());
 
-         var windowRegistry = WindowRegistry.Instance;
-         windowRegistry.Register<MainWindow> ("MainWindow");
-         windowRegistry.Register<DiscountDialog> ("DiscountDialog");
-         windowRegistry.Register<ProductLookupDialog> ("ProductLookupDialog");
-         windowRegistry.Register<ItemListDialog> ("ItemListDialog");
-      }
+      var windowRegistry = WindowRegistry.Instance;
+      windowRegistry.Register<MainWindow> ("MainWindow");
+      windowRegistry.Register<DiscountDialog> ("DiscountDialog");
+      windowRegistry.Register<ProductLookupDialog> ("ProductLookupDialog");
+      windowRegistry.Register<ItemListDialog> ("ItemListDialog");
    }
 }

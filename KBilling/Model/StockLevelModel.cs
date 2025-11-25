@@ -1,10 +1,11 @@
 ﻿namespace KBilling.Model;
 public enum StockLevel {
-   Low, Medium, High, InSufficient
+   All, Low, Medium, High, InSufficient
 }
 
 public static class StockLevelEx {
-   public static string ToDisplay (this StockLevel level) => level switch {
+   public static string ToText (this StockLevel level) => level switch {
+      StockLevel.All => "All",
       StockLevel.Low => "Low",
       StockLevel.Medium => "Medium",
       StockLevel.High => "High",

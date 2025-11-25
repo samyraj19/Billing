@@ -6,17 +6,17 @@
 			 xmlns:custom="using:KBilling.Controls"
              x:Class="KBilling.MainView">
 	<UserControl.Styles>
-		<Style Selector="Button">
-			<Setter Property="Background" Value="#2b7fff"/>
-			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="CornerRadius" Value="2"/>
-			<Setter Property="Width" Value="100"/>
-			<Setter Property="Height" Value="30"/>
-			<Setter Property="Margin" Value="2"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
-		</Style>
 		<Style Selector="custom|IconButtonText">
+			<Setter Property="Margin" Value="0,5,0,5"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="#2E2E2E"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Width" Value="120"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="Padding" Value="12,8"/>
+		</Style>
+		<Style Selector="custom|LeftMenubarButton">
 			<Setter Property="Margin" Value="0,5,0,5"/>
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#2E2E2E"/>
@@ -53,10 +53,9 @@
 					<StackPanel x:Name="NavPanel"
 						    Orientation="Vertical"
 							HorizontalAlignment="Center">
-						<custom:IconButtonText x:Name="BtnDashboard"
-											   Icon="avares://KBilling/Assets/dashboard.png"
-											   Text="Dashboard" Tag="DashBoard"/>
-
+						<custom:LeftMenubarButton x:Name="BtnDashboard"
+								Icon="avares://KBilling/Assets/dashboard.png"
+								Text="Dashboard" Tag="DashBoard"/>
 						<custom:IconButtonText x:Name="BtnCategory"
 								Text="Category" Tag="CategoryView"
 								Icon="avares://KBilling/Assets/category.png"/>
@@ -115,7 +114,7 @@
 					<Grid Grid.Row="0">
 						<Label x:Name="lblHeader" Margin="5,0,0,0"
 							   VerticalContentAlignment="Center"
-							   FontSize="12" FontWeight="Regular"/>
+							   FontSize="15" FontWeight="Regular"/>
 					</Grid>
 				</Border>
 				<!-- Conent panel-->

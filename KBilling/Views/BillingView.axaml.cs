@@ -14,6 +14,7 @@ using Avalonia.Input;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using KBilling.Controls;
+using KBilling.DialogWin;
 
 namespace KBilling;
 public partial class BillingView : UserControl {
@@ -118,7 +119,7 @@ public partial class BillingView : UserControl {
    void OnSearchTextChanging (object? sender, TextChangingEventArgs e) {
       if (mIgnoretxtchange || sender is not TextBox text) return;
 
-      mProductDialog ??= mManager.GetWindow ("ProductLookupDialog") as ProductLookupDialog;
+      mProductDialog ??= DialogStore.Get ("discount") as ProductLookupDialog;
       if (mProductDialog is null) return;
 
       mProductDialog.UpdateRefresh (text?.Text?.Trim ());
@@ -138,8 +139,9 @@ public partial class BillingView : UserControl {
 
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       if (VM ()?.BillItems?.Count is <= 0) return;
-      if (mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") is DiscountDialog dialog)
-         dialog.DiscountApplied += (discount) => ApplyDiscount (discount);
+      if (DialogStore.Get ("discount") is not DiscountDialog win) return;
+      mManager.ShowDialog (win);
+      win.DiscountApplied += (discount) => ApplyDiscount (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {

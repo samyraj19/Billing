@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia;
@@ -18,7 +19,7 @@ namespace KBilling.ViewModel {
 
       public void LoadStockData () {
          LoadData ();
-         FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToDisplay ());
+         FilterProducts?.ToList ().ForEach (item => item.Stocklevel = Get (item.Quantity).ToText ());
       }
 
       [RelayCommand]
@@ -37,8 +38,12 @@ namespace KBilling.ViewModel {
          _ => StockLevel.High
       };
 
+      public Func<StockLevel, string> Display => x => x.ToText ();
+      public Array StockLevels { get; } = Enum.GetValues (typeof (StockLevel));
+
       #region Observable Properties & Events
       [ObservableProperty] string? searchText;
+      [ObservableProperty] StockLevel selectedLevel;
 
       partial void OnSearchTextChanging (string? value) => UpdateFilter (value ?? string.Empty);
       #endregion

@@ -43,13 +43,14 @@
 	<Grid ColumnDefinitions="25* 75*" Margin="2">
 		<Border Grid.Column="0"
 				BorderBrush="LightGray"
-				BorderThickness="0,0,1,0">
+				BorderThickness="1">
 			<Grid RowDefinitions="10* 90*">
 				<StackPanel Grid.Row="0" Orientation="Vertical">
 					<Grid ColumnDefinitions="* *">
 						<CalendarDatePicker  Grid.Column="0"
 											 SelectedDate="{Binding StartDate}"
-											 Watermark="Start Date"/>
+											 Watermark="Start Date" 
+											 Margin="4,0"/>
 						<CalendarDatePicker  Grid.Column="1"
 											 SelectedDate="{Binding EndDate}"
 											 Watermark="End Date"/>
@@ -91,14 +92,25 @@
 			</Grid>
 		</Border>
 
-
+		<Border Grid.Column="1" Background="#FAFAFA">
+			<StackPanel HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						Spacing="8"
+						IsHitTestVisible="False">
+				<TextBlock Text="Please select bill"
+							FontSize="18"
+							FontWeight="SemiBold"
+							Foreground="#B2B3B6"/>
+			</StackPanel>
+		</Border>
+		
 		<Grid Grid.Column="1"
-			  Background="White">
-			<Border CornerRadius="8"
-					Background="White"
+			  Background="White"
+			  IsVisible="{Binding ShowPlaceholder,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+			<Border Background="White"
 					Padding="16"
 					BorderBrush="#E0E0E0"
-					BorderThickness="1" >
+					BorderThickness="0" >
 				<StackPanel>
 
 					<!-- Header row -->

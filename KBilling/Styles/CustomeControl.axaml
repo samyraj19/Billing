@@ -58,6 +58,46 @@
 		<Setter Property="FontWeight" Value="Bold"/>
 	</Style>
 
+	<!-- Custom icon button left menu button style-->
+	<Style Selector="local|LeftMenubarButton.Leftmenu">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="Part_Border_CusBtn"
+						Background="{TemplateBinding Background}"
+						CornerRadius="4"
+						Padding="5">
+					<Grid ColumnDefinitions="30* 70*">
+						<Image Grid.Column="0"
+							   Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"
+							   HorizontalAlignment="Left"/>
+						<ContentPresenter Grid.Column="1"
+										  x:Name="PART_CONTENT" Content="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+										  VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+					</Grid>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+	<Style Selector="local|LeftMenubarButton:pointerover /template/ Border#Part_Border_CusBtn">
+		<Setter Property="Background" Value="#D7EEFF"/>
+	</Style>
+	<Style Selector="local|LeftMenubarButton:pointerover /template/ ContentPresenter#PART_CONTENT">
+		<Setter Property="Foreground" Value="Black"/>
+	</Style>
+	<Style Selector="local|LeftMenubarButton:pressed /template/ Border#Part_Border_CusBtn">
+		<Setter Property="Background" Value="#1E88E5"/>
+	</Style>
+	<Style Selector="local|LeftMenubarButton:pressed /template/ ContentPresenter#PART_CONTENT">
+		<Setter Property="Foreground" Value="#FFFFFF"/>
+	</Style>
+	<Style Selector="local|LeftMenubarButton[IsSelected=true] /template/ Border#Part_Border_CusBtn">
+		<Setter Property="Background" Value="#1E88E5"/>
+	</Style>
+	<Style Selector="local|LeftMenubarButton[IsSelected=true] /template/ ContentPresenter#PART_CONTENT">
+		<Setter Property="Foreground" Value="#FFFFFF"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
+
 	<Style Selector="HeaderedContentControl">
 		<Setter Property="Template">
 			<ControlTemplate>

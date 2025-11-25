@@ -36,8 +36,8 @@
 
 		<StackPanel Grid.Row="2" Orientation="Horizontal" 
 					HorizontalAlignment="Center">
-			<Button x:Name="BtnAdd" Content="Add"/>
-			<Button x:Name="BtnCancel" Content="Cancel"/>
+			<Button x:Name="BtnAdd" Content="Add" Classes="Primary"/>
+			<Button x:Name="BtnCancel" Content="Cancel" Classes="Primary"/>
 		</StackPanel>
 	</Grid>
 </Window>

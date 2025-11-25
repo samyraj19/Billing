@@ -20,15 +20,11 @@
 		<Style Selector="TextBox.borderless">
 			<Setter Property="BorderThickness" Value="0"/>
 		</Style>
-		<Style Selector="Button.medium">
+		<Style Selector="Button.Primary.medium">
 			<Setter Property="Width" Value="120"/>
 			<Setter Property="Height" Value="35"/>
 			<Setter Property="CornerRadius" Value="5"/>
 			<Setter Property="Margin" Value="5,0"/>
-			<Setter Property="Background" Value="#2b7fff"/>
-			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
 		<Style Selector="Border">
 			<Setter Property="BorderBrush" Value="LightGray"/>
@@ -60,7 +56,7 @@
 			<Setter Property="Margin" Value="0,2"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
-		<Style Selector="Button.big">
+		<Style Selector="Button.Primary.big">
 			<Setter Property="Width" Value="200"/>
 			<Setter Property="Height" Value="35"/>
 			<Setter Property="CornerRadius" Value="5"/>
@@ -138,14 +134,14 @@
 				<Button Grid.Column="0"
 						x:Name="BtnClearAll"
 						Content="Clear All"
-						Classes="medium"
+						Classes="Primary medium"
 						Margin="150,0"/>
 
 				<Button Grid.ColumnSpan="2" Grid.Column="1"
 						x:Name="BtnDiscount"
 						Content="Add Discount"
 						HorizontalAlignment="Center"
-						Classes="medium"
+					    Classes="Primary medium"
 						Margin="10,0"/>
 
 			</Grid>
@@ -254,13 +250,13 @@
 					<Button x:Name="BtnSave"
 							Content="Save Bill"
 							Background="#16A34A"
-							Classes="big"/>
+							Classes="Primary big"/>
 
 					<Button Grid.Row="5"
 							x:Name="BtnPayBill"
 							Content="Pay Bill"
 							Background="#0078D7"
-							Classes="big"/>
+							Classes="Primary big"/>
 				</StackPanel>
 				
 			</Grid>

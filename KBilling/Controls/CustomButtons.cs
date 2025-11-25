@@ -59,4 +59,19 @@ namespace KBilling.Controls {
       public static readonly StyledProperty<string> TextProperty =
           AvaloniaProperty.Register<IconButtonText, string> (nameof (Text));
    }
+
+   public class LeftMenubarButton : IconButtonText {
+      public LeftMenubarButton () { Classes.Add ("Leftmenu"); }
+      protected override void OnPointerEntered (PointerEventArgs e) {
+         base.OnPointerEntered (e);
+         if (!IsSelected) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard.png");
+         else if(IsSelected && Icon != null) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard-white.png");
+      }
+
+      protected override void OnPointerExited (PointerEventArgs e) {
+         base.OnPointerExited (e);
+         if (!IsSelected) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard.png");
+         else if (IsSelected && Icon != null) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard-white.png");
+      }
+   }
 }

@@ -32,12 +32,13 @@ public partial class InvoiceVM : BaseModel {
 
    [RelayCommand]
    public async void ExportPDF () {
+      if (SelectedBill is null) return;
       var pdfbytes = App.Repo.InvoiceExport.PDF (this);
 
       var kfile = new KFileDialogs (MainWindow.Instance.StorageProvider);
-      var kdlg = kfile.SaveAsync("Save PDF File", $"{SelectedBill?.BillNumber ?? "Invoice"}.pdf", "*.pdf");
+      var kdlg = kfile.SaveAsync ("Save PDF File", $"{SelectedBill?.BillNumber ?? "Invoice"}.pdf", "*.pdf");
 
-      if (kdlg is null) return; 
+      if (kdlg is null) return;
       await using var stream = await (await kdlg).OpenWriteAsync ();
       using var writer = new System.IO.BinaryWriter (stream);
       writer.Write (pdfbytes);
@@ -60,6 +61,7 @@ public partial class InvoiceVM : BaseModel {
    [ObservableProperty] string? startDate;
    [ObservableProperty] string? endDate;
    [ObservableProperty] string searchText = string.Empty;
+   [ObservableProperty] bool showPlaceholder = false;
 
    [ObservableProperty] BillHeader? selectedBill;
 
@@ -70,6 +72,7 @@ public partial class InvoiceVM : BaseModel {
    partial void OnSelectedBillChanged (BillHeader? value) {
       GetDetails (value?.BillId ?? 0);
       SelectedBill = Invoices.Where (inv => inv.BillId == selectedBill?.BillId).SingleOrDefault ();
+      ShowPlaceholder = SelectedBill != null;
    }
    #endregion
 }

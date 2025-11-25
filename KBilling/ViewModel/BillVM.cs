@@ -82,7 +82,7 @@ namespace KBilling.ViewModel {
          BillItems?.Clear ();
       }
 
-      #region Fields
+      #region Observable Properties
       [ObservableProperty] BillHeaderVM? billHeader = new ();
       [ObservableProperty] AutoNumberedCollection<BillDetails>? billItems;
 

@@ -94,39 +94,21 @@
 		</Grid>
 
 		<Grid Grid.Row="2" ColumnDefinitions="70* 30*">
-			<DataGrid Grid.Column="0" 
+			<!-- DataGrid spans both columns so it fills the entire width -->
+			<DataGrid Grid.Column="0"
 					  Margin="5"
 					  x:Name="DataGridProduct"
+					  ColumnWidth="*"
+					  ScrollViewer.VerticalScrollBarVisibility="Auto"
 					  ItemsSource="{Binding Transaction.Transactions}">
 				<DataGrid.Columns>
-					<DataGridTextColumn IsReadOnly="True" Header="#"
-										Width="60"
-										Binding="{Binding No}"/>
-					<DataGridTextColumn Header="Bill No" 
-										Width="150"
-										IsReadOnly="True"
-										Binding="{Binding BillNumber}"/>
-					<DataGridTextColumn Header="Date &amp; Time" 
-										Width="175"
-										IsReadOnly="True"
-										Binding="{Binding Date}"/>
-					<DataGridTextColumn Header="Amount" 
-										Width="150"
-										IsReadOnly="True"
-										Binding="{Binding Amount}"/>
-					<DataGridTextColumn Header="Received Amt." 
-										Width="150"
-										IsReadOnly="True"
-										Binding="{Binding ReceivedAmount}"/>
-					<DataGridTextColumn Header="Balance Amt." 
-										Width="150"
-										IsReadOnly="True"
-										Binding="{Binding BalanceAmount}"/>
-					<DataGridTextColumn Header="Payment" 
-										Width="125"
-										IsReadOnly="True"
-										Binding="{Binding Payment}"/>
-
+					<DataGridTextColumn Header="#" Width="60" Binding="{Binding No}"/>
+					<DataGridTextColumn Header="Bill No" Width="150" Binding="{Binding BillNumber}"/>
+					<DataGridTextColumn Header="Date &amp; Time" Width="175" Binding="{Binding Date}"/>
+					<DataGridTextColumn Header="Amount" Width="105" Binding="{Binding Amount}"/>
+					<DataGridTextColumn Header="Received Amt." Width="150" Binding="{Binding ReceivedAmount}"/>
+					<DataGridTextColumn Header="Balance Amt." Width="145" Binding="{Binding BalanceAmount}"/>
+					<DataGridTextColumn Header="Payment" Width="110" Binding="{Binding Payment}"/>
 				</DataGrid.Columns>
 			</DataGrid>
 
@@ -141,7 +123,7 @@
 						<Grid Grid.Row="1" RowDefinitions="15* 85*">
 							<!-- Column Headers -->
 							<Grid Grid.Row="0" ColumnDefinitions="* * * *" Background="LightGray">
-								<TextBlock Grid.Column="0" Text="Item Code" Classes="h1"/>
+								<TextBlock Grid.Column="0" Text="Item Code" Classes="h1" Margin="4,0"/>
 								<TextBlock Grid.Column="1" Text="Item Name" Classes="h1"/>
 								<TextBlock Grid.Column="2" Text="Sell.Qty" Classes="h1"/>
 								<TextBlock Grid.Column="3" Text="Amount" Classes="h1"/>
