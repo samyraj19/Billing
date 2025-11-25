@@ -25,6 +25,7 @@
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
     <None Remove="Assets\invoice.png" />
+    <None Remove="Assets\pdf.png" />
     <None Remove="Assets\price.png" />
     <None Remove="Assets\price1.png" />
     <None Remove="Assets\product.png" />
@@ -51,6 +52,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+    <PackageReference Include="QuestPDF" Version="2025.7.4" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.10" />
   </ItemGroup>
 
@@ -67,6 +69,7 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\dashboard.png" />
     <AvaloniaResource Include="Assets\invoice.png" />
+    <AvaloniaResource Include="Assets\pdf.png" />
     <AvaloniaResource Include="Assets\price1.png" />
     <AvaloniaResource Include="Assets\product.png" />
     <AvaloniaResource Include="Assets\stocks.png" />

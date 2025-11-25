@@ -110,10 +110,13 @@ namespace KBilling.Services {
                BillNumber = Convert.ToString (row["InvoiceNumber"]),
                BillId = Convert.ToInt64 (row["InvoiceID"]),
                CustomerName = row["CustomerName"] as string ?? "Unknown",
+               SubTotal = Convert.ToDecimal (row["SubTotal"]),
                Total = Convert.ToDecimal (row["Total"]),
+               Discount = Convert.ToDecimal (row["Discount"]),
                ReceivedAmount = Convert.ToDecimal (row["ReceivedAmount"]),
                BalanceAmount = Convert.ToDecimal (row["BalanceAmount"]),
                PaymentMethod = row["PaymentMode"] as string ?? "N/A",
+               CreatedDate = Convert.ToDateTime (row["CreatedDate"]).ToString ("dd-MM-yyyy "),
             };
             bills.Add (bill);
          }

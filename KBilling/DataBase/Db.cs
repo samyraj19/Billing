@@ -1,7 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using Tmds.DBus.Protocol;
 
 namespace KBilling.DataBase {
    public static class Db {

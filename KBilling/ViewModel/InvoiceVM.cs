@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
+using Avalonia.Xaml.Interactions.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using KBilling.Core;
@@ -23,6 +28,19 @@ public partial class InvoiceVM : BaseModel {
    public void GetDetails (long billId) {
       var details = App.Repo.Bills.GetAllBillDetailsById (billId);
       BillDetails.SetCollection (details);
+   }
+
+   [RelayCommand]
+   public async void ExportPDF () {
+      var pdfbytes = App.Repo.InvoiceExport.PDF (this);
+
+      var kfile = new KFileDialogs (MainWindow.Instance.StorageProvider);
+      var kdlg = kfile.SaveAsync("Save PDF File", $"{SelectedBill?.BillNumber ?? "Invoice"}.pdf", "*.pdf");
+
+      if (kdlg is null) return; 
+      await using var stream = await (await kdlg).OpenWriteAsync ();
+      using var writer = new System.IO.BinaryWriter (stream);
+      writer.Write (pdfbytes);
    }
 
    public void Filter (string text) {
@@ -49,7 +67,10 @@ public partial class InvoiceVM : BaseModel {
 
    partial void OnSearchTextChanged (string? oldValue, string newValue) => Filter (SearchText);
 
-   partial void OnSelectedBillChanged (BillHeader? value) => GetDetails (value?.BillId ?? 0);
+   partial void OnSelectedBillChanged (BillHeader? value) {
+      GetDetails (value?.BillId ?? 0);
+      SelectedBill = Invoices.Where (inv => inv.BillId == selectedBill?.BillId).SingleOrDefault ();
+   }
    #endregion
 }
 

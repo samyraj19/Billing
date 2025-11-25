@@ -15,5 +15,7 @@ namespace KBilling.Services {
       public ISalesRepo Sales => new SalesRepo ();
 
       public ICategoryRepo Category => new CategoryRepo ();
+
+      public IExport InvoiceExport => new InvoiceExportRepo ();
    }
 }

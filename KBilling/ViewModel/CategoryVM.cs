@@ -62,6 +62,7 @@ namespace KBilling.ViewModel {
          if (Is.IsEmpty (Name)) errors.Add ("Category Name is required.");
          if (Is.IsEmpty (Prefix)) errors.Add ("Category Prefix is required.");
          if (Is.IsEmpty (Code)) errors.Add ("Category Code is required.");
+         if(CodeExistsCheck(CategoryId)) errors.Add ("Category Code already exists.");
 
          return errors;
       }
@@ -102,6 +103,10 @@ namespace KBilling.ViewModel {
          if (box == ButtonResult.Yes) Delete (id);
          SearchText = string.Empty;
       }
+
+      bool CodeExistsCheck (int id) => AllCategories.Exist (c => 
+         c.CategoryId != id &&c.Code?.Equals (Code, StringComparison.OrdinalIgnoreCase) == true &&
+         c.Prefix?.Equals (Prefix, StringComparison.OrdinalIgnoreCase) == true);
 
       #region Fields
       AutoNumberedCollection<Category>? AllCategories { get; } = new AutoNumberedCollection<Category> ();

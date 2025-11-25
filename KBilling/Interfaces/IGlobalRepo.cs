@@ -8,5 +8,6 @@ namespace KBilling.Interfaces {
       ISalesRepo Sales { get; }
       ICategoryRepo Category { get; }
       QueryExecutor QueryExe { get; } // shared 
+      IExport InvoiceExport { get; } // pdf, excel etc..
    }
 }

@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:custom="using:KBilling.Controls"
 			 xmlns:conv="using:KBilling.Converters"
 			 xmlns:vm="using:KBilling.ViewModel"
 			 x:DataType="vm:InvoiceVM"
@@ -93,7 +94,95 @@
 
 		<Grid Grid.Column="1"
 			  Background="White">
+			<Border CornerRadius="8"
+					Background="White"
+					Padding="16"
+					BorderBrush="#E0E0E0"
+					BorderThickness="1" >
+				<StackPanel>
 
+					<!-- Header row -->
+					<Grid ColumnDefinitions="* 260">
+						<StackPanel>
+							<TextBlock Text="{Binding SelectedBill.BillNumber}" FontSize="20" FontWeight="Bold"/>
+							<StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+								<TextBlock Text="{Binding SelectedBill.CreatedDate}" Foreground="#616161"/>
+								<TextBlock Text=" • " Foreground="#BDBDBD"/>
+								<TextBlock Text="Paid" Foreground="#388E3C" FontWeight="SemiBold"/>
+							</StackPanel>
+						</StackPanel>
+
+						<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="8">
+							<custom:IconButton Icon="avares://KBilling/Assets/pdf.png" 
+											   Content="PDF" 
+											   Width="25" Height="25"
+											   Command="{Binding ExportPDFCommand}" />
+						</StackPanel>
+
+					</Grid>
+
+					<Separator Margin="0,12"/>
+
+					<!-- From / To row -->
+					<Grid Margin="0,6">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+
+						<StackPanel Grid.Column="0">
+							<TextBlock Text="From" FontWeight="SemiBold" Foreground="#424242"/>
+							<TextBlock Text="My Fancy Store" />
+							<TextBlock Text="Phone: 99999 99999" FontSize="12" Foreground="#616161"/>
+							<TextBlock Text="Address line goes here" FontSize="12" Foreground="#616161"/>
+						</StackPanel>
+
+						<StackPanel Grid.Column="1">
+							<TextBlock Text="To" FontWeight="SemiBold" Foreground="#424242"/>
+							<TextBlock Text="{Binding SelectedBill.CustomerName}" />
+							<TextBlock Text="{Binding SelectedBill.CustomerPhone}" FontSize="12" Foreground="#616161"/>
+							<TextBlock Text="nil" FontSize="12" Foreground="#616161"/>
+						</StackPanel>
+					</Grid>
+
+					<Separator Margin="0,12"/>
+
+					<!-- Items table -->
+					<!-- Note: Add Avalonia.Controls.DataGrid NuGet if you want a grid; fallback to ItemsControl for simple lists -->
+					<DataGrid ItemsSource="{Binding BillDetails}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" >
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Code" Binding="{Binding ProductCode}"  Width="100"/>
+							<DataGridTextColumn Header="Name" Binding="{Binding ProductName}" Width="*"/>
+							<DataGridTextColumn Header="Qty" Binding="{Binding Quantity}"  Width="75"/>
+							<DataGridTextColumn Header="Price" Binding="{Binding Price}"  Width="110"/>
+							<DataGridTextColumn Header="Line Total" Binding="{Binding DbAmount}" Width="120"/>
+						</DataGrid.Columns>
+					</DataGrid>
+
+					<!-- Totals -->
+					<Grid Margin="0,5" HorizontalAlignment="Right" Width="360"
+						  RowDefinitions="Auto Auto Auto Auto" ColumnDefinitions="* 130">
+
+						<TextBlock Grid.Row="0" Grid.Column="0" Text="Subtotal" HorizontalAlignment="Right" />
+						<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedBill.SubTotal}" HorizontalAlignment="Right"/>
+
+						<TextBlock Grid.Row="1" Grid.Column="0" Text="Discount" HorizontalAlignment="Right" />
+						<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedBill.Discount}" HorizontalAlignment="Right"/>
+
+						<TextBlock Grid.Row="2" Grid.Column="0" Text="Grand Total" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+						<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedBill.Total}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+
+						<TextBlock Grid.Row="3" Grid.Column="0" Text="Received Amount" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right" Margin="0,8,0,0" />
+						<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedBill.ReceivedAmount}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+
+
+					</Grid>
+
+					<Separator Margin="0,12"/>
+
+					<TextBlock  Foreground="#616161"/>
+				</StackPanel>
+			</Border>
 		</Grid>
 	</Grid>
 </UserControl>
