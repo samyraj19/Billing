@@ -56,22 +56,22 @@
 						<custom:LeftMenubarButton x:Name="BtnDashboard"
 								Icon="avares://KBilling/Assets/dashboard.png"
 								Text="Dashboard" Tag="DashBoard"/>
-						<custom:IconButtonText x:Name="BtnCategory"
+						<custom:LeftMenubarButton x:Name="BtnCategory"
 								Text="Category" Tag="CategoryView"
 								Icon="avares://KBilling/Assets/category.png"/>
-						<custom:IconButtonText x:Name="BtnProduct"
+						<custom:LeftMenubarButton x:Name="BtnProduct"
 								Text="Products" Tag="AddProduct"
 								Icon="avares://KBilling/Assets/product.png"/>
-						<custom:IconButtonText x:Name="BtnPricing"
+						<custom:LeftMenubarButton x:Name="BtnPricing"
 								Text="Pricing" Tag="PriceUpdateView"
 								Icon="avares://KBilling/Assets/price1.png"/>
-						<custom:IconButtonText x:Name="BtnStock"
+						<custom:LeftMenubarButton x:Name="BtnStock"
 								Text="Stocks" Tag="StocksView"
 								Icon="avares://KBilling/Assets/stocks.png"/>
-						<custom:IconButtonText x:Name="BtnPos"
+						<custom:LeftMenubarButton x:Name="BtnPos"
 								Text="POS" Tag="BillingView"
 								Icon="avares://KBilling/Assets/bill.png"/>
-						<custom:IconButtonText Text="Invoices"
+						<custom:LeftMenubarButton Text="Invoices"
 								x:Name="btnInvoice"
 								Tag="InvoiceView"
 								Icon="avares://KBilling/Assets/invoice.png"/>
@@ -107,9 +107,10 @@
 			</Grid>
 		</Border>
 		<Border Grid.Column="1"
-				BorderBrush="#f9f9f9" BorderThickness="1"
+				BorderBrush="#E0E0E0" BorderThickness="1"
+				Margin="3"
 				CornerRadius="5">
-			<Grid  RowDefinitions="5* 95*" x:Name="GirdContentPanel" Margin="3">
+			<Grid  RowDefinitions="5* 95*" x:Name="GirdContentPanel">
 				<Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Background="#f9f9f9">
 					<Grid Grid.Row="0">
 						<Label x:Name="lblHeader" Margin="5,0,0,0"

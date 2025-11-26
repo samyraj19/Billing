@@ -40,6 +40,7 @@
 			<Setter Property="CornerRadius" Value="10"/>
 			<Setter Property="Padding" Value="5"/>
 		</Style>
+		
 		<Style Selector="TextBlock.h1">
 			<Setter Property="FontWeight" Value="Medium"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
@@ -96,7 +97,7 @@
 		<Grid Grid.Row="2" ColumnDefinitions="70* 30*">
 			<!-- DataGrid spans both columns so it fills the entire width -->
 			<DataGrid Grid.Column="0"
-					  Margin="5"
+					  Margin="10"
 					  x:Name="DataGridProduct"
 					  ColumnWidth="*"
 					  ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -122,7 +123,7 @@
 						<!-- Column Headers + List -->
 						<Grid Grid.Row="1" RowDefinitions="15* 85*">
 							<!-- Column Headers -->
-							<Grid Grid.Row="0" ColumnDefinitions="* * * *" Background="LightGray">
+							<Grid Grid.Row="0" ColumnDefinitions="* * * *" Background="#F5F5F5">
 								<TextBlock Grid.Column="0" Text="Item Code" Classes="h1" Margin="4,0"/>
 								<TextBlock Grid.Column="1" Text="Item Name" Classes="h1"/>
 								<TextBlock Grid.Column="2" Text="Sell.Qty" Classes="h1"/>

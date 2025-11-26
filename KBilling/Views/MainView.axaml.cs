@@ -20,6 +20,7 @@ public partial class MainView : UserControl {
    void OnLoad (object? sender, RoutedEventArgs e) {
       bool isAdmin = AppSession.Role == EUserRoles.Admin;
       ShowView (isAdmin ? "DashBoard" : "CategoryView");
+      DefaultSelection (isAdmin);
       BtnPricing.IsVisible = isAdmin;
       BtnStock.IsVisible = isAdmin;
       BtnDashboard.IsVisible = isAdmin;
@@ -39,8 +40,10 @@ public partial class MainView : UserControl {
       if (sender is Button btn && btn.Tag is string key)
          ShowView (key);
 
-      foreach (IconButtonText b in NavPanel.Children.OfType<IconButtonText> ())
+      foreach (LeftMenubarButton b in NavPanel.Children.OfType<LeftMenubarButton> ()) {
          b.IsSelected = b == sender;
+         b.UpdateIcon ();
+      }
    }
 
    void RegEvents () {
@@ -65,6 +68,12 @@ public partial class MainView : UserControl {
       GirdContentPanel.RowDefinitions[0].Height = visible
        ? new GridLength (5, GridUnitType.Star)
        : new GridLength (0);
+   }
+
+   void DefaultSelection (bool admin) {
+      var btn = admin ? BtnDashboard : BtnCategory;
+      btn.IsSelected = true;
+      btn.UpdateIcon ();
    }
 
 

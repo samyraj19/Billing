@@ -36,8 +36,8 @@ namespace KBilling.Controls {
 
       protected override void OnPointerEntered (PointerEventArgs e) {
          base.OnPointerEntered (e);
-         if(!UseHoverIcon) return;
-         if (Icon != null) Icon = ImageHelper.Load( "avares://KBilling/Assets/close-hover.png");
+         if (!UseHoverIcon) return;
+         if (Icon != null) Icon = ImageHelper.Load ("avares://KBilling/Assets/close-hover.png");
       }
 
       protected override void OnPointerExited (PointerEventArgs e) {
@@ -64,14 +64,18 @@ namespace KBilling.Controls {
       public LeftMenubarButton () { Classes.Add ("Leftmenu"); }
       protected override void OnPointerEntered (PointerEventArgs e) {
          base.OnPointerEntered (e);
-         if (!IsSelected) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard.png");
-         else if(IsSelected && Icon != null) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard-white.png");
+         UpdateIcon ();
       }
 
       protected override void OnPointerExited (PointerEventArgs e) {
          base.OnPointerExited (e);
-         if (!IsSelected) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard.png");
-         else if (IsSelected && Icon != null) Icon = ImageHelper.Load ("avares://KBilling/Assets/dashboard-white.png");
+         UpdateIcon ();
+      }
+
+      public void UpdateIcon () {
+         if (Tag is not string key) return;
+         IconStore.LoadImage ();
+         Icon = IsSelected ? IconStore.Active[key] : IconStore.Inactive[key];
       }
    }
 }

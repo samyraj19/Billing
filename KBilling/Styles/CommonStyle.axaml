@@ -26,7 +26,7 @@
 			</ControlTemplate>
 		</Setter>
 	</Style>
-	<Style Selector="Button.Primary:pointerover /template/ Border#Part_Border">
+	<Style Selector="Button.Primary.pointerover /template/ Border#Part_Border">
 		<Setter Property="Background" Value="#1E7BFF"/>
 	</Style>
 	

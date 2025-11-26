@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using KBilling.Core;
 using KBilling.Extension;
 using KBilling.Helper;
@@ -29,11 +30,11 @@ namespace KBilling.ViewModel {
             ProductCode = product.ProductNumber,
             ProductName = product.ProductName,
             Price = product.SellingRate,
-            AvilableStock = product.Quantity
+            AvilableStock = product.Quantity,
+            IsAdHoc = product.ProductNumber is null ? false : true
          });
          return true;
       }
-
 
       public void UpdateBill () {
          if (BillHeader == null || BillItems == null) return;
@@ -80,6 +81,13 @@ namespace KBilling.ViewModel {
       public void Reset () {
          BillHeader = new ();
          BillItems?.Clear ();
+      }
+
+      [RelayCommand]
+      public void AddRow () => BillItems?.Add (BillDetails.CreateEmpty ());
+
+      public void OnPriceChange (object sener, TextChangedEventArgs e) {
+
       }
 
       #region Observable Properties

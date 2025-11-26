@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using KBilling.Core;
 using KBilling.Extension;
+using KBilling.Helper;
 using KBilling.Model;
 
 namespace KBilling.ViewModel;
@@ -19,6 +20,7 @@ public partial class InvoiceVM : BaseModel {
    public InvoiceVM () { }
 
    public void GetAll () {
+      if (!HasValidInput ()) return;
       var bills = App.Repo.Bills.GetAllBills (StartDate, EndDate);
       Invoices.SetCollection (bills);
 
@@ -53,19 +55,51 @@ public partial class InvoiceVM : BaseModel {
                       inv.CustomerName?.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase) == true);
    }
 
+   public bool HasValidInput () {
+      var errors = GetValidationErrors ();
+      if (errors.Count > 0) {
+         MsgBox.ShowErrorAsync ("Error", "• " + string.Join ("\n• ", errors));
+         return false;
+      }
+      return true;
+   }
+
+   List<string> GetValidationErrors () {
+      var errors = new List<string> ();
+      // Try parsing the input strings
+      bool isStartValid = DateTime.TryParse (StartDate, out DateTime startDate);
+      bool isEndValid = DateTime.TryParse (EndDate, out DateTime endDate);
+      DateTime today = DateTime.Today;
+
+      if (!isStartValid) errors.Add ("Start date is invalid.");
+      if (!isEndValid) errors.Add ("End date is invalid.");
+
+      // Rule 1 & 2: start <= end
+      if (startDate > endDate) errors.Add ("Start date must be less than or equal to End date.");
+
+      // Rule 3: start and end <= today
+      if (startDate.Date > today) errors.Add ("Start date cannot be in the future.");
+
+      if (endDate.Date > today) errors.Add ("End date cannot be in the future.");
+
+      return errors;
+   }
+
    public ObservableCollection<BillHeader> Invoices { get; set; } = [];
    public AutoNumberedCollection<BillDetails> BillDetails { get; set; } = [];
 
    #region -----Observable fields & events-----
    public ObservableCollection<BillHeader> FilterInvoices { get; set; } = [];
-   [ObservableProperty] string? startDate;
-   [ObservableProperty] string? endDate;
+   [ObservableProperty] string? startDate = DateTime.Now.ToString ();
+   [ObservableProperty] string? endDate = DateTime.Now.ToString ();
    [ObservableProperty] string searchText = string.Empty;
    [ObservableProperty] bool showPlaceholder = false;
 
    [ObservableProperty] BillHeader? selectedBill;
 
    partial void OnEndDateChanged (string? value) => GetAll ();
+
+   partial void OnStartDateChanged (string? value) => GetAll ();
 
    partial void OnSearchTextChanged (string? oldValue, string newValue) => Filter (SearchText);
 

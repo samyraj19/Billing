@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KBilling.Helper;
 using static KBilling.DataBase.SP;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KBilling.Services {
    public class BillRepo : IBillRepo {
@@ -99,8 +100,12 @@ namespace KBilling.Services {
 
 
       public IEnumerable<BillHeader> GetAllBills (string? sdata, string? edate) {
-         var parameters = SqlP.PList (P.Val ("@FromDate", sdata, SqlDbType.DateTime),
-            P.Val ("@ToDate", edate, SqlDbType.DateTime));
+         DateTime? fromDate = null;
+         DateTime? toDate = null;
+         if (DateTime.TryParse (sdata, out var tempFrom)) fromDate = tempFrom;
+         if (DateTime.TryParse (edate, out var tempTo)) toDate = tempTo;
+         var parameters = SqlP.PList (P.Val ("@FromDate", fromDate, SqlDbType.DateTime),
+            P.Val ("@ToDate", toDate, SqlDbType.DateTime));
 
          DataTable dt = App.Repo.QueryExe.QuerySP (SP.Bills.GetBillsHeader, parameters);
          if (dt.Rows.Count == 0) return Enumerable.Empty<BillHeader> (); // safe, no nulls
@@ -124,7 +129,7 @@ namespace KBilling.Services {
       }
 
       public IEnumerable<BillDetails> GetAllBillDetailsById (long id) {
-         if(id <= 0) return Enumerable.Empty<BillDetails> ();
+         if (id <= 0) return Enumerable.Empty<BillDetails> ();
          var parameters = SqlP.PList (P.Val ("@BillId", id, SqlDbType.BigInt));
 
          DataTable dt = App.Repo.QueryExe.QuerySP (SP.Bills.GetBillDetailsByid, parameters);

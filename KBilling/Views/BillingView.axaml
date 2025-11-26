@@ -17,7 +17,7 @@
 		<vm:BillVM/>
 	</UserControl.DataContext>
 	<UserControl.Styles>
-		<Style Selector="TextBox.borderless">
+		<Style Selector="TextBox.noborder">
 			<Setter Property="BorderThickness" Value="0"/>
 		</Style>
 		<Style Selector="Button.Primary.medium">
@@ -66,6 +66,21 @@
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
+		<Style Selector="DataGridRow">
+			<Setter Property="Background" Value="#FFFFFF"/>
+		</Style>
+
+		<!-- Hover (Pointer Over) -->
+		<Style Selector="DataGridRow:pointerover">
+			<Setter Property="Background" Value="WhiteSmoke" />
+		</Style>
+
+		<!-- Selected Row -->
+		<Style Selector="DataGridRow:selected">
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Setter Property="Background" Value="#2D8CFF"/>
+		</Style>
 	</UserControl.Styles>
 
 	<Grid ColumnDefinitions="80* Auto">
@@ -79,13 +94,16 @@
 						 VerticalContentAlignment="Center"
 						 Watermark="Search by Product Name or Number"/>
 
-					<Label x:Name="lblError" Margin="10,0" Foreground="Red" FontWeight="SemiLight"
-						   VerticalContentAlignment="Center"/>
+					<ctrl:IconButton Icon="avares://KBilling/Assets/add.png" 
+									 HorizontalAlignment="Right"
+									 Margin="10,0"
+									 Width="25" Height="25" 
+									 Command="{Binding AddRowCommand}"/>
 				</StackPanel>
 			</Grid>
 
 			<DataGrid Grid.Row="1" x:Name="DataGridProduct"
-					  ColumnWidth="*" 
+					  ColumnWidth="*"
 					  Margin="5"
 					  ItemsSource="{Binding BillItems}">
 				<DataGrid.Columns>
@@ -93,36 +111,49 @@
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<ctrl:IconButton Width="15" Height="15"
-												 Tag="Delete"
-												 Click="IconButton_Click"
-												 Icon="avares://KBilling/Assets/cross.png"/>
+									  Tag="Delete"
+									  Click="IconButton_Click"
+									  Icon="avares://KBilling/Assets/cross.png"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
-					<DataGridTextColumn IsReadOnly="True" Header="#"
-										Width="57"
-										Binding="{Binding No}"/>
-					<DataGridTextColumn Header="Items" IsReadOnly="True"
-										Binding="{Binding ProductName}"/>
-					<DataGridTextColumn Header="Item Code" IsReadOnly="True"
-										Binding="{Binding ProductCode}"/>
-					<DataGridTextColumn Header="SP (₹)" IsReadOnly="True"
-										Binding="{Binding Price}"/>
+					<DataGridTextColumn IsReadOnly="True"  Header="#" Width="57" Binding="{Binding No}"/>
+					<!--<DataGridTextColumn Header="Items" IsReadOnly="True" Binding="{Binding ProductName}"/>
+					<DataGridTextColumn Header="Item Code" IsReadOnly="True" Binding="{Binding ProductCode}"/>-->
+					<DataGridTemplateColumn Header="Name">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding ProductName}"
+										 IsReadOnly="{Binding IsAdHoc}"
+										 Classes="noborder"/>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+					<!--<DataGridTextColumn Header="SP (₹)" IsReadOnly="True" Binding="{Binding Price}"/>-->
+					<DataGridTemplateColumn Header="SP (₹)">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Price}"
+										 IsReadOnly="{Binding IsAdHoc}"
+										 TextInput="TextBox_TextInput"
+										 Classes="noborder"/>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 					<DataGridTemplateColumn Header="Qty.">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<TextBox Text="{Binding Quantity}"
 										 Tag="{Binding AvilableStock}"
 										 TextChanged="OnGridQtyTxtChaning"
-										 Classes="borderless"/>
+										 Classes="noborder"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
-					<DataGridTextColumn Header="Amount (₹)" IsReadOnly="True"
-										Binding="{Binding Amount}"/>
-
+					<DataGridTextColumn Header="Amount (₹)" IsReadOnly="True" Binding="{Binding Amount}"/>
 				</DataGrid.Columns>
 			</DataGrid>
+			
 			<Grid Grid.Row="2" ColumnDefinitions="85* 15*">
 				<Label Grid.Column="0" Content="Total items: "
 					   Margin="5,0"
@@ -230,7 +261,7 @@
 
 				<HeaderedContentControl Grid.Row="3" Margin="0,10,5,5"
 										Header="Received Amount">
-					<StackPanel Orientation="Horizontal" 
+					<StackPanel Orientation="Horizontal"
 								Margin="5,10,5,5"
 								VerticalAlignment="Center">
 						<CheckBox x:Name="chkReceived"
@@ -258,7 +289,7 @@
 							Background="#0078D7"
 							Classes="Primary big"/>
 				</StackPanel>
-				
+
 			</Grid>
 		</Border>
 	</Grid>

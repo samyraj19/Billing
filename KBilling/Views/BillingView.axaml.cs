@@ -14,7 +14,6 @@ using Avalonia.Input;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using KBilling.Controls;
-using KBilling.DialogWin;
 
 namespace KBilling;
 public partial class BillingView : UserControl {
@@ -119,7 +118,7 @@ public partial class BillingView : UserControl {
    void OnSearchTextChanging (object? sender, TextChangingEventArgs e) {
       if (mIgnoretxtchange || sender is not TextBox text) return;
 
-      mProductDialog ??= DialogStore.Get ("discount") as ProductLookupDialog;
+      mProductDialog ??= mManager.GetWindow ("ProductLookupDialog") as ProductLookupDialog;
       if (mProductDialog is null) return;
 
       mProductDialog.UpdateRefresh (text?.Text?.Trim ());
@@ -130,7 +129,7 @@ public partial class BillingView : UserControl {
       mProductDialog.Position = text.PointToScreen (new Point (0, text.Bounds.Height));
       e.Handled = true;
 
-      if (!mProductDialog.mIsShow) mProductDialog.Show (MainWindow.Instance);
+      if (!mProductDialog.mIsShow) mProductDialog.ShowDialog (MainWindow.Instance);
 
       txtSearch.Focus ();
    }
@@ -139,15 +138,13 @@ public partial class BillingView : UserControl {
 
    void OnDiscountClick (object? sender, RoutedEventArgs e) {
       if (VM ()?.BillItems?.Count is <= 0) return;
-      if (DialogStore.Get ("discount") is not DiscountDialog win) return;
-      mManager.ShowDialog (win);
-      win.DiscountApplied += (discount) => ApplyDiscount (discount);
+      if (mManager.ShowDialog (MainWindow.Instance, "DiscountDialog") is DiscountDialog dialog)
+         dialog.DiscountApplied += (discount) => ApplyDiscount (discount);
    }
 
    void OnGridQtyTxtChaning (object? sender, TextChangedEventArgs e) {
       if (sender is not TextBox textBox || textBox.DataContext is not BillDetails item) return;
 
-      lblError.Content = string.Empty;
       string input = textBox.Text ?? string.Empty;
       // Ensure only integer input
       if (input.Length > 0 && !Is.Integer (input)) {
@@ -172,7 +169,6 @@ public partial class BillingView : UserControl {
       if (btn.DataContext is not BillDetails detail) return;
       var confirm = await MsgBox.ShowConfirmAsync ("Delete Item", "Are you sure?");
       if (confirm == ButtonResult.Yes) VM ()?.BillItems?.Remove (detail);
-
    }
    #endregion
 
@@ -213,6 +209,11 @@ public partial class BillingView : UserControl {
    ProductLookupDialog? mProductDialog;
    bool mIgnoretxtchange;
    bool mIsPaying;
-   #endregion
+
+    void TextBox_TextInput(object? sender, Avalonia.Input.TextInputEventArgs e)
+    {
+      NumHelper.OnDecimalOnly(this, e);
+    }
+    #endregion
 
 }

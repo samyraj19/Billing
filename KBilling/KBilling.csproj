@@ -16,7 +16,10 @@
     <None Remove="Data\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\add.png" />
+    <None Remove="Assets\bill-white.png" />
     <None Remove="Assets\bill.png" />
+    <None Remove="Assets\category-white.png" />
     <None Remove="Assets\category.png" />
     <None Remove="Assets\close-black.png" />
     <None Remove="Assets\close-hover.png" />
@@ -25,11 +28,15 @@
     <None Remove="Assets\dashboard.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\edit.png" />
+    <None Remove="Assets\invoice-white.png" />
     <None Remove="Assets\invoice.png" />
     <None Remove="Assets\pdf.png" />
     <None Remove="Assets\price.png" />
+    <None Remove="Assets\price1-white.png" />
     <None Remove="Assets\price1.png" />
+    <None Remove="Assets\product-white.png" />
     <None Remove="Assets\product.png" />
+    <None Remove="Assets\stocks-white.png" />
     <None Remove="Assets\stocks.png" />
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +65,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="Assets\add.png" />
+    <AvaloniaResource Include="Assets\bill-white.png" />
     <AvaloniaResource Include="Assets\bill.png" />
+    <AvaloniaResource Include="Assets\category-white.png" />
     <AvaloniaResource Include="Assets\category.png" />
     <AvaloniaResource Include="Assets\close-black.png" />
     <AvaloniaResource Include="Assets\close-hover.png" />
@@ -70,10 +80,14 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\dashboard.png" />
+    <AvaloniaResource Include="Assets\invoice-white.png" />
     <AvaloniaResource Include="Assets\invoice.png" />
     <AvaloniaResource Include="Assets\pdf.png" />
+    <AvaloniaResource Include="Assets\price1-white.png" />
     <AvaloniaResource Include="Assets\price1.png" />
+    <AvaloniaResource Include="Assets\product-white.png" />
     <AvaloniaResource Include="Assets\product.png" />
+    <AvaloniaResource Include="Assets\stocks-white.png" />
     <AvaloniaResource Include="Assets\stocks.png" />
   </ItemGroup>
 
