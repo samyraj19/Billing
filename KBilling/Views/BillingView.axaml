@@ -135,7 +135,7 @@
 							<DataTemplate>
 								<TextBox Text="{Binding Price}"
 										 IsReadOnly="{Binding IsAdHoc}"
-										 TextInput="TextBox_TextInput"
+										 TextChanged="OnPriceChanged"
 										 Classes="noborder"/>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>

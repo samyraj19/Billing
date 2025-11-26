@@ -164,6 +164,19 @@ public partial class BillingView : UserControl {
       VM ()?.UpdateBill ();
    }
 
+   void OnPriceChanged (object? sender, Avalonia.Controls.TextChangedEventArgs e) {
+      if (sender is not TextBox textBox || textBox.DataContext is not BillDetails item) return;
+
+      string input = textBox.Text ?? string.Empty;
+      // Ensure only integer input
+      if (input.Length > 0 && !Is.Decimal (input)) {
+         textBox.Text = input[..^1];
+         textBox.CaretIndex = textBox.Text.Length; // Keep cursor at end
+         return;
+      }
+      VM ()?.UpdateBill ();
+   }
+
    async void IconButton_Click (object? sender, RoutedEventArgs e) {
       if (sender is not IconButton btn) return;
       if (btn.DataContext is not BillDetails detail) return;
@@ -209,11 +222,6 @@ public partial class BillingView : UserControl {
    ProductLookupDialog? mProductDialog;
    bool mIgnoretxtchange;
    bool mIsPaying;
-
-    void TextBox_TextInput(object? sender, Avalonia.Input.TextInputEventArgs e)
-    {
-      NumHelper.OnDecimalOnly(this, e);
-    }
-    #endregion
+   #endregion
 
 }
