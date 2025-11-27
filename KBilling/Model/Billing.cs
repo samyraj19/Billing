@@ -23,6 +23,7 @@ namespace KBilling.Model {
       public static BillDetails CreateEmpty () {
          return new BillDetails {
             ProductName = $"item",
+            ProductCode = null,
             Quantity = 1,
             Price = 0,
             IsAdHoc = false
