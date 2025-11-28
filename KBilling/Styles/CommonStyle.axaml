@@ -29,6 +29,19 @@
 	<Style Selector="Button.Primary.pointerover /template/ Border#Part_Border">
 		<Setter Property="Background" Value="#1E7BFF"/>
 	</Style>
+
+	<Style Selector="TextBox.Primary">
+		<Setter Property="BorderBrush" Value="#D0D7DE"/>
+		<Setter Property="Background" Value="#FFFFFF"/>
+	</Style>
+	<Style Selector="TextBox.Primary:pointerover /template/ Border#PART_BorderElement">
+		<Setter Property="BorderBrush" Value="#9BA4AF"/>
+		<Setter Property="Background" Value="#FFFFFF"/>
+	</Style>
+	<Style Selector="TextBox.Primary:focus-visible /template/ Border#PART_BorderElement">
+		<Setter Property="BorderBrush" Value="#0D6EFD"/>
+		<Setter Property="Background" Value="#FFFFFF"/>
+	</Style>
 	
 	<Style Selector="DataGrid">
 		<Setter Property="Background" Value="White"/>

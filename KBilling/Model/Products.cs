@@ -32,11 +32,7 @@ public partial class Product : BaseModel {
 
    public void SnapShot () => mOriginal = (Product)this.MemberwiseClone ();
 
-   public bool IsModified () => mOriginal != null && (PurchaseRate != mOriginal.PurchaseRate || SellingRate != mOriginal.SellingRate);
+   public bool HasRateChanges () => mOriginal != null && (PurchaseRate != mOriginal.PurchaseRate || SellingRate != mOriginal.SellingRate);
 
-   public bool IsModifiedQty () => mOriginal != null && (Quantity != mOriginal.Quantity);
-}
-
-public static class ProductExtensions {
-   public static bool IsProductClass (this object obj) => obj is Product;
+   public bool HasQtyChanges () => mOriginal != null && (Quantity != mOriginal.Quantity);
 }

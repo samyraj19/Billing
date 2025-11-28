@@ -249,12 +249,14 @@
 								 x:Name="TextboxName"
 								 Text="{Binding BillHeader.CustomerName,Mode=TwoWay}"
 								 Margin="0,5"
-								 Width="200" Height="30"/>
+								 Width="200" Height="30"
+								 Classes="Primary"/>
 						<TextBox Grid.Row="1" Grid.Column="1"
 								 x:Name="TextboxPhone"
 								 Text="{Binding BillHeader.CustomerPhone,Mode=TwoWay}"
 								 Margin="2"
-								 Width="200" Height="30"/>
+								 Width="200" Height="30"
+								 Classes="Primary"/>
 					</Grid>
 
 				</HeaderedContentControl>

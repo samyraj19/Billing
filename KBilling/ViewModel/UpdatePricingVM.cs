@@ -18,7 +18,7 @@ namespace KBilling.ViewModel {
 
       [RelayCommand]
       public void Update () {
-         var items = FilterProducts?.Where (p => p.IsModified ()).ToList (); // Get modified items
+         var items = FilterProducts?.Where (p => p.HasRateChanges ()).ToList (); // Get modified items
          if (items is null) return;
          if (DBUpdate (items)) {
             MsgBox.ShowSuccessAsync ("Success", "Prices updated successfully.");

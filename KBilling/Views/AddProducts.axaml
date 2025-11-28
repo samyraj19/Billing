@@ -15,12 +15,11 @@
 		<KeyBinding Gesture="Enter" Command="{Binding SubmitCommand}"/>
 	</UserControl.KeyBindings>
 	<UserControl.Styles>
-		<Style Selector="TextBox">
+		<Style Selector="TextBox.Primary.Input">
 			<Setter Property="Width" Value="200"/>
 			<Setter Property="Height" Value="30"/>
 			<Setter Property="HorizontalAlignment" Value="Left"/>
 			<Setter Property="Focusable" Value="True"/>
-			
 		</Style>
 		<Style Selector="Label">
 			<Setter Property="Margin" Value="0,4"/>
@@ -33,46 +32,56 @@
 	<Grid RowDefinitions="Auto *">
 		<Border Background="White" Grid.Row="0"
 				Padding="5"
-				CornerRadius="5" 
+				CornerRadius="5"
 				Margin="15">
 			<Grid x:Name="MainPanel" RowDefinitions="* *" ColumnDefinitions="* * * * * *">
 				<TextBlock Grid.Row="0" Grid.Column="0">
 					<Run Text="Item Name"/>
-					<Run Text="*" Foreground="Red"/></TextBlock>
-				
+					<Run Text="*" Foreground="Red"/>
+				</TextBlock>
+
 				<TextBlock Grid.Row="0" Grid.Column="1">
 					<Run Text="Item Code "/>
-					<Run Text="*" Foreground="Red"/></TextBlock>
-				
+					<Run Text="*" Foreground="Red"/>
+				</TextBlock>
+
 				<TextBlock Grid.Row="0" Grid.Column="2">
 					<Run Text="Purchase Rate "/>
-					<Run Text="*" Foreground="Red"/></TextBlock>
+					<Run Text="*" Foreground="Red"/>
+				</TextBlock>
 
 				<TextBlock Grid.Row="0" Grid.Column="3">
 					<Run Text="Selling Rate "/>
-					<Run Text="*" Foreground="Red"/></TextBlock>
+					<Run Text="*" Foreground="Red"/>
+				</TextBlock>
 
 				<TextBlock Grid.Row="0" Grid.Column="4">
 					<Run Text="Quantity "/>
-					<Run Text="*" Foreground="Red"/></TextBlock>
+					<Run Text="*" Foreground="Red"/>
+				</TextBlock>
 
 				<TextBox Grid.Row="1" Grid.Column="0"
 						 x:Name="txtName"
 						 IsReadOnly="True"
+						 Classes="Primary Input"
 						 Text="{Binding ProductName,Mode=TwoWay}"/>
 				<TextBox Grid.Row="1" Grid.Column="1"
 						 x:Name="textCode"
+						 Classes="Primary Input"
 						 Text="{Binding ProductNumber,Mode=TwoWay}"/>
 				<TextBox x:Name="txtPurRate"
 						 Grid.Row="1" Grid.Column="2"
+						 Classes="Primary Input"
 						 IsEnabled="{Binding Role, Converter={StaticResource AdminOnly}}"
 						 Text="{Binding PurchaseRate,Mode=TwoWay}"/>
 				<TextBox x:Name="txtSellRate"
 						 Grid.Row="1" Grid.Column="3"
+						 Classes="Primary Input"
 						 IsEnabled="{Binding Role, Converter={StaticResource AdminOnly}}"
 						 Text="{Binding SellingRate,Mode=TwoWay}"/>
 				<TextBox x:Name="txtQty"
 						 Grid.Row="1" Grid.Column="4"
+						 Classes="Primary Input"
 						 Text="{Binding Quantity,Mode=TwoWay}"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="5"
@@ -96,14 +105,15 @@
 			</Grid>
 		</Border>
 
-		<Grid Grid.Row="1" RowDefinitions="10* 90*" Margin="10">
-			<Grid Grid.Row="0"
-				  Margin="0,5">
-				<TextBox x:Name="SearchTxt"
-						 Width="400"
-						 Watermark="Search Item name/number"
-						 Text="{Binding SearchText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-			</Grid>
+		<Grid Grid.Row="1" RowDefinitions="Auto *" Margin="10">
+
+			<TextBox Grid.Row="0" x:Name="SearchTxt"
+					 Width="400" Height="30"
+					 Margin="0,2"
+					 Watermark="Search Item name/number"
+					 HorizontalAlignment="Left"
+					 Text="{Binding SearchText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
 			<DataGrid Grid.Row="1"
 					  x:Name="DataGridProduct"
 					  ItemsSource="{Binding FilterProducts}">

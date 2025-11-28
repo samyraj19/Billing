@@ -74,7 +74,7 @@ namespace KBilling.Services {
       public bool UpdatePrices (IEnumerable<Product> products) {
          ArgumentNullException.ThrowIfNull (products);
          foreach (var p in products) {
-            if (p.IsModified ()) {
+            if (p.HasRateChanges ()) {
                Update (p);
             }
          }
@@ -94,7 +94,7 @@ namespace KBilling.Services {
       public bool UpdateQty (IEnumerable<Product> products) {
          ArgumentNullException.ThrowIfNull (products);
          foreach (var p in products) {
-            if (p.IsModifiedQty ()) {
+            if (p.HasQtyChanges ()) {
                Update (p);
             }
          }

@@ -17,6 +17,7 @@ using CommunityToolkit.Mvvm.Input;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using static Azure.Core.HttpHeader;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace KBilling.ViewModel {
    public partial class ProductVM : Product {
@@ -114,6 +115,16 @@ namespace KBilling.ViewModel {
                         p.ProductNumber?.ToString ().Contains (filterValue, StringComparison.OrdinalIgnoreCase) == true));
       }
 
+      public void StockFilter (string text) {
+         if (AllProducts is null) return;
+         FilterProducts?.Filter (AllProducts, p =>
+            !string.IsNullOrEmpty (p.Stocklevel) &&
+            (
+               string.IsNullOrEmpty (text) ||
+               p.Stocklevel.Contains (text, StringComparison.OrdinalIgnoreCase)
+            )
+         );
+      }
 
       public void Refersh () => UpdateFilter (string.Empty);
 

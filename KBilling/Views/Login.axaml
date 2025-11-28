@@ -2,48 +2,124 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Width="700" Height="500"
-		WindowStartupLocation="CenterScreen"
-        x:Class="KBilling.Login"
-		xmlns:vm="using:KBilling.ViewModel"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Width="700" Height="520"
+        WindowStartupLocation="CenterScreen"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		TransparencyLevelHint="AcrylicBlur"
+	    Background="Transparent"
+		CanResize="False"
+		xmlns:vm="using:KBilling.ViewModel" 
 		x:DataType="vm:LoginVM"
-		x:CompileBindings="True"
-        Title="K-Fashion Zone">
+        x:Class="KBilling.Login"
+        Title="K-Billing">
 	<Window.DataContext>
 		<vm:LoginVM/>
 	</Window.DataContext>
 	<Window.Styles>
+		<!-- Base TextBox style (implicit) -->
+		<Style Selector="TextBox">
+			<Setter Property="Width" Value="320"/>
+			<Setter Property="Height" Value="36"/>
+			<Setter Property="Padding" Value="10,6"/>
+			<Setter Property="Background" Value="#FFFFFF"/>
+			<Setter Property="BorderBrush" Value="#D0D7DE"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="6"/>
+		</Style>
+
+		<!-- Hover (pointer over) -->
+		<Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+			<Setter Property="Background" Value="#F1F5F9"/>
+			<Setter Property="BorderBrush" Value="#9BA4AF"/>
+		</Style>
+
+		<!-- Focused (keyboard focus / active) -->
+		<Style Selector="TextBox:focus-visible /template/ Border#PART_BorderElement">
+			<Setter Property="Background" Value="#FFFFFF"/>
+			<Setter Property="BorderBrush" Value="#0D6EFD"/>
+			<Setter Property="BoxShadow">
+				<!-- small glow when focused (Avalonia 11-ish) -->
+				<Setter.Value>
+					0 2 10 0 #0D6EFD20
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- ComboBox follow same visual system -->
+		<Style Selector="ComboBox">
+			<Setter Property="Width" Value="320"/>
+			<Setter Property="Height" Value="36"/>
+			<Setter Property="Padding" Value="8,4"/>
+			<Setter Property="BorderBrush" Value="#D0D7DE"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="6"/>
+			<Setter Property="Background" Value="#FFFFFF"/>
+		</Style>
+		<Style Selector="ComboBox:pointerover /template/ Border#PART_BorderElement">
+			<Setter Property="BorderBrush" Value="#9BA4AF"/>
+			<Setter Property="Background" Value="#F1F5F9"/>
+		</Style>
+		<Style Selector="ComboBox:focus-visible /template/ Border#PART_BorderElement">
+			<Setter Property="BorderBrush" Value="#0D6EFD"/>
+		</Style>
+
+		<!-- Primary Button style -->
+		<Style Selector="Button.Primary">
+			<Setter Property="Width" Value="320"/>
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Background" Value="#2F80ED"/>
+			<!-- primary button -->
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderThickness" Value="0"/>
+		</Style>
+		<Style Selector="Button.Primary:pointerover">
+			<Setter Property="Background" Value="#256FD6"/>
+		</Style>
+		<Style Selector="Button.Primary:pressed">
+			<Setter Property="Background" Value="#1E5FBF"/>
+		</Style>
 
 	</Window.Styles>
-	<Grid Background="#2b7fff">
-		<Border Height="400" Width="300" 
-				CornerRadius="15"
-				Background="White">
-			<Grid VerticalAlignment="Center" HorizontalAlignment="Center"
-				  Background="White"
-				  RowDefinitions="* * *">
-				<ComboBox Grid.Row="0"
-						  Width="200" Height="25"
-						  PlaceholderText="Select"
-						  SelectedIndex="0" SelectedValue="{Binding User,Mode=TwoWay}">
+
+	<Grid>
+		<!-- Attractive blue gradient background -->
+		<Grid.Background>
+			<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+				<GradientStop Color="#2F80ED" Offset="0.0"/>
+				<GradientStop Color="#3B82F6" Offset="0.45"/>
+				<GradientStop Color="#4CA1FF" Offset="1.0"/>
+			</LinearGradientBrush>
+		</Grid.Background>
+
+		<!-- Centered card -->
+		<Border Width="420" Height="380"
+				Background="White"
+				CornerRadius="14"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
+			<Border.BoxShadow>
+				<!-- simple soft shadow -->
+				0 2 10 #200D6EFD
+			</Border.BoxShadow>
+
+			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+				<TextBlock Text="Welcome Back" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+
+				<TextBlock Text="Please sign in to your account" FontSize="12" Opacity="0.7" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+
+				<ComboBox SelectedIndex="0" SelectedValue="{Binding User,Mode=TwoWay}">
 					<sys:String>Admin</sys:String>
 					<sys:String>Supervisor</sys:String>
 					<sys:String>Staff</sys:String>
 				</ComboBox>
-				<TextBox Grid.Row="1"
-						 PasswordChar="*"
-						 Width="200" Height="25"
-						 Margin="0,10,0,0"
-						 Text="{Binding Password,Mode=TwoWay}"
-						 Watermark="Password"/>
-				<Button Grid.Row="2" 
-						x:Name="BtnLogin"
-						Content="Login"
-						Classes="Primary"
-						Width="200" Height="35"
-						Margin="0,10,0,0"/>
-			</Grid>
+
+				<TextBox Watermark="Password" PasswordChar="*" Text="{Binding Password,Mode=TwoWay}" VerticalContentAlignment="Center"/>
+				<Button x:Name="BtnLogin" Command="{Binding LoginCommand}" CommandParameter="{Binding $parent[Window]}" Classes="Primary" Content="Login"/>
+			</StackPanel>
 		</Border>
 	</Grid>
 </Window>

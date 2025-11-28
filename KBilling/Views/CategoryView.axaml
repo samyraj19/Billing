@@ -11,7 +11,7 @@
 		<vm:CategoryVM/>
 	</UserControl.DataContext>
 	<UserControl.Styles>
-		<Style Selector="TextBox">
+		<Style Selector="TextBox.Primary.Input">
 			<Setter Property="Width" Value="200"/>
 			<Setter Property="Height" Value="30"/>
 			<Setter Property="HorizontalAlignment" Value="Left"/>
@@ -56,13 +56,17 @@
 				
 
 				<TextBox Grid.Row="1" Grid.Column="0" x:Name="TextName"
-						 Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+						 Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+						 Classes="Primary Input"/>
 				<TextBox Grid.Row="1" Grid.Column="1"
-						 Text="{Binding Prefix,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+						 Text="{Binding Prefix,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+						 Classes="Primary Input"/>
 				<TextBox Grid.Row="1" Grid.Column="2"
-						 Text="{Binding Code,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+						 Text="{Binding Code,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+						 Classes="Primary Input"/>
 				<TextBox Grid.Row="1" Grid.Column="3"
-						 Text="{Binding Description,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+						 Text="{Binding Description,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+						 Classes="Primary Input"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="4"
 							HorizontalAlignment="Left"
@@ -87,23 +91,23 @@
 		</Border>
 
 		<Grid Grid.Row="1" RowDefinitions="Auto *" Margin="10">
-			<StackPanel Orientation="Horizontal" Margin="0,5">
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,2">
 				<TextBox x:Name="SearchTxt"
-						 Width="400"
+						 Width="400" Height="30"
 						 Watermark="Search Item name/number"
 						 Text="{Binding SearchText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 				<Label Content="Sort By"
 					   FontWeight="SemiLight"
 					   VerticalContentAlignment="Center"
-					   Margin="15,5"/>
+					   Margin="15,0"/>
 				<ComboBox x:Name="SortByCmb"
 						  SelectedIndex="0"
 						  Width="75"
-						  Margin="5,5"
+						  Margin="5,0"
 						  SelectedItem="{Binding CmbSelectedItem,Mode=TwoWay}"/>
 				<Label VerticalContentAlignment="Center"
 					   FontWeight="SemiBold"
-					   Margin="15,5"
+					   Margin="15,0"
 					   Content="{Binding TotalItems}"/>
 
 			</StackPanel>
@@ -113,30 +117,24 @@
 					  ScrollViewer.VerticalScrollBarVisibility="Auto"
 					  ItemsSource="{Binding FilterCategories}">
 				<DataGrid.Columns>
-					<DataGridTextColumn IsVisible="False"
-										Binding="{Binding CategoryId}"/>
-					<DataGridTextColumn IsReadOnly="True" Header="#" Width="75"
-										Binding="{Binding No}"/>
-					<DataGridTextColumn Header="Name" IsReadOnly="True"
-										Binding="{Binding Name}"/>
-					<DataGridTextColumn Header="Prefix" IsReadOnly="True"
-										Binding="{Binding Prefix}"/>
-					<DataGridTextColumn Header="Code" IsReadOnly="True"
-										Binding="{Binding Code}"/>
-					<DataGridTextColumn Header="Description" IsReadOnly="True"
-										Binding="{Binding Description}"/>
+					<DataGridTextColumn IsVisible="False" Binding="{Binding CategoryId}"/>
+					<DataGridTextColumn IsReadOnly="True" Header="#" Width="75" Binding="{Binding No}"/>
+					<DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
+					<DataGridTextColumn Header="Prefix" IsReadOnly="True" Binding="{Binding Prefix}"/>
+					<DataGridTextColumn Header="Code" IsReadOnly="True" Binding="{Binding Code}"/>
+					<DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Description}"/>
 					<DataGridTemplateColumn Header="Action" Width="100">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 									<cus:IconButton Width="20" Height="20"
-															 Tag="Delete"
-															 Icon="avares://KBilling/Assets/delete.png"
-															 Click="OnActionClick"/>
+													Tag="Delete"
+													Icon="avares://KBilling/Assets/delete.png"
+													Click="OnActionClick"/>
 									<cus:IconButton Width="20" Height="20"
-															 Tag="Edit"
-															 Click="OnActionClick"
-															 Icon="avares://KBilling/Assets/edit.png"/>
+													Tag="Edit"
+													Click="OnActionClick"
+													Icon="avares://KBilling/Assets/edit.png"/>
 								</StackPanel>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
